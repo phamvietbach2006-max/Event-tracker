@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="vi"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Theo dõi sự kiện</title>
+<style>
+:root{--bg:#f4f5f7;--card:#fff;--ink:#1d2330;--mute:#6b7385;--line:#e3e6ec;
+--todo:#8a93a6;--doing:#e0a100;--ready:#1a9d5c;--issue:#d93a3a}
+@media(prefers-color-scheme:dark){:root{--bg:#12151c;--card:#1b2029;--ink:#e8ebf2;--mute:#8d96a8;--line:#2a313e}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 system-ui,sans-serif}
+header{position:sticky;top:0;z-index:5;background:var(--bg);padding:14px 20px;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:14px;align-items:center}
+h1{font-size:18px;margin:0;flex:1 1 220px}
+.sum{display:flex;gap:8px;flex-wrap:wrap}
+.chip{padding:4px 10px;border-radius:99px;font-size:13px;font-weight:600;color:#fff}
+.live{font-size:12px;color:var(--mute)}.live i{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--issue);margin-right:5px}.live.on i{background:var(--ready)}
+.total{height:6px;background:var(--line);width:100%;border-radius:4px;overflow:hidden}.total b{display:block;height:100%;background:var(--ready);transition:width .3s}
+main{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;padding:20px}
+.card{background:var(--card);border:1px solid var(--line);border-top:6px solid var(--c);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.top{display:flex;justify-content:space-between;gap:8px;align-items:start}
+.name{font-weight:700;font-size:17px;margin:0}
+select{border:0;border-radius:99px;padding:4px 8px;font:600 12px system-ui;color:#fff;background:var(--c);cursor:pointer}
+.bar{height:6px;background:var(--line);border-radius:4px;overflow:hidden}.bar b{display:block;height:100%;background:var(--c);transition:width .3s}
+.pct{font-size:12px;color:var(--mute)}
+ul{list-style:none;margin:0;padding:0}li{display:flex;gap:8px;align-items:center;padding:5px 0;border-bottom:1px dashed var(--line)}
+li label{flex:1;display:flex;gap:9px;align-items:center;cursor:pointer}
+li input{width:18px;height:18px;accent-color:var(--ready)}li.done span{text-decoration:line-through;color:var(--mute)}
+.x{border:0;background:none;color:var(--mute);cursor:pointer;opacity:.5}.x:hover{opacity:1;color:var(--issue)}
+.add,.note{width:100%;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:8px;padding:6px 8px;font:inherit}
+.meta{font-size:11px;color:var(--mute);display:flex;justify-content:space-between}
+.newroom{margin:0 20px 30px}button.p{background:var(--ink);color:var(--bg);border:0;border-radius:8px;padding:8px 14px;font:600 14px system-ui;cursor:pointer}
+</style></head><body>
+<header><h1>Theo dõi chuẩn bị sự kiện</h1><div class="sum" id="sum"></div><div class="live" id="live"><i></i>realtime</div><div class="total"><b id="tot"></b></div></header>
+<main id="grid"></main>
+<div class="newroom"><button class="p" onclick="addRoom()">+ Thêm khu vực</button></div>
+<script>
+const ST={todo:['Chưa bắt đầu','--todo'],doing:['Đang chuẩn bị','--doing'],ready:['Sẵn sàng','--ready'],issue:['Có sự cố','--issue']};
+let S={rooms:[]};
+const $=id=>document.getElementById(id);
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const call=(m,u,b)=>fetch('/api/'+u,{method:m,body:b&&JSON.stringify(b)});
+function render(){
+  if(document.activeElement&&document.activeElement.matches('.add,.note'))return; // don't clobber typing
+  const cnt={todo:0,doing:0,ready:0,issue:0};let d=0,t=0;
+  S.rooms.forEach(r=>{cnt[r.status]++;t+=r.tasks.length;d+=r.tasks.filter(x=>x.done).length});
+  $('sum').innerHTML=Object.keys(ST).map(k=>`<span class="chip" style="background:var(${ST[k][1]})">${ST[k][0]}: ${cnt[k]}</span>`).join('');
+  $('tot').style.width=(t?d/t*100:0)+'%';
+  $('grid').innerHTML=S.rooms.map(r=>{
+    const dn=r.tasks.filter(x=>x.done).length,pc=r.tasks.length?Math.round(dn/r.tasks.length*100):0;
+    return `<section class="card" style="--c:var(${ST[r.status][1]})">
+    <div class="top"><h2 class="name">${esc(r.name)}</h2>
+    <select onchange="call('PATCH','rooms/${r.id}',{status:this.value})">${Object.keys(ST).map(k=>`<option value="${k}" ${k==r.status?'selected':''}>${ST[k][0]}</option>`).join('')}</select></div>
+    <div class="bar"><b style="width:${pc}%"></b></div><div class="pct">${dn}/${r.tasks.length} việc · ${pc}%</div>
+    <ul>${r.tasks.map(x=>`<li class="${x.done?'done':''}"><label><input type="checkbox" ${x.done?'checked':''} onchange="call('PATCH','rooms/${r.id}/tasks/${x.id}',{done:this.checked})"><span>${esc(x.text)}</span></label><button class="x" title="Xoá" onclick="call('DELETE','rooms/${r.id}/tasks/${x.id}')">✕</button></li>`).join('')}</ul>
+    <input class="add" placeholder="+ Thêm việc, Enter" onkeydown="if(event.key=='Enter'&&this.value.trim()){call('POST','rooms/${r.id}/tasks',{text:this.value.trim()});this.value=''}">
+    <input class="note" placeholder="Ghi chú / sự cố…" value="${esc(r.note)}" onchange="call('PATCH','rooms/${r.id}',{note:this.value})">
+    <div class="meta"><span>Cập nhật ${new Date(r.updatedAt).toLocaleTimeString('vi-VN')}</span><a href="#" class="x" onclick="delRoom('${r.id}');return false">xoá khu vực</a></div></section>`}).join('');
+}
+function addRoom(){const n=prompt('Tên khu vực?');if(n)call('POST','rooms',{name:n,tasks:['Vệ sinh, sắp xếp','Kiểm tra âm thanh / ánh sáng','Nhân sự trực đã có mặt']})}
+function delRoom(id){if(confirm('Xoá khu vực này?'))call('DELETE','rooms/'+id)}
+function connect(){const es=new EventSource('/events');
+  es.onopen=()=>$('live').classList.add('on');
+  es.onmessage=e=>{S=JSON.parse(e.data);render()};
+  es.onerror=()=>$('live').classList.remove('on');}
+connect();
+</script></body></html>
