@@ -1,0 +1,7 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    { "name": "backend", "runtimeExecutable": "env", "runtimeArgs": ["PORT=3917", "DB_PATH=/tmp/et-dev.db", "BASE_URL=http://localhost:5173", "node", "server.js"], "port": 3917 },
+    { "name": "web", "runtimeExecutable": "env", "runtimeArgs": ["API_URL=http://127.0.0.1:3917", "npm", "run", "dev", "--prefix", "web", "--", "--port", "5173", "--host", "127.0.0.1"], "port": 5173 }
+  ]
+}
