@@ -1,6 +1,6 @@
 # Hướng dẫn kiểm thử – Theo dõi sự kiện
 
-Tài liệu cho người kiểm thử (không cần biết lập trình). Chia theo **vai trò** (use case), mỗi use case có các **testcase** gồm: bước làm → kết quả mong đợi.
+Tài liệu cho người kiểm thử (không cần biết lập trình). Luồng chi tiết của từng use case xem [USECASES.md](USECASES.md). Chia theo **vai trò** (use case), mỗi use case có các **testcase** gồm: bước làm → kết quả mong đợi.
 
 ## 0. Chuẩn bị
 
