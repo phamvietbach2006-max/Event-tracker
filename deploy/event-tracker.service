@@ -1,0 +1,19 @@
+[Unit]
+Description=Event tracker (sk.hust.edu.vn)
+After=network.target
+
+[Service]
+User=eventapp
+Group=eventapp
+WorkingDirectory=/opt/event-tracker/app
+EnvironmentFile=/etc/event-tracker.env
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=2
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/var/lib/event-tracker
+
+[Install]
+WantedBy=multi-user.target
