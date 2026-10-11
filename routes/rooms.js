@@ -51,4 +51,35 @@ export function registerRooms(router) {
     sse.broadcast();
     return taskView(taskOr404(db, task.id));
   });
+
+  // Chủ khu (và admin) thêm/bớt việc ngay trong khu của mình
+  router.add('POST', '/api/rooms/:id/tasks', ({ db, user, params, body, sse }) => {
+    requireUser(user);
+    const room = roomOr404(db, params.id);
+    requireRoomEditor(db, user, room.id);
+    const txt = text(body.text, 200, 'text');
+    const id = tx(db, () => {
+      const sort = db.prepare('SELECT COALESCE(MAX(sort), 0) + 1 AS n FROM tasks WHERE room_id = ?').get(room.id).n;
+      const info = db.prepare('INSERT INTO tasks(room_id, text, sort, updated_at, updated_by) VALUES (?,?,?,?,?)')
+        .run(room.id, txt, sort, Date.now(), user.name);
+      touchRoom(db, user, room.id);
+      return Number(info.lastInsertRowid);
+    });
+    logActivity(db, user, room.id, 'task.add', txt);
+    sse.broadcast();
+    return taskView(taskOr404(db, id));
+  });
+
+  router.add('DELETE', '/api/tasks/:id', ({ db, user, params, sse }) => {
+    requireUser(user);
+    const task = taskOr404(db, params.id);
+    requireRoomEditor(db, user, task.room_id);
+    tx(db, () => {
+      db.prepare('DELETE FROM tasks WHERE id = ?').run(task.id);
+      touchRoom(db, user, task.room_id);
+    });
+    logActivity(db, user, task.room_id, 'task.delete', task.text);
+    sse.broadcast();
+    return { ok: true };
+  });
 }

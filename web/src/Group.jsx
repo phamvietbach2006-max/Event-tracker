@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { api } from './api.js';
-import { ORDER, ST, TS, NEXT, NOTE_MAX, canEdit, doneCount, percent, statusCounts, patchRoom, patchTask, timeLabel } from './logic.js';
+import { ORDER, ST, TS, NEXT, NOTE_MAX, canEdit, doneCount, percent, statusCounts, patchRoom, patchTask, removeTask, timeLabel } from './logic.js';
 
 function NoteBox({ room, onSave }) {
   const [v, setV] = useState(room.note);
@@ -29,6 +29,21 @@ function NoteBox({ room, onSave }) {
   );
 }
 
+function AddTask({ onAdd }) {
+  const [v, setV] = useState('');
+  const go = () => { const s = v.trim(); if (s) { onAdd(s); setV(''); } };
+  return (
+    <div className="ctl">
+      <input
+        maxLength={200} value={v} placeholder="Thêm việc mới…"
+        onChange={(e) => setV(e.target.value)}
+        onKeyDown={(e) => { if (e.key === 'Enter') go(); }}
+      />
+      <button onClick={go}>+ Thêm</button>
+    </div>
+  );
+}
+
 function RoomCard({ room, me, open, onToggle, act }) {
   const ed = canEdit(me, room);
   const dn = doneCount(room);
@@ -38,6 +53,11 @@ function RoomCard({ room, me, open, onToggle, act }) {
     const n = NEXT[t.state];
     act((s) => patchTask(s, t.id, { state: n }), () => api.setTask(t.id, n));
   };
+  const delTask = (t) => {
+    if (!confirm(`Xoá việc "${t.text}"?`)) return;
+    act((s) => removeTask(s, t.id), () => api.delTask(t.id));
+  };
+  const addTask = (text) => act((s) => s, () => api.addTask(room.id, text)); // danh sách mới về qua realtime
   const saveNote = (note) => act((s) => patchRoom(s, room.id, { note }), () => api.setNote(room.id, note));
   return (
     <section className={`kid ${room.status} ${open ? 'open' : ''}`}>
@@ -62,8 +82,10 @@ function RoomCard({ room, me, open, onToggle, act }) {
           <div key={t.id} className={`task ${t.state}`}>
             <span className="tx">{t.text}</span>
             <button className={`ts ${t.state}`} disabled={!ed} onClick={() => cycle(t)}>{TS[t.state]}</button>
+            {ed && <button className="tdel" aria-label={`Xoá việc ${t.text}`} onClick={() => delTask(t)}>✕</button>}
           </div>
         ))}
+        {ed && <AddTask onAdd={addTask} />}
         {ed ? <NoteBox room={room} onSave={saveNote} /> : (
           <div className="lock">🔒 {me ? 'Chỉ người phụ trách mới sửa được' : 'Đăng nhập để cập nhật'}</div>
         )}

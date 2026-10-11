@@ -55,3 +55,11 @@ test('timeLabel: múi giờ Việt Nam, rỗng khi không có', () => {
   assert.equal(timeLabel(Date.UTC(2026, 9, 11, 17, 30)), '00:30');
   assert.equal(timeLabel(null), '');
 });
+
+test('removeTask bỏ đúng việc, giữ nguyên các việc khác và không đổi state gốc', async () => {
+  const { removeTask } = await import('./logic.js');
+  const out = removeTask(state, 2);
+  assert.deepEqual(out.groups[0].rooms[0].tasks.map((t) => t.id), [1, 3]);
+  assert.equal(state.groups[0].rooms[0].tasks.length, 3);
+  assert.deepEqual(removeTask(state, 999), state);
+});

@@ -12,7 +12,7 @@ test('mọi API quản trị: khách 401, người thường 403', async () => {
     const calls = [
       ['POST', '/api/groups', { name: 'X' }], ['PATCH', '/api/groups/1', { name: 'X' }], ['DELETE', '/api/groups/1'],
       ['POST', '/api/groups/1/rooms', { name: 'X' }], ['PATCH', '/api/rooms/1', { name: 'X' }], ['DELETE', '/api/rooms/1'],
-      ['PUT', '/api/rooms/1/owners', { emails: [] }], ['POST', '/api/rooms/1/tasks', { text: 'X' }], ['DELETE', '/api/tasks/1'],
+      ['PUT', '/api/rooms/1/owners', { emails: [] }],
       ['GET', '/api/users'], ['POST', '/api/users', { email: 'n@t.test', name: 'N' }],
       ['PATCH', '/api/users/owner@t.test', { name: 'N' }], ['DELETE', '/api/users/owner@t.test'], ['POST', '/api/users/owner@t.test/token'],
     ];

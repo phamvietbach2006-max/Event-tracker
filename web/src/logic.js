@@ -36,3 +36,6 @@ export const patchTask = (state, taskId, patch) =>
 
 const fmt = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'Asia/Ho_Chi_Minh' });
 export const timeLabel = (ms) => (ms ? fmt.format(new Date(ms)) : '');
+
+export const removeTask = (state, taskId) =>
+  mapRooms(state, (r) => (r.tasks.some((t) => t.id === taskId) ? { ...r, tasks: r.tasks.filter((t) => t.id !== taskId) } : r));

@@ -103,24 +103,6 @@ export function registerAdmin(router) {
     return { roomId: r.id, emails };
   });
 
-  // ---- việc ----
-  add('POST', '/api/rooms/:id/tasks', ({ db, user, params, body, sse }) => {
-    const r = roomOr404(db, params.id);
-    const txt = text(body.text, 200, 'text');
-    const sort = nextSort(db, 'SELECT COALESCE(MAX(sort), 0) + 1 AS n FROM tasks WHERE room_id = ?', r.id);
-    const id = rowId(db.prepare('INSERT INTO tasks(room_id, text, sort, updated_at, updated_by) VALUES (?,?,?,?,?)')
-      .run(r.id, txt, sort, Date.now(), user.name));
-    sse.broadcast();
-    return taskView(taskOr404(db, id));
-  });
-
-  add('DELETE', '/api/tasks/:id', ({ db, params, sse }) => {
-    const t = taskOr404(db, params.id);
-    db.prepare('DELETE FROM tasks WHERE id = ?').run(t.id);
-    sse.broadcast();
-    return { ok: true };
-  });
-
   // ---- người dùng ----
   add('GET', '/api/users', ({ db }) =>
     db.prepare('SELECT * FROM users ORDER BY is_admin DESC, name').all().map((u) => userView(db, u)));

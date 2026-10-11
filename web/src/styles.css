@@ -92,3 +92,6 @@ a.chip{text-decoration:none;color:inherit;display:inline-flex;align-items:center
 .mlink{display:grid;gap:6px;background:var(--gray-bg);padding:10px;border-radius:12px}
 .addrow{display:flex;gap:8px}
 .back{display:inline-flex;min-height:44px;align-items:center;color:var(--brand);text-decoration:none;font-weight:600}
+
+.tdel{flex:none;width:44px;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--mute);font-size:16px;cursor:pointer}
+.tdel:hover{color:var(--red);border-color:var(--red)}

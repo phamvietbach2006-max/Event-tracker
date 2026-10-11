@@ -130,3 +130,39 @@ test('realtime: thay đổi của một máy tới cả hai máy đang mở SSE'
     assert.equal(room(await b.next(), 2).status, 'green');
   } finally { a.abort(); b.abort(); await t.close(); }
 });
+
+test('chủ khu thêm/xoá việc trong khu mình; khu khác 403; khách 401; không có khu 403', async () => {
+  const t = await startApp();
+  try {
+    const r = await t.call('POST', '/api/rooms/1/tasks', { as: 'owner@t.test', body: { text: 'Việc do chủ khu thêm' } });
+    assert.equal(r.status, 200);
+    assert.equal(r.body.text, 'Việc do chủ khu thêm');
+    assert.equal(room((await t.call('GET', '/api/state')).body, 1).tasks.at(-1).text, 'Việc do chủ khu thêm');
+    assert.equal((await t.call('POST', '/api/rooms/3/tasks', { as: 'owner@t.test', body: { text: 'x' } })).status, 403);
+    assert.equal((await t.call('POST', '/api/rooms/1/tasks', { as: 'nobody@t.test', body: { text: 'x' } })).status, 403);
+    assert.equal((await t.call('POST', '/api/rooms/1/tasks', { body: { text: 'x' } })).status, 401);
+    assert.equal((await t.call('POST', '/api/rooms/1/tasks', { as: 'owner@t.test', body: { text: ' ' } })).status, 400);
+    assert.equal((await t.call('POST', '/api/rooms/1/tasks', { as: 'owner@t.test', body: { text: 'x'.repeat(201) } })).status, 400);
+    assert.equal((await t.call('POST', '/api/rooms/999/tasks', { as: 'owner@t.test', body: { text: 'x' } })).status, 404);
+
+    // xoá: việc khu khác 403, việc khu mình xoá được
+    assert.equal((await t.call('DELETE', '/api/tasks/4', { as: 'owner@t.test' })).status, 403);
+    assert.equal((await t.call('DELETE', '/api/tasks/4')).status, 401);
+    assert.equal((await t.call('DELETE', `/api/tasks/${r.body.id}`, { as: 'owner@t.test' })).status, 200);
+    assert.equal((await t.call('DELETE', `/api/tasks/${r.body.id}`, { as: 'owner@t.test' })).status, 404);
+    assert.equal(room((await t.call('GET', '/api/state')).body, 1).tasks.length, 2);
+  } finally { await t.close(); }
+});
+
+test('thêm/xoá việc cập nhật "cập nhật lúc/bởi" của khu và phát realtime', async () => {
+  const t = await startApp();
+  try {
+    const sse = await openSse(t.base);
+    await sse.next();
+    await t.call('POST', '/api/rooms/1/tasks', { as: 'owner@t.test', body: { text: 'Mới' } });
+    const st = await sse.next();
+    assert.equal(room(st, 1).tasks.length, 3);
+    assert.equal(room(st, 1).updatedBy, 'Chủ Khu');
+    sse.abort();
+  } finally { await t.close(); }
+});
