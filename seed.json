@@ -1,0 +1,45 @@
+{
+  "users": [
+    { "email": "admin@example.com", "name": "Quản trị viên", "isAdmin": true },
+    { "email": "a@example.com", "name": "Nguyễn Văn A" },
+    { "email": "b@example.com", "name": "Lê Thị B" },
+    { "email": "c@example.com", "name": "Trần Văn C" },
+    { "email": "d@example.com", "name": "Phạm Thị D" },
+    { "email": "e@example.com", "name": "Hoàng Văn E" },
+    { "email": "g@example.com", "name": "Đỗ Văn G" },
+    { "email": "h@example.com", "name": "Vũ Thị H" },
+    { "email": "k@example.com", "name": "Bùi Văn K" }
+  ],
+  "groups": [
+    { "name": "Khối Thư viện TQB", "rooms": [
+      { "name": "Sảnh thư viện", "status": "yellow", "note": "Đang dựng backdrop", "owners": ["d@example.com"],
+        "tasks": [["Dựng backdrop", "doing"], ["Bàn đón tiếp", "done"], ["Biển chỉ dẫn", "done"]] },
+      { "name": "Phòng đọc tầng 2", "status": "green", "note": "Sẵn sàng", "owners": ["c@example.com"],
+        "tasks": [["Bàn ghế, nước", "done"], ["Máy chiếu, Wi-Fi", "done"]] },
+      { "name": "Khu triển lãm", "note": "Chưa nhận mặt bằng", "owners": ["e@example.com"],
+        "tasks": ["Nhận mặt bằng", "Dựng panel", "Ánh sáng"] }
+    ] },
+    { "name": "Khối C2", "rooms": [
+      { "name": "Hội trường C2", "status": "yellow", "note": "Chờ chạy thử máy chiếu LED", "owners": ["a@example.com", "b@example.com"],
+        "tasks": [["Sắp xếp 600 ghế", "done"], ["Âm thanh, micro", "done"], ["Chạy thử máy chiếu LED", "doing"], ["Ánh sáng sân khấu", "todo"], ["Backdrop, standee", "done"], ["Nhân sự trực có mặt", "todo"]] },
+      { "name": "Sảnh C2", "note": "Thiếu 200 thẻ đại biểu, đang in lại", "owners": ["a@example.com"],
+        "tasks": [["Dựng bàn đón tiếp", "done"], ["In và xếp thẻ đại biểu", "doing"], ["Bảng chỉ dẫn", "done"], ["Quầy gửi đồ", "todo"]] },
+      { "name": "Phòng họp C2-1", "status": "green", "note": "Sẵn sàng", "owners": ["c@example.com"],
+        "tasks": [["Bàn ghế, nước", "done"], ["Máy chiếu, Wi-Fi", "done"]] },
+      { "name": "Phòng VIP", "status": "yellow", "note": "Đang bày hoa", "owners": ["d@example.com"],
+        "tasks": [["Bàn trà, hoa", "done"], ["Khu chụp ảnh", "doing"], ["Danh sách VIP bản in", "done"]] },
+      { "name": "Phòng điều hành", "note": "Chưa bắt đầu", "owners": ["b@example.com"],
+        "tasks": ["Màn hình giám sát", "Bộ đàm"] }
+    ] },
+    { "name": "Khối Sân trường – An ninh", "rooms": [
+      { "name": "Cổng chính", "status": "yellow", "note": "An ninh đã vào vị trí 1/2 ca", "owners": ["g@example.com"],
+        "tasks": [["Rào chắn, lối vào", "done"], ["Bảo vệ ca 1", "done"], ["Bảo vệ ca 2", "doing"]] },
+      { "name": "Khu giữ xe", "note": "Chưa phân khu", "owners": ["g@example.com"],
+        "tasks": ["Phân khu xe máy, ô tô", "Biển chỉ dẫn"] },
+      { "name": "Khu ăn nhẹ", "status": "yellow", "note": "Chờ đồ ăn lúc 10h", "owners": ["h@example.com"],
+        "tasks": [["Bàn buffet", "done"], ["Nhận đồ ăn lúc 10h", "doing"], ["Ly, đĩa, rác", "todo"]] },
+      { "name": "Phòng y tế", "status": "green", "note": "Sẵn sàng", "owners": ["k@example.com"],
+        "tasks": [["Thuốc, dụng cụ sơ cứu", "done"], ["Nhân viên y tế", "done"]] }
+    ] }
+  ]
+}

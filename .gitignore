@@ -11,3 +11,4 @@ data.json
 *.key
 *.pem
 seed.private.json
+.superpowers/

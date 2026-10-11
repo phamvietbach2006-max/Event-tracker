@@ -167,3 +167,11 @@ Backend tạo sẵn dữ liệu mẫu (`seed`) và 3 link đăng nhập thử, g
 - Frontend build ra `web/dist/` (`npm run build`). Backend phục vụ `dist/` ở đường dẫn gốc `/`. Mọi đường dẫn không phải `/api`, `/events`, `/auth` trả `index.html` (SPA).
 - Đường dẫn trong bản build dùng tương đối từ gốc (`base: '/'`). Không dùng địa chỉ tuyệt đối tới server.
 - Môi trường thử: `https://sk.hust.edu.vn` (sau khi DNS xong). Trước đó dùng `http://168.107.75.89`.
+
+### 4.3 Quy ước kết quả
+
+- Tạo mới (`POST`) và sửa (`PATCH`) trả `200` với đối tượng vừa ghi. Khu/việc trả dạng `{ id, groupId|roomId, name|text, status|state, note, sort, updatedAt, updatedBy }`.
+- Xoá (`DELETE`) trả `200` với `{ "ok": true }`.
+- `PUT /api/rooms/:id/owners` nhận `emails` có thể rỗng (bỏ hết người phụ trách), trả `{ "roomId": 5, "emails": ["a@hust.edu.vn"] }`. Email phải đã có trong danh sách người dùng, nếu không trả 400 `unknown_user`.
+- `PATCH /api/tasks/:id` chỉ gửi `state` thì chủ khu cũng gọi được; gửi `text` thì chỉ admin (kể cả khi gửi cùng `state`).
+- Admin không tự xoá (`cannot_delete_self`) hoặc tự bỏ quyền admin (`cannot_demote_self`) của chính mình; xoá khối còn khu trả `group_not_empty`.

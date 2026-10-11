@@ -1,0 +1,11 @@
+{
+  "name": "event-tracker",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.13" },
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test \"tests/*.test.js\" \"web/src/*.test.js\"",
+    "links": "node scripts/links.js"
+  }
+}
