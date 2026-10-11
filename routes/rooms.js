@@ -1,5 +1,5 @@
 import { HttpError } from '../lib/http.js';
-import { requireUser, requireAdmin, requireRoomEditor } from '../lib/perm.js';
+import { requireUser, requireRoomEditor } from '../lib/perm.js';
 import { roomOr404, taskOr404, logActivity, tx, roomView, taskView } from '../lib/repo.js';
 import { oneOf, text, STATUSES, TASK_STATES } from '../lib/validate.js';
 
@@ -39,7 +39,6 @@ export function registerRooms(router) {
     const hasState = 'state' in body;
     const hasText = 'text' in body;
     if (!hasState && !hasText) throw new HttpError(400, 'bad_request', 'Cần state hoặc text');
-    if (hasText) requireAdmin(user);
     const state = hasState ? oneOf(body.state, TASK_STATES, 'state') : task.state;
     const txt = hasText ? text(body.text, 200, 'text') : task.text;
     tx(db, () => {
@@ -47,7 +46,7 @@ export function registerRooms(router) {
         .run(state, txt, Date.now(), user.name, task.id);
       touchRoom(db, user, task.room_id);
     });
-    logActivity(db, user, task.room_id, 'task.update', `${task.id}: ${task.state} -> ${state}`);
+    logActivity(db, user, task.room_id, 'task.update', `${task.id}: ${task.state} -> ${state}${txt !== task.text ? `; text: ${txt}` : ''}`);
     sse.broadcast();
     return taskView(taskOr404(db, task.id));
   });

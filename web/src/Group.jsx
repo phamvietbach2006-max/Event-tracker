@@ -57,6 +57,7 @@ function RoomCard({ room, me, open, onToggle, act }) {
     if (!confirm(`Xoá việc "${t.text}"?`)) return;
     act((s) => removeTask(s, t.id), () => api.delTask(t.id));
   };
+  const editTask = (t, text) => act((s) => patchTask(s, t.id, { text }), () => api.patchTaskText(t.id, text));
   const addTask = (text) => act((s) => s, () => api.addTask(room.id, text)); // danh sách mới về qua realtime
   const saveNote = (note) => act((s) => patchRoom(s, room.id, { note }), () => api.setNote(room.id, note));
   return (
@@ -80,7 +81,13 @@ function RoomCard({ room, me, open, onToggle, act }) {
         )}
         {room.tasks.map((t) => (
           <div key={t.id} className={`task ${t.state}`}>
-            <span className="tx">{t.text}</span>
+            {ed
+              ? <input
+                  key={t.text} className="tx tedit" defaultValue={t.text} maxLength={200} aria-label="Nội dung việc"
+                  onBlur={(e) => { const v = e.target.value.trim(); if (v && v !== t.text) editTask(t, v); else e.target.value = t.text; }}
+                  onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); if (e.key === 'Escape') { e.currentTarget.value = t.text; e.currentTarget.blur(); } }}
+                />
+              : <span className="tx">{t.text}</span>}
             <button className={`ts ${t.state}`} disabled={!ed} onClick={() => cycle(t)}>{TS[t.state]}</button>
             {ed && <button className="tdel" aria-label={`Xoá việc ${t.text}`} onClick={() => delTask(t)}>✕</button>}
           </div>

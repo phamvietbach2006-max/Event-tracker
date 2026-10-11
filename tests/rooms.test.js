@@ -84,15 +84,22 @@ test('trạng thái việc: chủ khu đổi việc trong khu mình, cập nhậ
   } finally { await t.close(); }
 });
 
-test('sửa nội dung việc chỉ admin; chủ khu gửi text → 403 và không đổi gì', async () => {
+test('sửa nội dung việc: chủ khu khu mình và admin được; khu khác 403; khách 401; rỗng/quá dài 400', async () => {
   const t = await startApp();
   try {
-    assert.equal((await t.call('PATCH', '/api/tasks/1', { as: 'owner@t.test', body: { text: 'Hack' } })).status, 403);
-    assert.equal((await t.call('PATCH', '/api/tasks/1', { as: 'owner@t.test', body: { text: 'Hack', state: 'done' } })).status, 403);
-    assert.equal(room((await t.call('GET', '/api/state')).body, 1).tasks[0].state, 'todo');
-    const ok = await t.call('PATCH', '/api/tasks/1', { as: 'admin@t.test', body: { text: 'Sắp xếp 600 ghế' } });
+    const ok = await t.call('PATCH', '/api/tasks/1', { as: 'owner@t.test', body: { text: 'Sắp xếp 600 ghế' } });
+    assert.equal(ok.status, 200);
     assert.equal(ok.body.text, 'Sắp xếp 600 ghế');
-    assert.equal((await t.call('PATCH', '/api/tasks/1', { as: 'admin@t.test', body: { text: '  ' } })).status, 400);
+    assert.equal(room((await t.call('GET', '/api/state')).body, 1).updatedBy, 'Chủ Khu');
+    const both = await t.call('PATCH', '/api/tasks/1', { as: 'owner@t.test', body: { text: 'Ghế VIP', state: 'done' } });
+    assert.equal(both.body.state, 'done');
+    assert.equal(both.body.text, 'Ghế VIP');
+    assert.equal((await t.call('PATCH', '/api/tasks/4', { as: 'owner@t.test', body: { text: 'Hack' } })).status, 403);
+    assert.equal((await t.call('PATCH', '/api/tasks/1', { as: 'nobody@t.test', body: { text: 'Hack' } })).status, 403);
+    assert.equal((await t.call('PATCH', '/api/tasks/1', { body: { text: 'Hack' } })).status, 401);
+    assert.equal((await t.call('PATCH', '/api/tasks/1', { as: 'owner@t.test', body: { text: '  ' } })).status, 400);
+    assert.equal((await t.call('PATCH', '/api/tasks/1', { as: 'owner@t.test', body: { text: 'x'.repeat(201) } })).status, 400);
+    assert.equal((await t.call('PATCH', '/api/tasks/4', { as: 'admin@t.test', body: { text: 'Rào chắn 2' } })).status, 200);
   } finally { await t.close(); }
 });
 

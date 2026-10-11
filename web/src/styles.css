@@ -95,3 +95,7 @@ a.chip{text-decoration:none;color:inherit;display:inline-flex;align-items:center
 
 .tdel{flex:none;width:44px;min-height:44px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--mute);font-size:16px;cursor:pointer}
 .tdel:hover{color:var(--red);border-color:var(--red)}
+.tedit{flex:1;min-width:0;min-height:44px;border:1px solid transparent;background:transparent;color:inherit;border-radius:10px;padding:0 8px;font:inherit}
+.tedit:hover{border-color:var(--line)}
+.tedit:focus{border-color:var(--c,var(--line));background:var(--bg);outline:none}
+.task.done .tedit{text-decoration:line-through;color:var(--mute)}

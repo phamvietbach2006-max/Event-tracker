@@ -39,11 +39,11 @@ test('e2e: admin cấu hình → cấp link → chủ khu cập nhật → khác
     assert.equal(room(st, rx.id).updatedBy, 'Chủ A');
     guest.abort();
 
-    // UC3: tick việc; UC6: khu khác / quản trị / sửa nội dung → 403
+    // UC3: tick việc; UC6: khu khác / quản trị → 403; chủ khu sửa được chữ việc của khu mình
     assert.equal((await t.call('PATCH', `/api/tasks/${task.id}`, { cookie, body: { state: 'done' } })).status, 200);
     assert.equal((await t.call('PATCH', `/api/rooms/${ry.id}/status`, { cookie, body: { status: 'red' } })).status, 403);
     assert.equal((await t.call('POST', '/api/groups', { cookie, body: { name: 'x' } })).status, 403);
-    assert.equal((await t.call('PATCH', `/api/tasks/${task.id}`, { cookie, body: { text: 'đổi chữ' } })).status, 403);
+    assert.equal((await t.call('PATCH', `/api/tasks/${task.id}`, { cookie, body: { text: 'đổi chữ' } })).status, 200);
 
     // Link mới → link cũ hết hiệu lực
     const link2 = await t.call('POST', '/api/users/a@t.test/token', A);

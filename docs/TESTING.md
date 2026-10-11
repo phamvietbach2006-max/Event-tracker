@@ -60,8 +60,8 @@ Ba vai trò: **Khách** (xem, không sửa) · **Chủ khu** (sửa khu mình ph
 | UC3-10 | Khu có 2 chủ khu: cả hai cùng sửa | Cả hai đều sửa được; không ghi đè lẫn nhau sai lệch |
 | UC3-12 | Mở khu mình, gõ việc mới ở ô "Thêm việc mới…" rồi Enter hoặc bấm "+ Thêm" | Việc xuất hiện cuối danh sách, mọi máy thấy ngay, % tiến độ đổi |
 | UC3-13 | Bấm ✕ cạnh một việc, xác nhận | Việc biến mất ở mọi máy; huỷ xác nhận thì không xoá |
-| UC3-14 | Khu không phụ trách / khách | Không có ô thêm việc và không có nút ✕; gọi API thêm/xoá → 403/401 |
-| UC3-11 | Chủ khu sửa **nội dung** của việc (text) | Không làm được (chỉ admin) |
+| UC3-14 | Khu không phụ trách / khách | Không có ô thêm việc, nút ✕, chữ việc không sửa được; gọi API thêm/xoá/sửa → 403/401 |
+| UC3-11 | Bấm vào chữ của một việc trong khu mình, sửa, Enter hoặc bấm ra ngoài | Lưu lại ở mọi máy; Esc huỷ; để trống thì giữ chữ cũ; tối đa 200 ký tự |
 
 ## UC4 – Realtime
 

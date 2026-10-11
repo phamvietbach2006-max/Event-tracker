@@ -67,7 +67,7 @@ Thứ tự kiểm tra của server khi có thao tác ghi: **401** chưa đăng n
   - E1. Khu không phụ trách → không có nút sửa; nếu gọi API: 403.
   - E2. Server từ chối/lỗi mạng → giao diện hoàn lại dữ liệu thật, hiện thông báo.
   - E3. Phiên hết hạn (401) → báo đăng nhập lại.
-  - E4. Sửa **nội dung** việc → chỉ admin; chủ khu bị 403.
+  - E4. Thêm/xoá/sửa chữ việc ở khu không phụ trách → 403 (chủ khu làm được ở khu của mình).
 - **Kết quả:** dữ liệu mới có ở mọi máy; "Cập nhật lúc … · tên" đúng.
 - **Testcase:** UC3-01 … UC3-11
 
