@@ -141,3 +141,18 @@ Dùng cửa sổ ẩn danh hoặc công cụ như Postman/curl. Thứ tự kiể
 | UC1-01 | iPhone / Safari | | |
 
 Thứ tự ưu tiên khi ít thời gian: **UC2 → UC3 → UC4 → UC5 → UC6 → UC7**.
+
+---
+
+## Test tự động
+
+| Loại | Lệnh | Nội dung |
+|---|---|---|
+| Toàn bộ test | `npm test` | Backend (quyền, đăng nhập, validate, SSE, quản trị), logic giao diện, và `tests/e2e.test.js` |
+| Luồng end-to-end | `node --test tests/e2e.test.js` | UC5→UC2→UC3→UC4→UC6 trong một kịch bản; 50 client SSE; 200 yêu cầu ghi song song; XSS/Origin/JSON hỏng |
+| Test tải | `npm run loadtest -- --url <địa chỉ> --sse 300 --readers 50 --seconds 20` | Mở N kết nối realtime, M người đọc liên tục, đo p50/p95/p99 |
+| Test tải có ghi | thêm `--write --cookie "sid=<cookie admin>"` | Mỗi 0,5 giây sửa một dòng status và đo độ trễ lan tới các client. **Chỉ chạy trên bản local/thử, vì sẽ ghi đè status của khu đầu tiên** |
+
+Tiêu chí đạt của test tải: không lỗi, p95 < 500 ms, mọi kết nối SSE còn mở, mọi lần ghi đều lan tới client.
+
+Kết quả mẫu trên máy dev (300 SSE + 50 người đọc, 10 giây): ~4.800 yêu cầu đọc/giây, p95 16 ms, độ trễ lan realtime ~125 ms (gồm 100 ms gộp của server), 0 lỗi.
