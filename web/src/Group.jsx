@@ -94,7 +94,7 @@ function RoomCard({ room, me, open, onToggle, act }) {
         ))}
         {ed && <AddTask onAdd={addTask} />}
         {ed ? <NoteBox room={room} onSave={saveNote} /> : (
-          <div className="lock">🔒 {me ? 'Chỉ người phụ trách mới sửa được' : 'Đăng nhập để cập nhật'}</div>
+          <div className="lock">{me ? 'Chỉ người phụ trách mới sửa được' : 'Đăng nhập để cập nhật'}</div>
         )}
         <div className="lock">Cập nhật lúc {timeLabel(room.updatedAt)}{room.updatedBy ? ` · ${room.updatedBy}` : ''}</div>
       </div>

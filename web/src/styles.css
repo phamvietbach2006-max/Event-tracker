@@ -1,15 +1,15 @@
 :root{--bg:#f3f4f7;--card:#fff;--ink:#161b26;--mute:#667085;--line:#e4e7ec;--brand:#1f3a8a;
---red:#c0262d;--yellow:#b45309;--green:#0f7b45;--gray:#667085;
+--red:#c0262d;--yellow:#9a4306;--green:#0f7b45;--gray:#586174;
 --red-bg:#fde4e4;--yellow-bg:#fdf0d5;--green-bg:#dff5e8;--gray-bg:#eef0f4}
 @media(prefers-color-scheme:dark){:root{--bg:#0e1118;--card:#171b25;--ink:#eef0f5;--mute:#98a1b3;--line:#273041;--brand:#8ea6ff;
 --red:#ff7b7f;--yellow:#f2b84b;--green:#4cc98b;--gray:#9aa3b5;
 --red-bg:#3d1a1c;--yellow-bg:#3a2e12;--green-bg:#12301f;--gray-bg:#222938}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.4 system-ui,-apple-system,sans-serif;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
 button{font:inherit;color:inherit}
 header{position:sticky;top:0;z-index:10;background:var(--bg);padding:calc(10px + env(safe-area-inset-top)) 16px 10px;border-bottom:1px solid var(--line)}
 .row{display:flex;align-items:center;gap:10px;justify-content:space-between}
-h1{font-size:17px;margin:0;font-weight:700}
+h1{font-size:17px;margin:0;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
 .live{font-size:12px;color:var(--mute);display:flex;align-items:center;gap:6px;white-space:nowrap}
 .live i{width:8px;height:8px;border-radius:50%;background:var(--green);animation:p 2s infinite}
 @keyframes p{50%{opacity:.35}}
@@ -99,3 +99,26 @@ a.chip{text-decoration:none;color:inherit;display:inline-flex;align-items:center
 .tedit:hover{border-color:var(--line)}
 .tedit:focus{border-color:var(--c,var(--line));background:var(--bg);outline:none}
 .task.done .tedit{text-decoration:line-through;color:var(--mute)}
+
+/* --- Polish: focus, hover, press, skeleton, empty, reduced motion --- */
+:focus-visible{outline:3px solid var(--brand);outline-offset:2px;border-radius:8px}
+.tile,.chip,.tag,.seg button,.ts,.ctl button,.roles button,.gh,.head,.tdel,.mpage button{transition:background-color .2s,border-color .2s,transform .12s,box-shadow .2s}
+@media(hover:hover){
+.tile:hover{transform:translateY(-1px);box-shadow:0 4px 12px -6px var(--c)}
+.chip:hover{border-color:var(--ink)}
+.seg button:hover:not(.on){border-color:var(--mute)}
+.ts:hover:not(:disabled){filter:brightness(.97)}
+.ctl button:hover,.mpage button:hover:not(:disabled){border-color:var(--mute)}
+.gh:hover .gname,.head:hover .name{text-decoration:underline;text-underline-offset:3px}}
+.tile:active,.chip:active,.seg button:active,.ts:active:not(:disabled),.ctl button:active,.tdel:active,.roles button:active{transform:scale(.97)}
+.tile b{font-size:26px;font-weight:800}
+.skip{position:absolute;left:12px;top:-60px;background:var(--ink);color:var(--bg);padding:10px 14px;border-radius:10px;z-index:40;text-decoration:none;font-weight:600}
+.skip:focus{top:calc(8px + env(safe-area-inset-top))}
+.sk{display:grid;gap:14px;padding:12px 16px}
+.sk i{display:block;border-radius:14px;background:linear-gradient(90deg,var(--line) 25%,var(--gray-bg) 50%,var(--line) 75%);background-size:200% 100%;animation:sh 1.4s linear infinite}
+.sk .h{height:132px}.sk .c{height:96px}
+@keyframes sh{to{background-position:-200% 0}}
+.empty-state{display:grid;gap:10px;justify-items:center;padding:40px 16px;text-align:center;color:var(--mute)}
+.empty-state b{color:var(--ink);font-size:16px}
+.empty-state button{min-height:44px;padding:0 16px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-weight:600;cursor:pointer}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}

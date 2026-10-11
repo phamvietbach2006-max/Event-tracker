@@ -47,7 +47,7 @@ export default function App() {
     }
   }, [setState, reload]);
 
-  if (!state || me === undefined) return <p className="loading">Đang tải…</p>;
+  if (!state || me === undefined) return <div className="sk" role="status" aria-label="Đang tải"><i className="h" /><i className="c" /><i className="c" /><i className="c" /></div>;
   if (hash === '#/manage' && me?.isAdmin) return <Manage state={state} say={setToast} toast={toast} />;
 
   const rooms = allRooms(state);
@@ -56,6 +56,7 @@ export default function App() {
 
   return (
     <>
+      <a className="skip" href="#main">Bỏ qua, đến nội dung</a>
       {!online && <div className="offline">Đang kết nối lại…</div>}
       <Header me={me} online={online} counts={statusCounts(rooms)} tot={totals(rooms)} filter={filter} setFilter={setFilter} />
       <div className="chips">
@@ -63,10 +64,10 @@ export default function App() {
           ? <a className="chip" href="/auth/sso/start">Đăng nhập</a>
           : <button className="chip" onClick={() => setToast('Dùng link đăng nhập được gửi riêng cho bạn')}>Đăng nhập</button>)}
         {me && <button className={`chip ${filter === 'mine' ? 'on' : ''}`} onClick={() => setFilter(filter === 'mine' ? 'all' : 'mine')}>Của tôi</button>}
-        {me?.isAdmin && <a className="chip" href="#/manage">⚙ Quản lý</a>}
+        {me?.isAdmin && <a className="chip" href="#/manage">Quản lý</a>}
         {me && <button className="chip" onClick={logout}>Đăng xuất</button>}
       </div>
-      <main>
+      <main id="main">
         {state.groups.map((g) => {
           const rs = g.rooms.filter(pass);
           if (!rs.length) return null;
@@ -78,7 +79,13 @@ export default function App() {
             />
           );
         })}
-        {!rooms.some(pass) && <p className="loading">Không có khu nào</p>}
+        {!rooms.some(pass) && (
+          <div className="empty-state">
+            <b>Không có khu nào khớp bộ lọc</b>
+            <span>Thử bỏ lọc để xem toàn bộ các khu.</span>
+            <button onClick={() => setFilter('all')}>Xem tất cả</button>
+          </div>
+        )}
       </main>
       <div className={`toast ${toast ? 'show' : ''}`}>{toast}</div>
     </>
