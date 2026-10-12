@@ -9,6 +9,16 @@ const config = {
   host: process.env.HOST ?? '127.0.0.1',
   dbPath: process.env.DB_PATH ?? 'app.db',
   baseUrl: (process.env.BASE_URL ?? 'http://localhost:3000').replace(/\/$/, ''),
+  // Bật SSO khi có đủ biến môi trường (xem docs/SSO.md)
+  sso: process.env.SSO_CLIENT_ID && process.env.SSO_CLIENT_SECRET && process.env.SSO_TENANT_ID
+    ? {
+        tenantId: process.env.SSO_TENANT_ID,
+        clientId: process.env.SSO_CLIENT_ID,
+        clientSecret: process.env.SSO_CLIENT_SECRET,
+        authority: `https://login.microsoftonline.com/${process.env.SSO_TENANT_ID}/v2.0`,
+        redirectUri: `${(process.env.BASE_URL ?? 'http://localhost:3000').replace(/\/$/, '')}/auth/callback`,
+      }
+    : null,
   seedFile: process.env.SEED_FILE ?? fileURLToPath(new URL('./seed.json', import.meta.url)),
 };
 

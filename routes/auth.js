@@ -1,6 +1,7 @@
 import { HttpError } from '../lib/http.js';
 import { createSession, destroySession, sidFrom, setSessionCookie, clearSessionCookie } from '../lib/session.js';
 import { userByToken } from '../auth/token.js';
+import { ssoStart, ssoCallback } from '../auth/sso.js';
 
 const ownedRoomIds = (db, email) =>
   db.prepare('SELECT room_id FROM room_owners WHERE email = ? ORDER BY room_id').all(email).map((r) => r.room_id);
@@ -28,7 +29,10 @@ export function registerAuth(router) {
     res.writeHead(204).end();
   });
 
-  const sso = () => { throw new HttpError(501, 'sso_not_configured', 'SSO chưa được cấu hình'); };
-  router.add('GET', '/auth/sso/start', sso);
-  router.add('GET', '/auth/callback', sso);
+  const sso = (fn) => (ctx) => {
+    if (!ctx.config.sso) throw new HttpError(501, 'sso_not_configured', 'SSO chưa được cấu hình');
+    return fn(ctx);
+  };
+  router.add('GET', '/auth/sso/start', sso(ssoStart));
+  router.add('GET', '/auth/callback', sso(ssoCallback));
 }

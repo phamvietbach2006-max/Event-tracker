@@ -28,6 +28,12 @@ export default function App() {
   const [openK, setOpenK] = useState(() => new Set());
   const [toast, setToast] = useState('');
   const hash = useHash();
+  useEffect(() => {
+    const r = new URLSearchParams(location.search).get('login');
+    if (!r) return;
+    setToast(r === 'denied' ? 'Tài khoản chưa được cấp quyền, liên hệ admin' : 'Đăng nhập không thành công, thử lại');
+    history.replaceState(null, '', location.pathname + location.hash);
+  }, []);
 
   useEffect(() => { api.me().then(setMe).catch(() => setMe(null)); }, []);
   useEffect(() => {

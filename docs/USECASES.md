@@ -43,13 +43,13 @@ Thứ tự kiểm tra của server khi có thao tác ghi: **401** chưa đăng n
 - **Luồng rẽ nhánh**
   - A1. Bấm "Đăng xuất" → xoá phiên, về chế độ khách.
   - A2. Admin tạo link mới → link cũ mất hiệu lực.
-  - A3. (Sau này) Bấm "Đăng nhập" → SSO của HUST; link token vẫn dùng song song.
+  - A3. Bấm "Đăng nhập" → SSO Microsoft của HUST (chỉ email đã được admin thêm; email lạ → "Tài khoản chưa được cấp quyền"); link token vẫn dùng song song.
 - **Luồng lỗi**
   - E1. Token sai/đã bị thay → về `/?login=failed`, vẫn là khách.
   - E2. Phiên hết hạn hoặc người dùng bị xoá → thao tác kế tiếp báo hết phiên, về chế độ khách.
-  - E3. SSO chưa cấu hình → `501 sso_not_configured`.
+  - E3. SSO chưa cấu hình → `501 sso_not_configured`. E4. SSO lỗi/hết hạn/sai state → `/?login=failed`.
 - **Kết quả:** có phiên hợp lệ hoặc vẫn là khách, không có trạng thái nửa vời.
-- **Testcase:** UC2-01 … UC2-07, UC6-09
+- **Testcase:** UC2-01 … UC2-07, UC6-09 … UC6-13
 
 ## UC3 – Chủ khu cập nhật khu của mình
 - **Tác nhân:** Chủ khu (khu mình phụ trách), Admin (mọi khu)

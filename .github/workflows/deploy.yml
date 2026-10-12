@@ -29,7 +29,7 @@ jobs:
       - name: Build frontend (nếu có web/)
         run: |
           if [ -f web/package.json ]; then
-            cd web && npm ci && npm run build
+            cd web && npm ci && VITE_SSO=1 npm run build
           else echo "chưa có web/"; fi
       - uses: actions/upload-artifact@v4
         if: github.event_name == 'push'

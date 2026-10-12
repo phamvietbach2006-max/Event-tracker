@@ -113,6 +113,10 @@ Dùng cửa sổ ẩn danh hoặc công cụ như Postman/curl. Thứ tự kiể
 | UC6-07 | Gửi sửa từ trang web khác (Origin lạ) | Bị từ chối |
 | UC6-08 | Cookie đăng nhập | Có `HttpOnly`; khi qua HTTPS có thêm `Secure` |
 | UC6-09 | `/auth/sso/start` khi chưa cấu hình SSO | `501` `sso_not_configured` |
+| UC6-10 | SSO: start chuyển sang Microsoft với state, nonce, PKCE (S256), cookie `sso` HttpOnly | `tests/sso.test.js` |
+| UC6-11 | SSO: email có trong danh sách (không phân biệt hoa thường; `email` hoặc `preferred_username`) | Có phiên, về `/` |
+| UC6-12 | SSO: email HUST chưa được thêm | `/?login=denied`, không có phiên |
+| UC6-13 | SSO: thiếu cookie/state sai/dùng lại state, id_token sai nonce/aud/iss/tenant/hết hạn/chữ ký/alg, đổi code lỗi | `/?login=failed`, không có phiên |
 
 ## UC7 – Điện thoại và giao diện
 
