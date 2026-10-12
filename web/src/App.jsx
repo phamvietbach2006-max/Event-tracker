@@ -7,6 +7,7 @@ import Sidebar from './Sidebar.jsx';
 import Header from './Header.jsx';
 import GroupCard from './Group.jsx';
 import Manage from './Manage.jsx';
+import Footer from './Footer.jsx';
 const MapView = lazy(() => import('./MapView.jsx')); // maplibre-gl nặng, chỉ tải khi mở Sơ đồ
 
 function useHash() {
@@ -131,6 +132,7 @@ export default function App() {
           <div className="event-columns">{shownGroups.map((group) => <GroupCard key={`${group.id}-${mode}`} group={group} rooms={group.rooms.filter((room) => matches(room, group))} me={me} act={act} detail={mode !== 'overview'} />)}</div>
           {shownRooms.length === 0 && <div className="empty-state"><b>Không có khu phù hợp</b><span>Thử đổi mục hoặc từ khóa tìm kiếm.</span><button onClick={() => navigate('overview')}>Về tổng quan</button></div>}
         </main>}
+        <Footer tot={totals(rooms)} online={online} onNavigate={navigate} />
       </div>
       <nav className="mobile-bottom-nav" aria-label="Điều hướng nhanh">
         <button className={!managing && mode === 'overview' ? 'active' : ''} onClick={() => navigate('overview')}><Home size={20} />Tổng quan</button>

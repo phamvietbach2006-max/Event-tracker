@@ -1543,3 +1543,255 @@ a {
 .campus-marker-anchor .campus-marker:hover{transform:translateY(-2px) scale(1.04)}
 .campus-marker-anchor .campus-marker.selected{transform:scale(1.08)}
 .campus-map .maplibregl-ctrl-attrib{font-size:10px}
+
+/* ==========================================================================
+   SYSTEM FOOTER (CLB THANH NIÊN SỐ - DYC • ĐOÀN ĐHBK HÀ NỘI)
+   ========================================================================== */
+#main {
+  flex: 1;
+}
+
+.app-footer {
+  margin-top: auto;
+  background: #F8FAFC;
+  border-top: 1px solid var(--border-card);
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.footer-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 28px 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: minmax(280px, 1.45fr) minmax(220px, 1fr) minmax(240px, 1.1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+
+.footer-dyc-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.footer-dyc-logo-box {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #0F172A;
+  border: 1px solid #1E293B;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 7px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+}
+
+.footer-dyc-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+.footer-dyc-titles {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.footer-kicker {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #0D9488;
+}
+
+.footer-org-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.25;
+}
+
+.footer-org-sub {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.footer-desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  max-width: 460px;
+}
+
+.footer-heading {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--text-main);
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-links button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  padding: 4px 0;
+  text-align: left;
+  transition: color 0.2s ease;
+}
+
+.footer-links button:hover {
+  color: var(--brand-red);
+}
+
+.footer-event-tag {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: 8px;
+  margin-top: 2px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  background: #FFFFFF;
+  border: 1px solid var(--brand-border-soft);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--brand-red);
+  letter-spacing: 0.02em;
+}
+
+.footer-event-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brand-gradient);
+  flex-shrink: 0;
+}
+
+.footer-status-box {
+  background: #FFFFFF;
+  border: 1px solid var(--border-card);
+  border-radius: 14px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer-live-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.footer-live-row.is-online {
+  color: #087c56;
+}
+
+.footer-live-row.is-offline {
+  color: #b45309;
+}
+
+.footer-metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 12px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--border-card);
+}
+
+.footer-metric-row strong {
+  color: var(--text-main);
+  font-weight: 800;
+}
+
+.footer-security-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+}
+
+.footer-security-row svg {
+  flex-shrink: 0;
+  color: #0D9488;
+}
+
+.footer-bottom {
+  padding-top: 16px;
+  border-top: 1px solid var(--border-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.footer-bottom-credit strong {
+  color: var(--text-main);
+  font-weight: 700;
+}
+
+@media (max-width: 960px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+  .footer-brand-col {
+    grid-column: 1 / -1;
+  }
+  .footer-inner {
+    padding: 24px 16px 18px;
+  }
+}
+
+@media (max-width: 680px) {
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .footer-inner {
+    padding: 22px 14px calc(84px + env(safe-area-inset-bottom));
+  }
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
