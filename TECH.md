@@ -10,14 +10,14 @@
 | HTTP | `node:http` + router nhỏ tự viết (hoặc Express nếu cả nhóm quen hơn) | Ít thư viện, ít thứ hỏng khi deploy |
 | Dữ liệu | **SQLite** (`node:sqlite` có sẵn từ Node 22.5) | Mỗi thao tác là một câu UPDATE nguyên tử, nhiều người sửa cùng lúc không ghi đè nhau. Sao lưu bằng một lệnh. Thay cho `data.json` |
 | Realtime | **SSE** (`/events`) | Một chiều server → máy, đủ cho dashboard, tự nối lại khi rớt mạng |
-| Giao diện | **React 18 + Vite** (TypeScript nếu cả nhóm quen, không thì JS), CSS thường | Nhóm đã chọn React. Vite build ra file tĩnh nên không cần Next.js hay server render. Giữ bundle nhỏ vì dùng trên 4G |
+| Giao diện | **React 18 + Vite**, CSS tác chiến, `lucide-react`, `maplibre-gl` 4.7.1 | Nhóm đã chọn React. Vite build ra file tĩnh nên không cần Next.js hay server render. Bản đồ vector HUSTMAP tự host ngoại tuyến. Giữ bundle nhỏ gọn cho 4G |
 | Phiên đăng nhập | Cookie `sid` (HttpOnly, Secure, SameSite=Lax), lưu trong bảng `sessions` | Đơn giản, thu hồi được |
-| SSO | Module cắm vào (`auth/sso.js`) | Viết khi biết giao thức. Nếu là OIDC dùng thư viện `openid-client` |
-| Reverse proxy | **nginx** + HTTPS | Cần tắt buffering cho SSE |
+| SSO | Module `auth/sso.js` (Microsoft Entra ID OIDC + PKCE) | Dùng chuẩn `node:crypto` và `fetch`, không cần cài thêm thư viện ngoài |
+| Reverse proxy | **nginx** + HTTPS | Cần tắt buffering cho SSE, cache tài nguyên bản đồ tĩnh |
 | Chạy nền | **systemd** (`Restart=always`) | Tự khởi động lại khi lỗi hoặc khi server reboot |
-| Test | `node:test` + chạy thật trên điện thoại | Không thêm thư viện |
+| Test | `node:test` + chạy thật trên điện thoại | Không thêm thư viện, 63 test suite tự động |
 
-Dependency: **backend không có** (chỉ thêm `openid-client` nếu SSO là OIDC). **Frontend:** `react`, `react-dom`, `vite`. Không thêm thư viện UI hay quản lý state, vì dùng `useReducer` + một hook `useLiveState()` là đủ.
+Dependency: **backend không có** (zero external dependencies, kể cả SSO). **Frontend:** `react`, `react-dom`, `vite`, `lucide-react`, `maplibre-gl` (tải lười khi mở bản đồ).
 
 **Build:** `npm run build` trong `web/` ra `web/dist/`, **build trên máy anh/chị rồi rsync `dist/` lên VM** (VM không cần cài toolchain build). Server Node phục vụ `dist/` như file tĩnh. Khi dev, Vite chạy ở cổng riêng và proxy `/api`, `/events`, `/auth` sang Node.
 
@@ -29,35 +29,50 @@ Việc cần xác nhận trên server `168.107.68.32`: phiên bản Node (`node 
 event-tracker/
 ├── server.js            # khởi động, gắn router, SSE
 ├── lib/
-│   ├── db.js            # mở SQLite, tạo bảng, hàm truy vấn
-│   ├── session.js       # tạo/đọc/xoá session, cookie
+│   ├── app.js           # app factory, dispatch route, checkOrigin
+│   ├── db.js            # mở SQLite, tạo bảng, hàm getState
+│   ├── session.js       # tạo/đọc/xoá session, cookie sid
 │   ├── perm.js          # canEditRoom(user, roomId), isAdmin(user)
-│   └── sse.js           # danh sách client, broadcast
+│   ├── repo.js          # truy vấn thực thể, transactions, activity log
+│   ├── sse.js           # danh sách client, broadcast debounce 100ms
+│   ├── http.js          # router mini, readJson, HttpError
+│   └── validate.js      # kiểm tra hợp lệ dữ liệu
 ├── routes/
 │   ├── public.js        # GET /api/state, /events
-│   ├── rooms.js         # API khu vực, checklist
-│   ├── users.js         # API quản lý người dùng (admin)
-│   └── auth.js          # /login, /auth/*, /api/me, logout
+│   ├── rooms.js         # API khu vực, checklist, thêm/xóa việc
+│   ├── admin.js         # API quản trị (khối, khu, người dùng, token)
+│   └── auth.js          # /auth/token, /auth/sso/*, /api/me, logout
 ├── auth/
 │   ├── token.js         # đăng nhập bằng link riêng (dự phòng)
-│   └── sso.js           # SSO HUST (làm sau)
-├── web/                 # React + Vite
+│   └── sso.js           # SSO Microsoft Entra ID (OIDC + PKCE)
+├── web/                 # React 18 + Vite
 │   ├── index.html
 │   ├── vite.config.js   # proxy /api, /events, /auth sang :3000 khi dev
+│   ├── public/
+│   │   └── hustmap/     # Tài nguyên bản đồ offline (style.json, tiles z16-18, fonts, sprite)
 │   └── src/
 │       ├── main.jsx
-│       ├── api.js            # fetch + kiểu dữ liệu
-│       ├── useLiveState.js   # SSE + tự nối lại, trả về state
-│       ├── components/       # GroupCard, RoomCard, StatusTiles, TaskList, RoleBar…
-│       ├── pages/            # Dashboard, Manage (admin)
-│       └── styles.css        # chuyển từ mockup/index.html
+│       ├── App.jsx           # Điều phối state, routing mode, optimistic act()
+│       ├── Sidebar.jsx       # Thanh điều hướng bên, drawer mobile, lọc nhanh, tiến độ
+│       ├── Header.jsx        # Topbar, ô tìm kiếm, chip lọc, trạng thái realtime
+│       ├── Group.jsx         # GroupCard, RoomCard (collapsed-by-default), NoteBox, AddTask
+│       ├── MapView.jsx       # Bản đồ MapLibre GL tích hợp, marker trạng thái động
+│       ├── Manage.jsx        # Màn hình Quản lý cho admin (#/manage)
+│       ├── api.js            # fetch API client
+│       ├── logic.js          # Tính phần trăm, đếm trạng thái, format ngày giờ, quyền
+│       ├── useLive.js        # Hook SSE tự nối lại, nhận broadcast state
+│       └── styles.css        # Toàn bộ CSS giao diện tác chiến
 ├── mockup/              # mẫu giao diện đã duyệt, làm khuôn cho web/
 ├── seed.json            # danh sách khu vực, checklist, người phụ trách, admin
-├── scripts/seed.js      # nạp seed.json vào DB
-├── tests/api.test.js
+├── scripts/
+│   ├── links.js         # xuất link đăng nhập token
+│   └── loadtest.js      # kiểm thử tải nặng SSE + đọc/ghi
+├── tests/               # 63 bài test tự động (api, auth, db, sse, sso, e2e)
 └── deploy/
     ├── nginx.conf
     ├── event-tracker.service
+    ├── setup-vm.sh
+    ├── deploy.sh
     └── backup.sh
 ```
 
@@ -158,18 +173,32 @@ Mọi cách đăng nhập chỉ cần trả về `{email, name}`, sau đó dùng
 
 Khi anh Tùng cho biết giao thức, chỉ viết lại `auth/sso.js`. Phần quyền, DB, giao diện không đổi.
 
-## 6. Giao diện (mobile-first)
+## 6. Giao diện (mobile-first) và Kiến trúc UI mới
 
-- Một cột dưới 600 px, nút và ô đổi trạng thái việc cao tối thiểu 44 px.
-- Thanh trên cùng dính khi cuộn: số khu vực theo từng status, thanh tiến độ tổng, chấm xanh/đỏ báo đang kết nối realtime.
-- Bộ lọc nhanh: bấm ô đếm màu (đỏ, vàng, xanh) ở đầu trang, và **Của tôi** (chỉ hiện khi đã login).
-- **Hai cấp:** 3 khối (dropdown), **mở sẵn khi vào trang**. Mỗi khu là một block luôn hiện đủ: **màu, tên, người phụ trách, 1 dòng text status, % việc xong**. Bấm block mới xem checklist chi tiết. Khối gập lại thì chỉ còn các ô màu (tên + màu).
-- Khối có dòng tóm tắt: số khu đang sự cố, đang chuẩn bị, sẵn sàng, chưa bắt đầu.
+### 6.1 Bố cục và trải nghiệm người dùng
+- Một cột dưới 600 px, nút và ô đổi trạng thái việc cao tối thiểu 44 px, tối ưu ngón tay bấm trên điện thoại.
+- Thanh trên cùng dính khi cuộn (`Header.jsx`): số khu vực theo từng status, thanh tiến độ tổng, ô tìm kiếm thời gian thực, chấm báo realtime (`Wifi`/`WifiOff`).
+- Bộ lọc nhanh: bấm ô đếm màu (đỏ, vàng, xanh) ở đầu trang, hoặc chip **Của tôi** (chỉ hiện khi đã login).
 - Quyền gán ở cấp khu con (`room_owners`). Admin xem và sửa tất cả.
 - Khách: card chỉ đọc. Người phụ trách: chỉ card của mình có điều khiển. Admin: mọi card, thêm nút quản lý.
-- Tick cập nhật ngay trên màn hình (không chờ server), lỗi thì hoàn lại và báo.
-- Màn Quản lý (admin): danh sách khu vực (thêm, đổi tên, thứ tự, gán người phụ trách), danh sách người dùng (thêm, đặt admin, copy link đăng nhập).
-- Mất mạng: hiện thanh "Đang kết nối lại…", tự lấy lại state khi có mạng.
+- Cập nhật lạc quan: tick cập nhật ngay trên màn hình (không chờ server), lỗi thì hoàn lại và hiện toast báo lỗi.
+- Màn Quản lý (`Manage.jsx` cho admin tại `#/manage`): danh sách khu vực (thêm, đổi tên, thứ tự, gán người phụ trách), danh sách người dùng (thêm, đặt admin, copy link đăng nhập).
+- Mất mạng: hiện thanh banner "Đang kết nối lại…", tự lấy lại state khi có mạng.
+
+### 6.2 Cải tiến kiến trúc UI (nhánh `minh` tích hợp)
+- **Thanh điều hướng Sidebar & Mobile Bottom Nav (`Sidebar.jsx`):**
+  - Mở rộng cố định bên trái trên desktop và chuyển thành ngăn kéo trượt (drawer with backdrop) trên thiết bị di động.
+  - Phân vùng chức năng rõ ràng: menu chính (Tổng quan, Khu của tôi, Sơ đồ khu vực, Quản lý), bộ lọc nhanh 3 trạng thái, danh sách phím tắt chuyển đến từng khối sự kiện, thẻ thống kê tiến độ checklist tổng thể, thông tin tài khoản hiện tại và nút đăng nhập/đăng xuất.
+  - Hỗ trợ thanh điều hướng dưới đáy màn hình (`mobile-bottom-nav`) cho thiết bị di động, thao tác 1 chạm thuận tiện.
+- **Thẻ khu vực thu gọn mặc định (Collapsed-by-default `RoomCard`):**
+  - Mặc định các thẻ khu vực hiển thị ở dạng tóm tắt tinh gọn: pill màu trạng thái, tên khu, người phụ trách, dòng ghi chú hiện trường, % tiến độ checklist.
+  - Bấm vào thẻ để mở rộng (expanded): xem danh sách việc, sửa trực tiếp nội dung việc, nút đổi trạng thái việc xoay vòng (`todo` → `doing` → `done`), nút xóa việc, ô thêm việc nhanh (`AddTask`), các nút chuyển màu trạng thái khu và ô ghi chú `NoteBox`.
+  - Ô ghi chú `NoteBox`: xử lý chống ghi đè khi người dùng đang tập trung gõ (`typing.current = true`) ngay cả khi có bản tin SSE cập nhật từ server gửi về.
+- **Tích hợp bản đồ số khuôn viên HUSTMAP (`MapView.jsx`):**
+  - Sử dụng **MapLibre GL v4**, nạp động (`React.lazy`) để tối ưu hóa thời gian tải ban đầu của ứng dụng.
+  - **Tự host ngoại tuyến 100%:** Toàn bộ dữ liệu vector tiles (zoom 16–18 bao trọn khuôn viên HUST), phông chữ glyphs Montserrat và sprite biểu tượng được lưu tại `web/public/hustmap/`, không tạo bất kỳ kết nối ra ngoài internet khi tải bản đồ.
+  - Marker động thông minh tại 6 cụm trọng điểm (Nhà C2, Thư viện TQB, Cổng chính, Giữ xe C9, Khu ăn nhẹ C1, Phòng y tế D3) với màu sắc tự động cập nhật theo trạng thái ưu tiên cao nhất của các khu con (`red` > `yellow` > `green`).
+  - Giao diện tương tác 2 chiều: chọn địa điểm trên bản đồ sẽ mở panel danh sách khu vực và nhúng trực tiếp `RoomCard` để ban tổ chức kiểm tra và cập nhật checklist trực tiếp ngay trên bản đồ.
 
 ## 7. Triển khai
 

@@ -49,10 +49,17 @@ export default function App() {
   }, [toast]);
 
   const act = useCallback(async (optimistic, call) => {
-    setState((current) => current ? optimistic(current) : current);
+    let previous = null;
+    setState((current) => {
+      previous = current;
+      return current ? optimistic(current) : current;
+    });
     try {
-      await call();
+      const res = await call();
+      if (!online) reload();
+      return res;
     } catch (e) {
+      if (previous) setState(previous);
       if (e.status === 401) {
         setMe(null);
         setToast('Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại.');
@@ -60,8 +67,9 @@ export default function App() {
         setToast(e.status === 403 ? 'Bạn không có quyền sửa khu này.' : e.message);
       }
       reload();
+      return undefined;
     }
-  }, [reload, setState]);
+  }, [online, reload, setState]);
 
   const navigate = (nextMode, value) => {
     location.hash = '#/';

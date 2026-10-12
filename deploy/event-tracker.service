@@ -10,6 +10,7 @@ EnvironmentFile=/etc/event-tracker.env
 ExecStart=/usr/bin/node server.js
 Restart=always
 RestartSec=2
+LimitNOFILE=65536
 NoNewPrivileges=true
 ProtectSystem=full
 ProtectHome=true

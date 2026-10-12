@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { startApp } from './helpers.js';
+import { hashToken } from '../auth/token.js';
 
 test('/api/me: khách → null; chủ khu; admin', async () => {
   const t = await startApp();
@@ -46,6 +47,12 @@ test('link riêng: đúng token → 302 / + cookie dùng được; sai token →
     assert.equal(bad.headers.get('location'), '/?login=failed');
     assert.equal(bad.headers.get('set-cookie'), null);
     assert.equal((await t.call('GET', '/auth/token')).headers.get('location'), '/?login=failed');
+
+    const raw = 'tok-hashed-0123456789abcdef';
+    t.db.prepare("UPDATE users SET token=? WHERE email='owner@t.test'").run(hashToken(raw));
+    const okHashed = await t.call(`GET`, `/auth/token?t=${raw}`);
+    assert.equal(okHashed.status, 302);
+    assert.equal(okHashed.headers.get('location'), '/');
   } finally { await t.close(); }
 });
 

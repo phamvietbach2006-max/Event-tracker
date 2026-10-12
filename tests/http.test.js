@@ -17,8 +17,13 @@ test('readJson: rỗng là {}, JSON đúng, JSON sai, mảng, null', async () =>
   }
 });
 
-test('readJson: quá giới hạn → 413 và vẫn đọc hết luồng', async () => {
+test('readJson: quá giới hạn → 413 và ngắt luồng khi vượt ngưỡng cứng', async () => {
   await assert.rejects(readJson(req('{"a":"' + 'x'.repeat(100) + '"}'), 50), (e) => e.status === 413);
+  let destroyed = false;
+  const big = Readable.from([Buffer.from('x'.repeat(300))]);
+  big.destroy = () => { destroyed = true; };
+  await assert.rejects(readJson(big, 50), (e) => e.status === 413);
+  assert.equal(destroyed, true);
 });
 
 test('router: khớp method, tham số, giải mã %, không khớp → null', () => {
@@ -33,11 +38,13 @@ test('router: khớp method, tham số, giải mã %, không khớp → null', (
   assert.equal(r.match('GET', '/api/users/%E0%A4%A'), null);
 });
 
-test('checkOrigin: GET bỏ qua, không có Origin ok, khác host → 403', () => {
+test('checkOrigin: GET bỏ qua, không có Origin/Referer ok, khác host → 403', () => {
   checkOrigin({ method: 'GET', headers: { origin: 'http://evil.test', host: 'a.vn' } });
   checkOrigin({ method: 'POST', headers: { host: 'a.vn' } });
   checkOrigin({ method: 'POST', headers: { origin: 'https://a.vn', host: 'a.vn' } });
+  checkOrigin({ method: 'POST', headers: { referer: 'https://a.vn/page', host: 'a.vn' } });
   assert.throws(() => checkOrigin({ method: 'POST', headers: { origin: 'http://evil.test', host: 'a.vn' } }), (e) => e.status === 403);
+  assert.throws(() => checkOrigin({ method: 'POST', headers: { referer: 'http://evil.test/x', host: 'a.vn' } }), (e) => e.status === 403);
   assert.throws(() => checkOrigin({ method: 'PATCH', headers: { origin: 'not a url', host: 'a.vn' } }), (e) => e.status === 403);
 });
 

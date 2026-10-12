@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { Crosshair, Info, MapPin, Minus, Plus, X } from 'lucide-react';
 import { RoomCard } from './Group.jsx';
+import { ST } from './logic.js';
 
 // Bản đồ vector của HUSTMAP (hustmap.com): style + sprite + font + tile (z16-18) đều tự host ở /hustmap (web/public/hustmap).
 // lng/lat lấy từ API tìm kiếm HUSTMAP; "gate" và "food" là vị trí gần đúng [VERIFY NEEDED].
@@ -30,9 +31,11 @@ export default function MapView({ groups, me, act }) {
   const mapRef = useRef(null);
   const markersRef = useRef(new Map());
   const chooseRef = useRef(null);
-  const rooms = groups.flatMap((group) => group.rooms);
-  const places = PLACES.map((place) => ({ ...place, rooms: rooms.filter((room) => place.match.test(room.name)) }));
-  const activePlaces = places.filter((place) => place.rooms.length);
+  const { rooms, places, activePlaces } = useMemo(() => {
+    const r = groups.flatMap((group) => group.rooms);
+    const p = PLACES.map((place) => ({ ...place, rooms: r.filter((room) => place.match.test(room.name)) }));
+    return { rooms: r, places: p, activePlaces: p.filter((place) => place.rooms.length) };
+  }, [groups]);
   const selectedPlace = places.find((place) => place.key === selectedKey);
   const selectedRoom = selectedPlace?.rooms.find((room) => room.id === selectedId);
 
@@ -50,9 +53,12 @@ export default function MapView({ groups, me, act }) {
     let cancelled = false;
     let map = null;
     let observer = null;
+    let loadTimer = null;
     (async () => {
       try {
-        const style = await (await fetch('/hustmap/style.json')).json();
+        const res = await fetch('/hustmap/style.json');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const style = await res.json();
         if (cancelled) return;
         style.sprite = `${location.origin}/hustmap/sprite/sprite`;
         style.glyphs = `${location.origin}/hustmap/fonts/{fontstack}/{range}.pbf`;
@@ -61,8 +67,14 @@ export default function MapView({ groups, me, act }) {
         map = new maplibregl.Map({ container: containerRef.current, style, ...HOME, minZoom: 16, maxZoom: 20, maxBounds: BOUNDS, attributionControl: false, dragRotate: false });
         map.touchZoomRotate.disableRotation();
         map.addControl(new maplibregl.AttributionControl({ compact: true, customAttribution: 'Bản đồ © HUSTMAP' }), 'bottom-left');
-        map.on('load', () => { if (!cancelled) setReady(true); });
-        map.on('error', (e) => { if (!map.loaded() && !cancelled && e?.error?.status === 404 && /style\.json/.test(e.error.url || '')) setFailed(true); });
+        loadTimer = setTimeout(() => { if (!cancelled && !map?.loaded()) setFailed(true); }, 10000);
+        map.on('load', () => { clearTimeout(loadTimer); if (!cancelled) setReady(true); });
+        map.on('error', (e) => {
+          if (!map.loaded() && !cancelled && (e?.error?.status >= 400 || e?.error?.message)) {
+            clearTimeout(loadTimer);
+            setFailed(true);
+          }
+        });
         mapRef.current = map;
         observer = new ResizeObserver(() => map.resize());
         observer.observe(containerRef.current);
@@ -72,6 +84,7 @@ export default function MapView({ groups, me, act }) {
     })();
     return () => {
       cancelled = true;
+      clearTimeout(loadTimer);
       observer?.disconnect();
       markersRef.current.forEach((marker) => marker.remove());
       markersRef.current.clear();
@@ -88,13 +101,14 @@ export default function MapView({ groups, me, act }) {
     markersRef.current.forEach((marker) => marker.remove());
     markersRef.current.clear();
     activePlaces.forEach((place) => {
+      const status = placeStatus(place);
       const anchor = document.createElement('div');
       anchor.className = 'campus-marker-anchor';
       anchor.dataset.key = place.key;
       const button = document.createElement('button');
       button.type = 'button';
-      button.className = `campus-marker ${placeStatus(place)}`;
-      button.setAttribute('aria-label', `${place.label}: ${place.rooms.length} khu vực`);
+      button.className = `campus-marker ${status}`;
+      button.setAttribute('aria-label', `${place.label}: ${place.rooms.length} khu vực (${ST[status]})`);
       button.innerHTML = `${PIN_SVG}<span></span><b>${place.rooms.length}</b>`;
       button.querySelector('span').textContent = place.label;
       button.addEventListener('click', (event) => { event.stopPropagation(); chooseRef.current(place); });
@@ -107,7 +121,7 @@ export default function MapView({ groups, me, act }) {
 
   // Đánh dấu marker đang chọn
   useEffect(() => {
-    markersRef.current.forEach((marker, key) => marker.getElement().firstChild.classList.toggle('selected', key === selectedKey));
+    markersRef.current.forEach((marker, key) => marker.getElement()?.querySelector('.campus-marker')?.classList.toggle('selected', key === selectedKey));
   }, [selectedKey, signature, ready]);
 
   const zoomBy = (delta) => mapRef.current?.easeTo({ zoom: mapRef.current.getZoom() + delta, duration: 250 });
@@ -127,7 +141,7 @@ export default function MapView({ groups, me, act }) {
         </div>
       </div>
       <aside className={`campus-panel ${selectedPlace ? 'has-selection' : ''}`} aria-label="Danh sách điểm trên bản đồ">
-        {selectedPlace ? <><div className="campus-panel-head"><div><small>ĐIỂM ĐƯỢC CHỌN</small><h3>{selectedPlace.label}</h3><p>{selectedPlace.hint}</p></div><button className="campus-close" onClick={close} aria-label="Đóng chi tiết"><X size={19} /></button></div><div className="campus-panel-body"><div className="campus-room-list">{selectedPlace.rooms.map((room) => <button key={room.id} className={`campus-room-link ${room.status} ${selectedId === room.id ? 'active' : ''}`} onClick={() => setSelectedId(room.id)}><i />{room.name}<span>›</span></button>)}</div>{selectedRoom && <RoomCard key={selectedRoom.id} room={selectedRoom} me={me} act={act} initialOpen />}</div></> : <><div className="campus-panel-head"><div><small>ĐIỂM SỰ KIỆN</small><h3>Danh sách khu vực</h3><p>{rooms.length} khu vực trong {activePlaces.length} điểm</p></div></div><div className="campus-panel-body"><div className="campus-place-list">{activePlaces.map((place) => <button key={place.key} onClick={() => choosePlace(place)}><span className={`campus-place-icon ${placeStatus(place)}`}><MapPin size={18} /></span><span><strong>{place.label}</strong><small>{place.rooms.length} khu vực · {place.hint}</small></span><span className="campus-arrow">›</span></button>)}</div><p className="campus-help"><Info size={15} />Chọn điểm trên bản đồ hoặc trong danh sách để xem checklist.</p></div></>}
+        {selectedPlace ? <><div className="campus-panel-head"><div><small>ĐIỂM ĐƯỢC CHỌN</small><h3>{selectedPlace.label}</h3><p>{selectedPlace.hint}</p></div><button className="campus-close" onClick={close} aria-label="Đóng chi tiết"><X size={19} /></button></div><div className="campus-panel-body"><div className="campus-room-list">{selectedPlace.rooms.map((room) => <button key={room.id} className={`campus-room-link ${room.status} ${selectedId === room.id ? 'active' : ''}`} aria-label={`${room.name} (${ST[room.status]})`} onClick={() => setSelectedId(room.id)}><i aria-hidden="true" />{room.name}<span>›</span></button>)}</div>{selectedRoom && <RoomCard key={selectedRoom.id} room={selectedRoom} me={me} act={act} initialOpen />}</div></> : <><div className="campus-panel-head"><div><small>ĐIỂM SỰ KIỆN</small><h3>Danh sách khu vực</h3><p>{rooms.length} khu vực trong {activePlaces.length} điểm</p></div></div><div className="campus-panel-body"><div className="campus-place-list">{activePlaces.map((place) => <button key={place.key} onClick={() => choosePlace(place)}><span className={`campus-place-icon ${placeStatus(place)}`}><MapPin size={18} /></span><span><strong>{place.label}</strong><small>{place.rooms.length} khu vực · {place.hint}</small></span><span className="campus-arrow">›</span></button>)}</div><p className="campus-help"><Info size={15} />Chọn điểm trên bản đồ hoặc trong danh sách để xem checklist.</p></div></>}
       </aside>
     </div>
     <p className="map-caption">Kéo để di chuyển; dùng con lăn, hai ngón hoặc nút +/− để phóng to, thu nhỏ. Nền bản đồ © HUSTMAP (hustmap.com); vị trí điểm sự kiện là tương đối, không dùng để dẫn đường chính xác.</p>

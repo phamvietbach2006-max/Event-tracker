@@ -10,10 +10,27 @@ export function useLive() {
 
   useEffect(() => {
     reload();
+    let hadError = false;
     const es = new EventSource('/events');
-    es.onopen = () => setOnline(true);
-    es.onerror = () => setOnline(false);
-    es.onmessage = (e) => { setState(JSON.parse(e.data)); setError(false); };
+    es.onopen = () => {
+      setOnline(true);
+      if (hadError) {
+        hadError = false;
+        reload();
+      }
+    };
+    es.onerror = () => {
+      hadError = true;
+      setOnline(false);
+    };
+    es.onmessage = (e) => {
+      try {
+        setState(JSON.parse(e.data));
+        setError(false);
+      } catch {
+        // Bỏ qua gói dữ liệu SSE không phải JSON hợp lệ
+      }
+    };
     return () => es.close();
   }, [reload]);
 

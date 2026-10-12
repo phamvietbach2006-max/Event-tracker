@@ -4,13 +4,13 @@ import { api } from './api.js';
 import { ORDER, ST, TS, NEXT, NOTE_MAX, canEdit, doneCount, percent, statusCounts, patchRoom, patchTask, removeTask, timeLabel } from './logic.js';
 
 function NoteBox({ room, onSave }) {
-  const [value, setValue] = useState(room.note);
+  const [value, setValue] = useState(room.note ?? '');
   const typing = useRef(false);
-  useEffect(() => { if (!typing.current) setValue(room.note); }, [room.note]);
+  useEffect(() => { if (!typing.current) setValue(room.note ?? ''); }, [room.note]);
   const save = () => {
     typing.current = false;
     const next = value.trim();
-    if (next !== room.note) onSave(next);
+    if (next !== (room.note ?? '')) onSave(next);
   };
   return <label className="note-input-wrap"><span>Ghi chú tình trạng</span><input className="note-input" value={value} maxLength={NOTE_MAX} placeholder="Nhập ghi chú ngắn…" onFocus={() => { typing.current = true; }} onChange={(e) => setValue(e.target.value)} onBlur={save} onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }} /><small>{value.length}/{NOTE_MAX}</small></label>;
 }
@@ -40,18 +40,22 @@ export function RoomCard({ room, me, act, initialOpen = false }) {
   const deleteTask = (task) => {
     if (confirm(`Xóa việc "${task.text}"?`)) act((state) => removeTask(state, task.id), () => api.delTask(task.id));
   };
+  const addNewTask = (text) => act(
+    (state) => patchRoom(state, room.id, { tasks: [...room.tasks, { id: -Date.now(), text, state: 'todo', sort: room.tasks.length + 1 }] }),
+    () => api.addTask(room.id, text),
+  );
   const saveNote = (note) => act((state) => patchRoom(state, room.id, { note }), () => api.setNote(room.id, note));
   const ownerNames = room.owners.map((owner) => owner.name).join(', ') || 'Chưa có người phụ trách';
 
   return <article className={`task-card room-card status-${room.status} ${open ? 'expanded' : ''}`}>
-    <button className="room-card-head" onClick={() => setOpen(!open)} aria-expanded={open} aria-label={`${open ? 'Thu gọn' : 'Mở'} khu ${room.name}`}>
+    <button className="room-card-head" onClick={() => setOpen(!open)} aria-expanded={open}>
       <span className={`room-status-pill ${room.status}`}><i />{ST[room.status]}</span>
-      <ChevronDown size={18} className="room-chevron" />
+      <ChevronDown size={18} className="room-chevron" aria-hidden="true" />
       <strong className="card-title">{room.name}</strong>
-      <span className="room-owner"><UserRound size={15} />{ownerNames}</span>
+      <span className="room-owner"><UserRound size={15} aria-hidden="true" />{ownerNames}</span>
       <span className={`card-desc ${room.note ? '' : 'empty'}`}>{room.note || 'Chưa có cập nhật'}</span>
       <span className="card-progress-meta"><span>{done}/{room.tasks.length} việc xong</span><span>{progress}%</span></span>
-      <span className="card-progress-track"><span className={`card-progress-bar ${room.status}`} style={{ width: `${progress}%` }} /></span>
+      <span className="card-progress-track" role="progressbar" aria-label={`Tiến độ ${room.name}`} aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}><span className={`card-progress-bar ${room.status}`} style={{ width: `${progress}%` }} /></span>
     </button>
     <div className="room-details-shell" inert={!open ? '' : undefined} aria-hidden={!open}>
     <div className="room-details">
@@ -62,7 +66,7 @@ export function RoomCard({ room, me, act, initialOpen = false }) {
         <button className={`task-state-btn ${task.state}`} disabled={!editor} onClick={() => changeTask(task)} aria-label={`${task.text}: ${TS[task.state]}. ${editor ? 'Nhấn để chuyển trạng thái' : 'Chỉ xem'}`}>{TS[task.state]}</button>
         {editor && <button className="task-del-btn" onClick={() => deleteTask(task)} aria-label={`Xóa việc ${task.text}`}><Trash2 size={16} /></button>}
       </div>)}</div>
-      {editor && <><AddTask onAdd={(text) => act((state) => state, () => api.addTask(room.id, text))} /><div className="room-detail-title">Tình trạng khu</div><div className="room-status-bar">{ORDER.map((status) => <button key={status} className={`status-choice-btn ${status} ${room.status === status ? 'on' : ''}`} onClick={() => changeStatus(status)} aria-pressed={room.status === status}>{ST[status]}</button>)}</div><NoteBox room={room} onSave={saveNote} /></>}
+      {editor && <><AddTask onAdd={addNewTask} /><div className="room-detail-title">Tình trạng khu</div><div className="room-status-bar">{ORDER.map((status) => <button key={status} className={`status-choice-btn ${status} ${room.status === status ? 'on' : ''}`} onClick={() => changeStatus(status)} aria-pressed={room.status === status}>{ST[status]}</button>)}</div><NoteBox room={room} onSave={saveNote} /></>}
       {!editor && <p className="room-readonly">{me ? 'Chỉ người phụ trách khu này mới được cập nhật.' : 'Đăng nhập để cập nhật khu vực.'}</p>}
       <div className="card-bottom-row"><Clock3 size={14} /><span>Cập nhật {timeLabel(room.updatedAt)}{room.updatedBy ? ` · ${room.updatedBy}` : ''}</span></div>
     </div></div>
