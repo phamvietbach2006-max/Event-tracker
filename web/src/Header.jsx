@@ -10,7 +10,7 @@ export default function Header({ me, online, stats, counts, tot, mode, filter, o
       <div className="space-brand">
         <button className="mobile-menu-btn" onClick={onOpenSidebar} aria-label="Mở menu"><Menu size={22} /></button>
         <div className="space-title-box">
-          <div className="space-title-row">
+          <div className="space-title-row" style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'nowrap' }}>
             <h1 className="space-title">Tình trạng khu vực</h1>
             <span className={`live-pill ${online ? '' : 'offline'}`}>{online ? <Wifi size={14} /> : <WifiOff size={14} />}{online ? 'Trực tiếp' : 'Đang kết nối'}</span>
           </div>
