@@ -1,6 +1,6 @@
-import { ShieldCheck, Wifi, WifiOff, Map, Home, Users, Eye } from 'lucide-react';
+import { ShieldCheck, Wifi, WifiOff, Users, Eye } from 'lucide-react';
 
-export default function Footer({ tot, online, stats, onNavigate }) {
+export default function Footer({ tot, online, stats }) {
   const onlineCount = Math.max(1, Number(stats?.online) || 1);
   const visitCount = Math.max(1, Number(stats?.visits) || 1);
 
@@ -29,29 +29,7 @@ export default function Footer({ tot, online, stats, onNavigate }) {
             </p>
           </div>
 
-          <div className="footer-col">
-            <h3 className="footer-heading">ĐIỀU HƯỚNG NHANH</h3>
-            <ul className="footer-links">
-              <li>
-                <button type="button" onClick={() => onNavigate('overview')}>
-                  <Home size={14} />
-                  <span>Bảng điều hành tổng quan ({tot.rooms} khu vực)</span>
-                </button>
-              </li>
-              <li>
-                <button type="button" onClick={() => onNavigate('map')}>
-                  <Map size={14} />
-                  <span>Sơ đồ khu vực HUSTMAP</span>
-                </button>
-              </li>
-            </ul>
-            <div className="footer-event-tag">
-              <span className="footer-event-dot" aria-hidden="true" />
-              <span>EVENT TRACKER • LỄ ĐÓN TỔNG BÍ THƯ</span>
-            </div>
-          </div>
-
-          <div className="footer-col">
+          <div className="footer-col footer-status-col">
             <h3 className="footer-heading">TRẠNG THÁI HỆ THỐNG</h3>
             <div className="footer-status-box">
               <div className={`footer-live-row ${online ? 'is-online' : 'is-offline'}`}>

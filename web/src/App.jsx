@@ -132,7 +132,7 @@ export default function App() {
           <div className="event-columns">{shownGroups.map((group) => <GroupCard key={`${group.id}-${mode}`} group={group} rooms={group.rooms.filter((room) => matches(room, group))} me={me} act={act} detail={mode !== 'overview'} />)}</div>
           {shownRooms.length === 0 && <div className="empty-state"><b>Không có khu phù hợp</b><span>Thử đổi mục hoặc từ khóa tìm kiếm.</span><button onClick={() => navigate('overview')}>Về tổng quan</button></div>}
         </main>}
-        <Footer tot={totals(rooms)} online={online} stats={stats} onNavigate={navigate} />
+        <Footer tot={totals(rooms)} online={online} stats={stats} />
       </div>
       <nav className="mobile-bottom-nav" aria-label="Điều hướng nhanh">
         <button className={!managing && mode === 'overview' ? 'active' : ''} onClick={() => navigate('overview')}><Home size={20} />Tổng quan</button>
