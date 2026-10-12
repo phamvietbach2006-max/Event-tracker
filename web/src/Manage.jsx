@@ -29,10 +29,12 @@ function AddUser({ onAdd }) {
 }
 
 function RoomEditor({ room, groups, users, run, reloadUsers }) {
-  const owners = users.filter((u) => u.ownedRoomIds.includes(room.id)).map((u) => u.email);
-  const toggleOwner = (e) => {
-    const next = owners.includes(e) ? owners.filter((x) => x !== e) : [...owners, e];
-    run(() => api.setOwners(room.id, next), reloadUsers);
+  const ownerNames = room.owners.map((o) => o.name).join(', ');
+  const saveOwners = (e) => {
+    const names = e.target.value.split(',').map((s) => s.trim()).filter(Boolean);
+    if (names.join(', ') !== ownerNames) {
+      run(() => api.setOwnerNames(room.id, names), reloadUsers);
+    }
   };
   const rename = (e) => {
     const v = e.target.value.trim();
@@ -40,7 +42,7 @@ function RoomEditor({ room, groups, users, run, reloadUsers }) {
   };
   return (
     <details className="mroom">
-      <summary>{room.name} <small>({room.owners.map((o) => o.name).join(', ') || 'chưa có người phụ trách'})</small></summary>
+      <summary>{room.name} <small>({ownerNames || 'chưa có người phụ trách'})</small></summary>
       <div className="mrow">
         <input key={room.name} defaultValue={room.name} maxLength={80} onBlur={rename} />
         <button onClick={() => confirm(`Xoá khu "${room.name}" và toàn bộ checklist?`) && run(() => api.delRoom(room.id), reloadUsers)}>Xoá khu</button>
@@ -50,10 +52,20 @@ function RoomEditor({ room, groups, users, run, reloadUsers }) {
         <label>Thứ tự <input type="number" min="0" defaultValue={room.sort} key={`${room.id}-${room.sort}`} onBlur={(e) => { const sort = Number(e.target.value); if (Number.isInteger(sort) && sort !== room.sort) run(() => api.patchRoom(room.id, { sort })); }} /></label>
       </div>
       <div className="mlabel">Người phụ trách</div>
-      <div className="mchecks">
-        {users.map((u) => (
-          <label key={u.email}><input type="checkbox" checked={owners.includes(u.email)} onChange={() => toggleOwner(u.email)} /> {u.name}</label>
-        ))}
+      <div className="mrow">
+        <input
+          key={ownerNames}
+          defaultValue={ownerNames}
+          list={`users-list-${room.id}`}
+          maxLength={200}
+          placeholder="Nhập tên người phụ trách (cách nhau bởi dấu phẩy)…"
+          aria-label={`Người phụ trách ${room.name}`}
+          onBlur={saveOwners}
+          onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }}
+        />
+        <datalist id={`users-list-${room.id}`}>
+          {users.map((u) => <option key={u.email} value={u.name} />)}
+        </datalist>
       </div>
       <div className="mlabel">Checklist</div>
       {room.tasks.map((t) => (

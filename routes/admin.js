@@ -87,17 +87,42 @@ export function registerAdmin(router) {
 
   add('PUT', '/api/rooms/:id/owners', ({ db, user, params, body, sse }) => {
     const r = roomOr404(db, params.id);
-    if (!Array.isArray(body.emails)) throw new HttpError(400, 'bad_request', 'emails: phải là mảng');
-    const emails = [...new Set(body.emails.map((e) => email(e, 'emails')))].sort();
-    for (const e of emails) {
-      if (!db.prepare('SELECT 1 FROM users WHERE email = ?').get(e)) {
-        throw new HttpError(400, 'unknown_user', `Chưa có người dùng ${e}`);
+    let emails;
+    if (Array.isArray(body.names)) {
+      const names = [...new Set(body.names.map((n) => text(n, 80, 'names')))];
+      tx(db, () => {
+        const allUsers = db.prepare('SELECT email, name FROM users').all();
+        emails = [...new Set(names.map((n) => {
+          const lower = n.toLocaleLowerCase('vi');
+          const found = allUsers.find((u) => u.name.toLocaleLowerCase('vi') === lower || u.email === lower);
+          if (found) return found.email;
+          const base = n.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd')
+            .toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.+|\.+$/g, '') || 'user';
+          let candidate = `${base}@hust.local`;
+          let suffix = 2;
+          while (db.prepare('SELECT 1 FROM users WHERE email = ?').get(candidate)) {
+            candidate = `${base}.${suffix++}@hust.local`;
+          }
+          db.prepare('INSERT INTO users(email, name, is_admin) VALUES (?,?,0)').run(candidate, n);
+          allUsers.push({ email: candidate, name: n });
+          return candidate;
+        }))].sort();
+        db.prepare('DELETE FROM room_owners WHERE room_id = ?').run(r.id);
+        for (const e of emails) db.prepare('INSERT INTO room_owners(room_id, email) VALUES (?,?)').run(r.id, e);
+      });
+    } else {
+      if (!Array.isArray(body.emails)) throw new HttpError(400, 'bad_request', 'emails: phải là mảng');
+      emails = [...new Set(body.emails.map((e) => email(e, 'emails')))].sort();
+      for (const e of emails) {
+        if (!db.prepare('SELECT 1 FROM users WHERE email = ?').get(e)) {
+          throw new HttpError(400, 'unknown_user', `Chưa có người dùng ${e}`);
+        }
       }
+      tx(db, () => {
+        db.prepare('DELETE FROM room_owners WHERE room_id = ?').run(r.id);
+        for (const e of emails) db.prepare('INSERT INTO room_owners(room_id, email) VALUES (?,?)').run(r.id, e);
+      });
     }
-    tx(db, () => {
-      db.prepare('DELETE FROM room_owners WHERE room_id = ?').run(r.id);
-      for (const e of emails) db.prepare('INSERT INTO room_owners(room_id, email) VALUES (?,?)').run(r.id, e);
-    });
     logActivity(db, user, r.id, 'room.owners', emails.join(','));
     sse.broadcast();
     return { roomId: r.id, emails };

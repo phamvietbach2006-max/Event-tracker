@@ -37,6 +37,7 @@ export const api = {
   patchRoom: (id, p) => req('PATCH', `/api/rooms/${id}`, p),
   delRoom: (id) => req('DELETE', `/api/rooms/${id}`),
   setOwners: (id, emails) => req('PUT', `/api/rooms/${id}/owners`, { emails }),
+  setOwnerNames: (id, names) => req('PUT', `/api/rooms/${id}/owners`, { names }),
   addTask: (roomId, text) => req('POST', `/api/rooms/${roomId}/tasks`, { text }),
   patchTaskText: (id, text) => req('PATCH', `/api/tasks/${id}`, { text }),
   delTask: (id) => req('DELETE', `/api/tasks/${id}`),

@@ -76,6 +76,9 @@ test('gán người phụ trách: thay thế danh sách, chuẩn hoá hoa/thư�
     assert.equal((await t.call('PUT', '/api/rooms/999/owners', { as: A, body: { emails: [] } })).status, 404);
     await t.call('PUT', '/api/rooms/3/owners', { as: A, body: { emails: ['nobody@t.test'] } });
     assert.equal((await t.call('PATCH', '/api/rooms/3/status', { as: 'nobody@t.test', body: { status: 'green' } })).status, 200);
+    const byNames = await t.call('PUT', '/api/rooms/3/owners', { as: A, body: { names: ['Chủ Khu', 'Trần Quốc Tuấn'] } });
+    assert.equal(byNames.status, 200);
+    assert.deepEqual(rooms(await state(t)).find((r) => r.id === 3).owners.map((o) => o.name), ['Chủ Khu', 'Trần Quốc Tuấn']);
   } finally { await t.close(); }
 });
 
