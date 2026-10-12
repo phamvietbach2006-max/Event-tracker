@@ -8,10 +8,12 @@ export default function Sidebar({ me, mode, filter, groupId, onNavigate, groups,
     {open && <button className="sidebar-backdrop" onClick={() => setOpen(false)} aria-label="Đóng menu" />}
     <aside className={`sidebar ${open ? 'open' : ''}`}>
       <div className="sidebar-logo">
-        <a href="#/" className="sidebar-brand" onClick={() => choose('overview')} aria-label="Trang chủ Theo dõi sự kiện HUST">
-          <img className="sidebar-logo-main" src="/logo-hust.svg" alt="Đại học Bách khoa Hà Nội" />
-          <span className="sidebar-logo-divider" aria-hidden="true" />
+        <a href="#/" className="sidebar-brand" onClick={() => choose('overview')} aria-label="EVENT TRACKER - Lễ đón Tổng Bí thư">
           <img className="sidebar-logo-70" src="/logo-70-hust.svg" alt="Kỷ niệm 70 năm Đại học Bách khoa Hà Nội (1956–2026)" />
+          <span className="sidebar-brand-text">
+            <strong className="sidebar-brand-title">EVENT TRACKER</strong>
+            <span className="sidebar-brand-subtitle">LỄ ĐÓN TỔNG BÍ THƯ</span>
+          </span>
         </a>
         <button className="sidebar-close" onClick={() => setOpen(false)} aria-label="Đóng menu"><X size={20} /></button>
       </div>

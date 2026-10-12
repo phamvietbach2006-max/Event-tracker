@@ -112,7 +112,7 @@ a {
 
 /* SIDEBAR (Jerraa Style) */
 .sidebar {
-  width: 250px;
+  width: 264px;
   background: var(--bg-sidebar);
   border-right: 1px solid var(--border-card);
   display: flex;
@@ -122,15 +122,15 @@ a {
   height: 100vh;
   flex-shrink: 0;
   z-index: 50;
-  padding: 24px 18px 20px;
+  padding: 22px 16px 20px;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .sidebar-logo {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 0 6px 20px;
+  gap: 8px;
+  padding: 0 4px 18px;
   margin-bottom: 6px;
   border-bottom: 1px solid var(--border-subtle);
 }
@@ -138,10 +138,10 @@ a {
 .sidebar-brand {
   display: inline-flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   min-width: 0;
   border-radius: 10px;
-  padding: 2px 4px;
+  padding: 2px 0;
   transition: opacity 0.2s ease;
 }
 
@@ -149,27 +149,38 @@ a {
   opacity: 0.9;
 }
 
-.sidebar-logo-main {
-  height: 52px;
-  width: auto;
-  display: block;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-
-.sidebar-logo-divider {
-  width: 1px;
-  height: 38px;
-  background: var(--border-input);
-  flex-shrink: 0;
-}
-
 .sidebar-logo-70 {
-  height: 50px;
+  height: 44px;
   width: auto;
   display: block;
   object-fit: contain;
   flex-shrink: 0;
+}
+
+.sidebar-brand-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.sidebar-brand-title {
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.sidebar-brand-subtitle {
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: 0.02em;
+  color: #b42318;
+  white-space: nowrap;
 }
 
 .sidebar-nav {
