@@ -1,4 +1,4 @@
-import { Activity, Home, Star, Settings, LogOut, LogIn, X, Map } from 'lucide-react';
+import { Home, Star, Settings, LogOut, LogIn, X, Map } from 'lucide-react';
 import { ST } from './logic.js';
 
 export default function Sidebar({ me, mode, filter, groupId, onNavigate, groups, counts, open, setOpen, tot, online, onLogout, toast, managing }) {
@@ -7,7 +7,14 @@ export default function Sidebar({ me, mode, filter, groupId, onNavigate, groups,
   return <>
     {open && <button className="sidebar-backdrop" onClick={() => setOpen(false)} aria-label="Đóng menu" />}
     <aside className={`sidebar ${open ? 'open' : ''}`}>
-      <div className="sidebar-logo"><span className="logo-icon"><Activity size={21} /></span><span className="logo-text">Sự kiện</span><button className="sidebar-close" onClick={() => setOpen(false)} aria-label="Đóng menu"><X size={20} /></button></div>
+      <div className="sidebar-logo">
+        <a href="#/" className="sidebar-brand" onClick={() => choose('overview')} aria-label="Trang chủ Theo dõi sự kiện HUST">
+          <img className="sidebar-logo-main" src="/logo-hust.svg" alt="Đại học Bách khoa Hà Nội" />
+          <span className="sidebar-logo-divider" aria-hidden="true" />
+          <img className="sidebar-logo-70" src="/logo-70-hust.svg" alt="Kỷ niệm 70 năm Đại học Bách khoa Hà Nội (1956–2026)" />
+        </a>
+        <button className="sidebar-close" onClick={() => setOpen(false)} aria-label="Đóng menu"><X size={20} /></button>
+      </div>
       <nav className="sidebar-nav" aria-label="Điều hướng">
         <button className={`nav-item ${!managing && mode === 'overview' ? 'active' : ''}`} onClick={() => choose('overview')}><Home size={19} />Tổng quan<span className="nav-badge">{tot.rooms}</span></button>
         {me && <button className={`nav-item ${!managing && mode === 'mine' ? 'active' : ''}`} onClick={() => choose('mine')}><Star size={19} />Khu của tôi<span className="nav-badge">{me.ownedRoomIds?.length || 0}</span></button>}

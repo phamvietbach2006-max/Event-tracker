@@ -129,36 +129,47 @@ a {
 .sidebar-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 8px 24px;
+  gap: 12px;
+  padding: 0 6px 20px;
+  margin-bottom: 6px;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
-.logo-icon {
-  width: 34px;
-  height: 34px;
-  background: linear-gradient(135deg, #111827 0%, #374151 100%);
-  color: #fff;
-  border-radius: 10px;
-  display: flex;
+.sidebar-brand {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-weight: 800;
-  font-size: 18px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  gap: 14px;
+  min-width: 0;
+  border-radius: 10px;
+  padding: 2px 4px;
+  transition: opacity 0.2s ease;
 }
 
-.logo-text {
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  color: var(--text-main);
+.sidebar-brand:hover {
+  opacity: 0.9;
 }
 
-.logo-badge {
-  font-size: 11px;
-  font-weight: 700;
-  color: #EF4444;
-  margin-left: -4px;
+.sidebar-logo-main {
+  height: 52px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.sidebar-logo-divider {
+  width: 1px;
+  height: 38px;
+  background: var(--border-input);
+  flex-shrink: 0;
+}
+
+.sidebar-logo-70 {
+  height: 50px;
+  width: auto;
+  display: block;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .sidebar-nav {
