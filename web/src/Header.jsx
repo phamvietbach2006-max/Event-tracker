@@ -10,13 +10,11 @@ export default function Header({ me, online, stats, counts, tot, mode, filter, o
       <div className="space-brand">
         <button className="mobile-menu-btn" onClick={onOpenSidebar} aria-label="Mở menu"><Menu size={22} /></button>
         <div className="space-title-box">
-          <h1 className="space-title">Tình trạng khu vực</h1>
-          <p className="space-subtitle">
-            <span><b>{tot.rooms}</b> khu vực</span>
-            <i className="subtitle-dot" aria-hidden="true" />
-            <span><b>{tot.done}/{tot.total}</b> việc đã xong</span>
-            <span className="subtitle-pct">{tot.pct}%</span>
-          </p>
+          <div className="space-title-row">
+            <h1 className="space-title">Tình trạng khu vực</h1>
+            <span className={`live-pill ${online ? '' : 'offline'}`}>{online ? <Wifi size={14} /> : <WifiOff size={14} />}{online ? 'Trực tiếp' : 'Đang kết nối'}</span>
+          </div>
+          <p className="space-subtitle">{tot.rooms} khu vực · {tot.done}/{tot.total} việc đã xong ({tot.pct}%)</p>
         </div>
       </div>
       <div className="topbar-actions">
@@ -38,7 +36,6 @@ export default function Header({ me, online, stats, counts, tot, mode, filter, o
             <span className="header-stat-label">lượt xem</span>
           </span>
         </div>
-        <span className={`live-pill ${online ? '' : 'offline'}`}>{online ? <Wifi size={15} /> : <WifiOff size={15} />}{online ? 'Trực tiếp' : 'Đang kết nối'}</span>
         {!me && (sso ? <a className="login-link" href="/auth/sso/start"><LogIn size={16} />Đăng nhập</a> : <button className="login-link" onClick={onGuestLogin}><LogIn size={16} />Đăng nhập</button>)}
       </div>
     </div>
@@ -49,5 +46,6 @@ export default function Header({ me, online, stats, counts, tot, mode, filter, o
     </div>}
   </header>;
 }
+
 
 
