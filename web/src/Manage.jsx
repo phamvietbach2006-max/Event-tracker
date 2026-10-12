@@ -28,7 +28,7 @@ function AddUser({ onAdd }) {
   );
 }
 
-function RoomEditor({ room, users, run, reloadUsers }) {
+function RoomEditor({ room, groups, users, run, reloadUsers }) {
   const owners = users.filter((u) => u.ownedRoomIds.includes(room.id)).map((u) => u.email);
   const toggleOwner = (e) => {
     const next = owners.includes(e) ? owners.filter((x) => x !== e) : [...owners, e];
@@ -44,6 +44,10 @@ function RoomEditor({ room, users, run, reloadUsers }) {
       <div className="mrow">
         <input key={room.name} defaultValue={room.name} maxLength={80} onBlur={rename} />
         <button onClick={() => confirm(`Xoá khu "${room.name}" và toàn bộ checklist?`) && run(() => api.delRoom(room.id), reloadUsers)}>Xoá khu</button>
+      </div>
+      <div className="mrow mrow-options">
+        <label>Thuộc khối <select value={groups.find((g) => g.rooms.some((r) => r.id === room.id))?.id ?? ''} onChange={(e) => run(() => api.patchRoom(room.id, { groupId: Number(e.target.value) }))}>{groups.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}</select></label>
+        <label>Thứ tự <input type="number" min="0" defaultValue={room.sort} key={`${room.id}-${room.sort}`} onBlur={(e) => { const sort = Number(e.target.value); if (Number.isInteger(sort) && sort !== room.sort) run(() => api.patchRoom(room.id, { sort })); }} /></label>
       </div>
       <div className="mlabel">Người phụ trách</div>
       <div className="mchecks">
@@ -97,7 +101,8 @@ export default function Manage({ state, say, toast }) {
             />
             <button disabled={g.rooms.length > 0} onClick={() => confirm(`Xoá khối "${g.name}"?`) && run(() => api.delGroup(g.id))}>Xoá khối</button>
           </div>
-          {g.rooms.map((r) => <RoomEditor key={r.id} room={r} users={users} run={run} reloadUsers={loadUsers} />)}
+          <label className="sort-field">Thứ tự khối <input type="number" min="0" defaultValue={g.sort} key={`${g.id}-${g.sort}`} onBlur={(e) => { const sort = Number(e.target.value); if (Number.isInteger(sort) && sort !== g.sort) run(() => api.patchGroup(g.id, { sort })); }} /></label>
+          {g.rooms.map((r) => <RoomEditor key={r.id} room={r} groups={state.groups} users={users} run={run} reloadUsers={loadUsers} />)}
           <AddRow placeholder="Tên khu mới" onAdd={(name) => run(() => api.addRoom(g.id, name))} />
         </section>
       ))}
@@ -107,7 +112,7 @@ export default function Manage({ state, say, toast }) {
       <div className="mg">
         {users.map((u) => (
           <div className="muser" key={u.email}>
-            <div><b>{u.name}</b><br /><small>{u.email}</small></div>
+            <div><input className="user-name-input" key={`${u.email}-${u.name}`} defaultValue={u.name} maxLength={80} aria-label={`Tên của ${u.email}`} onBlur={(e) => { const name = e.target.value.trim(); if (name && name !== u.name) run(() => api.patchUser(u.email, { name }), loadUsers); }} /><br /><small>{u.email}</small></div>
             <label>
               <input type="checkbox" checked={u.isAdmin} onChange={(e) => run(() => api.patchUser(u.email, { isAdmin: e.target.checked }), loadUsers)} /> Admin
             </label>
