@@ -90,7 +90,6 @@ export default function Manage({ state, say, toast }) {
 
   return (
     <div className="mpage">
-      <a className="back" href="#/">← Về dashboard</a>
       <h2>Khu vực</h2>
       {state.groups.map((g) => (
         <section className="mg" key={`${g.id}-${g.name}`}>
