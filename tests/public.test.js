@@ -66,3 +66,23 @@ test('SSE: nhiều broadcast sát nhau được gộp, state cuối là state m�
     assert.equal((await a.next()).groups[0].rooms[0].note, '3');
   } finally { a.abort(); await t.close(); }
 });
+
+test('GET /api/stats: đếm đúng số người đang online và tổng lượt truy cập', async () => {
+  const t = await startApp();
+  const a = await openSse(t.base);
+  const b = await openSse(t.base);
+  try {
+    await a.next();
+    await b.next();
+    const r1 = await t.call('GET', '/api/stats');
+    assert.equal(r1.status, 200);
+    assert.equal(r1.body.online, 2);
+    assert.equal(r1.body.visits, 2);
+    a.abort();
+    for (let i = 0; i < 50 && t.app.sse.size() > 1; i++) await new Promise((r) => setTimeout(r, 20));
+    const r2 = await t.call('GET', '/api/stats');
+    assert.equal(r2.body.online, 1);
+    assert.equal(r2.body.visits, 2);
+  } finally { a.abort(); b.abort(); await t.close(); }
+});
+

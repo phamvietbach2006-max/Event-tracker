@@ -5,6 +5,7 @@ export function useLive() {
   const [state, setState] = useState(null);
   const [online, setOnline] = useState(false);
   const [error, setError] = useState(false);
+  const [stats, setStats] = useState({ online: 1, visits: 1 });
 
   const reload = useCallback(() => { api.state().then((next) => { setState(next); setError(false); }).catch(() => setError(true)); }, []);
 
@@ -31,8 +32,16 @@ export function useLive() {
         // Bỏ qua gói dữ liệu SSE không phải JSON hợp lệ
       }
     };
+    es.addEventListener('stats', (e) => {
+      try {
+        const next = JSON.parse(e.data);
+        if (next && typeof next.online === 'number') setStats(next);
+      } catch {
+        // Bỏ qua gói thống kê lỗi
+      }
+    });
     return () => es.close();
   }, [reload]);
 
-  return { state, setState, online, reload, error };
+  return { state, setState, online, reload, error, stats };
 }

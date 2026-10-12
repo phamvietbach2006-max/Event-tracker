@@ -1723,6 +1723,60 @@ a {
   color: #b45309;
 }
 
+.footer-counters-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--border-card);
+}
+
+.footer-counter-item {
+  background: #F8FAFC;
+  border: 1px solid var(--border-subtle);
+  border-radius: 10px;
+  padding: 7px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.footer-counter-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.footer-counter-label svg {
+  color: #0D9488;
+  flex-shrink: 0;
+}
+
+.footer-counter-val {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-main);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.footer-counter-val.online-val {
+  color: #087c56;
+}
+
+.footer-online-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+  flex-shrink: 0;
+}
+
 .footer-metric-row {
   display: flex;
   align-items: center;
