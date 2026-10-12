@@ -11,7 +11,12 @@ export default function Header({ me, online, stats, counts, tot, mode, filter, o
         <button className="mobile-menu-btn" onClick={onOpenSidebar} aria-label="Mở menu"><Menu size={22} /></button>
         <div className="space-title-box">
           <h1 className="space-title">Tình trạng khu vực</h1>
-          <p className="space-subtitle">{tot.rooms} khu vực · {tot.done}/{tot.total} việc đã xong ({tot.pct}%)</p>
+          <p className="space-subtitle">
+            <span><b>{tot.rooms}</b> khu vực</span>
+            <i className="subtitle-dot" aria-hidden="true" />
+            <span><b>{tot.done}/{tot.total}</b> việc đã xong</span>
+            <span className="subtitle-pct">{tot.pct}%</span>
+          </p>
         </div>
       </div>
       <div className="topbar-actions">
@@ -21,13 +26,13 @@ export default function Header({ me, online, stats, counts, tot, mode, filter, o
           {search && <button className="search-clear" onClick={() => setSearch('')} aria-label="Xóa tìm kiếm"><X size={16} /></button>}
         </label>}
         <div className="header-stats-pill" aria-label={`${onlineCount} người đang online, ${visitCount} lượt truy cập`}>
-          <span className="header-stat-item" title="Số người đang online trực tuyến">
+          <span className="header-stat-item online-item" title="Số người đang online trực tuyến">
             <Users size={14} aria-hidden="true" />
             <b>{onlineCount}</b>
             <span className="header-stat-label">online</span>
           </span>
           <i className="header-stats-sep" aria-hidden="true" />
-          <span className="header-stat-item" title="Tổng số lượt truy cập hệ thống">
+          <span className="header-stat-item visit-item" title="Tổng số lượt truy cập hệ thống">
             <Eye size={14} aria-hidden="true" />
             <b>{visitCount.toLocaleString('vi-VN')}</b>
             <span className="header-stat-label">lượt xem</span>
@@ -44,4 +49,5 @@ export default function Header({ me, online, stats, counts, tot, mode, filter, o
     </div>}
   </header>;
 }
+
 
