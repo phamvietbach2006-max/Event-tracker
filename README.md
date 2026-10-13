@@ -213,3 +213,5 @@ Mọi thông tin chi tiết về từng khía cạnh của hệ thống được
 ---
 
 *© 2026 CLB Chuyển đổi số Đại học Bách khoa Hà Nội (DYC). Bản quyền nội bộ phục vụ sự kiện.*
+#   E v e n t - t r a c k e r  
+ 
