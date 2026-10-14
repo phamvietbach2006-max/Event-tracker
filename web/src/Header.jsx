@@ -36,7 +36,7 @@ export default function Header({ me, online, stats, counts, tot, mode, filter, s
       </div>
     </div>
 
-    {!managing && mode !== 'map' && (
+    {!managing && mode !== 'map' && mode !== 'dashboard' && (
       <div className="filter-bar-stack">
         <div className="filter-toolbar" role="toolbar" aria-label="Thanh công cụ lọc">
           {/* 1. Chọn Đơn vị */}

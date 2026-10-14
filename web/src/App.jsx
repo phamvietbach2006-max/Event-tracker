@@ -9,6 +9,7 @@ import GroupCard from './Group.jsx';
 import Manage from './Manage.jsx';
 import Footer from './Footer.jsx';
 import UnitImportModal from './UnitImportModal.jsx';
+import OverviewTable from './OverviewTable.jsx';
 const MapView = lazy(() => import('./MapView.jsx')); // maplibre-gl nặng, chỉ tải khi mở Sơ đồ
 
 function useHash() {
@@ -160,31 +161,13 @@ export default function App() {
         {!online && <div className="offline-banner" role="status">Đang kết nối lại để nhận cập nhật mới…</div>}
         {managing ? <main id="main"><Manage state={state} say={setToast} toast={toast} onOpenImport={() => setImportOpen(true)} /></main> : mode === 'map' ? <main id="main"><Suspense fallback={<div className="sk" role="status" aria-label="Đang tải bản đồ"><i className="h" /><i className="c" /></div>}><MapView groups={unitGroups} me={me} act={act} /></Suspense></main> : mode === 'dashboard' ? (
           <main id="main" className="overview-page">
-            <div className="overview-placeholder-card">
-              <span className="overview-badge">Trang Tổng quan</span>
-              <div className="overview-logo-wrap">
-                <img src="/logo-full.png" alt="Logo Ban Tổ chức - Kiểm tra" className="overview-hero-logo" />
-              </div>
-              <h2>Tổng quan Đại hội Chi đoàn</h2>
-              <p className="overview-desc">Khu vực báo cáo tổng hợp tiến độ tổ chức Đại hội và tỉ lệ hoàn thiện hồ sơ các Chi đoàn.</p>
-              <div className="overview-stats-grid">
-                <div className="overview-stat-tile">
-                  <b>{unitCounts?.all ?? 0}</b>
-                  <span>Tổng số lớp</span>
-                </div>
-                <div className="overview-stat-tile">
-                  <b>{UNITS.length}</b>
-                  <span>Đơn vị tổ chức</span>
-                </div>
-                <div className="overview-stat-tile">
-                  <b>{totals(rooms).done}/{totals(rooms).total}</b>
-                  <span>Giấy tờ đã đủ</span>
-                </div>
-              </div>
-              <button className="btn-primary" onClick={() => navigate('overview')}>
-                <ClipboardList size={16} /> Đi đến Bảng theo dõi
-              </button>
-            </div>
+            <OverviewTable
+              state={state}
+              me={me}
+              act={act}
+              onNavigate={navigate}
+              onSelectUnit={setSelectedUnit}
+            />
           </main>
         ) : <main id="main" className={`event-board ${mode === 'overview' ? '' : 'detail-board'}`}>
           {mode !== 'overview' && (
