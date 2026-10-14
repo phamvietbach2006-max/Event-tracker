@@ -1,6 +1,7 @@
 import { openDb } from '../lib/db.js';
 import { createApp } from '../lib/app.js';
 import { isEmpty, applySeed, syncUsersSeed, ensureTokens } from '../lib/seed.js';
+import { tx } from '../lib/repo.js';
 import { readFileSync } from 'node:fs';
 
 let seedData;
@@ -41,36 +42,26 @@ function getApp() {
 
   const db = openDb(dbPath);
   try {
-    db.prepare("DELETE FROM room_owners WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
-    db.prepare("DELETE FROM sessions WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
-    db.prepare("DELETE FROM user_units WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
-    db.prepare("DELETE FROM user_groups WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
-    db.prepare("DELETE FROM users WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
-  } catch (err) {
-    console.error('Lỗi dọn dẹp tài khoản không thuộc sis.hust.edu.vn:', err);
-  }
+    tx(db, () => {
+      db.prepare("DELETE FROM room_owners WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+      db.prepare("DELETE FROM sessions WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+      db.prepare("DELETE FROM user_units WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+      db.prepare("DELETE FROM user_groups WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+      db.prepare("DELETE FROM users WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
 
-  if (isEmpty(db)) {
-    try {
-      applySeed(db, seedData);
-    } catch (err) {
-      console.error('Lỗi khi nạp dữ liệu mẫu ban đầu:', err);
-    }
-  } else {
-    try {
-      syncUsersSeed(db, seedData.users);
-    } catch (err) {
-      console.error('Lỗi đồng bộ cán bộ từ seed.json:', err);
-    }
-  }
+      if (isEmpty(db)) {
+        applySeed(db, seedData);
+      } else {
+        syncUsersSeed(db, seedData.users);
+      }
 
-  try {
-    const needsToken = db.prepare('SELECT 1 FROM users WHERE token IS NULL LIMIT 1').get();
-    if (needsToken) {
-      ensureTokens(db);
-    }
+      const needsToken = db.prepare('SELECT 1 FROM users WHERE token IS NULL LIMIT 1').get();
+      if (needsToken) {
+        ensureTokens(db);
+      }
+    });
   } catch (err) {
-    console.error('Lỗi kiểm tra token:', err);
+    console.error('Lỗi khởi tạo database serverless:', err);
   }
 
   appInstance = createApp({ db, config });

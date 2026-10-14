@@ -38,10 +38,16 @@ export function useLive() {
   const reload = useCallback(() => {
     return api.state()
       .then((next) => {
-        updateState(next);
+        if (next && Array.isArray(next.groups)) {
+          updateState(next);
+        }
       })
       .catch((err) => {
-        console.warn('Lỗi tải state:', err);
+        if (err?.name === 'TimeoutError' || err?.name === 'AbortError') {
+          console.warn('Đang kết nối lại mạng hoặc tải chậm trong nền:', err.message);
+        } else {
+          console.warn('Lỗi tải state:', err);
+        }
         setStateInternal((curr) => {
           if (!curr) setError(true);
           return curr;

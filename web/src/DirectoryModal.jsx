@@ -198,25 +198,27 @@ export default function DirectoryModal({ open, contacts = [], onSelectOfficer, o
                     className={`directory-officer-card ${isExec ? 'is-exec' : ''}`}
                     onClick={() => onSelectOfficer(officer)}
                   >
-                    <div className="doc-avatar">
-                      {getInitials(officer.name)}
-                    </div>
-                    <div className="doc-content">
-                      <div className="doc-name-row">
+                    <div className="doc-top">
+                      <div className="doc-avatar">
+                        {getInitials(officer.name)}
+                      </div>
+                      <div className="doc-content">
                         <strong className="doc-name">{officer.name}</strong>
-                        {officer.position && (
-                          <span className={`doc-pos-tag ${isExec ? 'exec-pos' : ''}`}>
-                            {officer.position}
-                          </span>
+                        <div className="doc-meta-row">
+                          {officer.position && (
+                            <span className={`doc-pos-tag ${isExec ? 'exec-pos' : ''}`}>
+                              {officer.position}
+                            </span>
+                          )}
+                          <span className="doc-team" title={officer.team}>{officer.team || 'Cán bộ Ban TC-KT'}</span>
+                        </div>
+                        {officer.department && (
+                          <div className="doc-dept" title={officer.department}>
+                            <Building size={12} />
+                            <span>{officer.department}</span>
+                          </div>
                         )}
                       </div>
-                      <div className="doc-team">{officer.team || 'Cán bộ Ban TC-KT'}</div>
-                      {officer.department && (
-                        <div className="doc-dept">
-                          <Building size={12} />
-                          <span>{officer.department}</span>
-                        </div>
-                      )}
                     </div>
 
                     <div
@@ -230,24 +232,19 @@ export default function DirectoryModal({ open, contacts = [], onSelectOfficer, o
                           className="doc-call-action-btn"
                           title={`Gọi ngay cho ${officer.name}: ${displayPhone}`}
                         >
-                          <PhoneCall size={16} />
+                          <PhoneCall size={14} />
                           <span className="doc-phone-text">{displayPhone}</span>
                         </a>
                       ) : (
                         <span className="doc-no-phone">Chưa có SĐT</span>
                       )}
+                      <span className="doc-view-pill">Chi tiết →</span>
                     </div>
                   </div>
                 );
               })}
             </div>
           )}
-        </div>
-
-        <div className="directory-footer">
-          <button type="button" className="officer-close-btn" onClick={onClose}>
-            Đóng danh bạ
-          </button>
         </div>
       </div>
     </div>
