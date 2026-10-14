@@ -42,24 +42,22 @@ function getApp() {
 
   const db = openDb(dbPath);
   try {
-    tx(db, () => {
-      db.prepare("DELETE FROM room_owners WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
-      db.prepare("DELETE FROM sessions WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
-      db.prepare("DELETE FROM user_units WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
-      db.prepare("DELETE FROM user_groups WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
-      db.prepare("DELETE FROM users WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+    db.prepare("DELETE FROM room_owners WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+    db.prepare("DELETE FROM sessions WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+    db.prepare("DELETE FROM user_units WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+    db.prepare("DELETE FROM user_groups WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+    db.prepare("DELETE FROM users WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
 
-      if (isEmpty(db)) {
-        applySeed(db, seedData);
-      } else {
-        syncUsersSeed(db, seedData.users);
-      }
+    if (isEmpty(db)) {
+      applySeed(db, seedData);
+    } else {
+      syncUsersSeed(db, seedData.users);
+    }
 
-      const needsToken = db.prepare('SELECT 1 FROM users WHERE token IS NULL LIMIT 1').get();
-      if (needsToken) {
-        ensureTokens(db);
-      }
-    });
+    const needsToken = db.prepare('SELECT 1 FROM users WHERE token IS NULL LIMIT 1').get();
+    if (needsToken) {
+      ensureTokens(db);
+    }
   } catch (err) {
     console.error('Lỗi khởi tạo database serverless:', err);
   }
@@ -69,6 +67,11 @@ function getApp() {
 }
 
 export default async function handler(req, res) {
+  if (req.headers['x-forwarded-uri']) {
+    req.url = req.headers['x-forwarded-uri'];
+  } else if (req.headers['x-matched-path'] && !req.headers['x-matched-path'].includes('/index.js')) {
+    req.url = req.headers['x-matched-path'];
+  }
   const app = getApp();
   return app.handleRequest(req, res);
 }
