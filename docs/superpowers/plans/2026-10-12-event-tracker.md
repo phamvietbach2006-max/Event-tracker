@@ -1,3 +1,6 @@
+---
+render_with_liquid: false
+---
 # Event Tracker (backend + frontend) Implementation Plan
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
@@ -2276,6 +2279,7 @@ export function useLive() {
 
 - [ ] **Step 3: Viết `web/src/Header.jsx`**
 
+{% raw %}
 ```jsx
 import { ORDER, ST } from './logic.js';
 
@@ -2305,9 +2309,11 @@ export default function Header({ me, online, counts, tot, filter, setFilter }) {
   );
 }
 ```
+{% endraw %}
 
 - [ ] **Step 4: Viết `web/src/Group.jsx`**
 
+{% raw %}
 ```jsx
 import { useEffect, useRef, useState } from 'react';
 import { api } from './api.js';
@@ -2407,6 +2413,7 @@ export default function GroupCard({ group, rooms, me, open, onToggle, openK, onT
   );
 }
 ```
+{% endraw %}
 
 - [ ] **Step 5: Viết `web/src/App.jsx`**
 
