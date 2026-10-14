@@ -3,8 +3,8 @@
   "services": {
     "app": {
       "root": ".",
-      "runtime": "node",
-      "entrypoint": "server.js"
+      "runtime": "nodejs22.x",
+      "entrypoint": "api/index.js"
     },
     "web": {
       "root": "web",
