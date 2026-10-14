@@ -97,9 +97,17 @@ function init() {
 }
 
 const dispatch = (req, res) => {
+  if (req.headers['x-forwarded-uri']) {
+    req.url = req.headers['x-forwarded-uri'];
+  } else if (req.headers['x-matched-path'] && !req.headers['x-matched-path'].includes('/server.js')) {
+    req.url = req.headers['x-matched-path'];
+  }
   const url = new URL(req.url, 'http://local');
   if (url.pathname === '/health' || url.pathname === '/api/health') {
-    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.writeHead(200, {
+      'Content-Type': 'application/json',
+      'Access-Control-Allow-Origin': '*',
+    });
     res.end(JSON.stringify({ status: 'healthy', uptime: process.uptime() }));
     return;
   }
