@@ -5,10 +5,14 @@ import { createApp } from './lib/app.js';
 import { isEmpty, applySeed, ensureTokens } from './lib/seed.js';
 
 const baseUrl = (process.env.WEB_URL ?? process.env.BASE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
+const tursoUrl = process.env.TURSO_DATABASE_URL ?? process.env.LIBSQL_URL;
+const dbPath = tursoUrl ? tursoUrl : (process.env.VERCEL ? '/tmp/app.db' : (process.env.DB_PATH ?? 'app.db'));
+const host = process.env.HOST ?? (process.env.VERCEL ? '0.0.0.0' : '127.0.0.1');
+
 const config = {
   port: Number(process.env.PORT ?? 3000),
-  host: process.env.HOST ?? '127.0.0.1',
-  dbPath: process.env.DB_PATH ?? 'app.db',
+  host,
+  dbPath,
   baseUrl,
   // Bật SSO khi có đủ biến môi trường (xem docs/SSO.md)
   sso: process.env.SSO_CLIENT_ID && process.env.SSO_CLIENT_SECRET && process.env.SSO_TENANT_ID
