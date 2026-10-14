@@ -20,7 +20,7 @@ jobs:
           node-version: 22
       - name: Kiểm tra cú pháp backend
         run: |
-          for f in server.js $(find lib routes auth -name '*.js' 2>/dev/null); do node --check "$f"; done
+          for f in server.js $(find lib routes auth api -name '*.js' 2>/dev/null); do node --check "$f"; done
       - name: Backend test (nếu có)
         run: |
           if [ -f package.json ] && node -e "process.exit(require('./package.json').scripts?.test?0:1)"; then

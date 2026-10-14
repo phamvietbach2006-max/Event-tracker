@@ -167,10 +167,29 @@ npm run loadtest -- --url http://127.0.0.1:3000 --sse 300 --readers 50 --seconds
 
 ---
 
-## 6. Hướng dẫn Triển khai Production
+## 6. Hướng dẫn Triển khai (Deployment)
 
 Chi tiết cấu hình hạ tầng xem tại [TECH.md](TECH.md) và [deploy/VM-TUNING.md](deploy/VM-TUNING.md).
 
+### 🚀 Cách 1: Triển khai nhanh trên Vercel (Serverless Cloud)
+Dự án đã được tích hợp sẵn cấu hình `vercel.json` và Serverless Function entrypoint tại `api/index.js`:
+1. Đẩy code lên GitHub repository: `https://github.com/phamvietbach2006-max/Event-tracker.git`.
+2. Truy cập [Vercel Dashboard](https://vercel.com/new) và nhấn **Add New Project** ➔ **Import Git Repository**.
+3. Chọn repo `Event-tracker`.
+4. Cấu hình triển khai:
+   - **Framework Preset:** Vite (hoặc Other).
+   - **Root Directory:** `./` (mặc định).
+   - **Build Command:** `npm run build` (tự động nhận từ `vercel.json`).
+   - **Output Directory:** `web/dist` (tự động nhận từ `vercel.json`).
+   - **Node.js Version:** Chọn `22.x` trong Project Settings.
+5. Nhấn **Deploy**.
+> **Lưu ý về Serverless SQLite trên Vercel:**  
+> Hệ thống sẽ tự động khởi tạo cơ sở dữ liệu SQLite trong `/tmp/app.db` và nạp toàn bộ 237 chi đoàn, 1220 đầu việc, 10 toà nhà/tầng và 33 tài khoản cán bộ từ `seed.json`. Tài khoản quản trị mặc định: `admin@example.com` / Mật khẩu: `Abc@123456767`.
+
+---
+
+### 🖥️ Cách 2: Triển khai máy chủ chuyên dụng (Ubuntu 24.04 LTS / VPS)
+Phù hợp cho môi trường sự kiện thực tế cần lưu trữ vĩnh viễn trên đĩa cứng và hỗ trợ kết nối SSE hàng nghìn người:
 1. **Build Frontend:**
    ```bash
    cd web
