@@ -1,6 +1,11 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "web/dist",
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "seed.json"
+    }
+  },
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/index.js" },
     { "source": "/events", "destination": "/api/index.js" },

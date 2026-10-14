@@ -1,7 +1,9 @@
 import { openDb } from '../lib/db.js';
 import { createApp } from '../lib/app.js';
 import { isEmpty, applySeed, syncUsersSeed, ensureTokens } from '../lib/seed.js';
-import seedData from '../seed.json' with { type: 'json' };
+import { readFileSync } from 'node:fs';
+
+const seedData = JSON.parse(readFileSync(new URL('../seed.json', import.meta.url), 'utf8'));
 
 let appInstance = null;
 
