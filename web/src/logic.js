@@ -101,7 +101,71 @@ export function totals(rooms) {
 }
 
 export const canEdit = (me, room) =>
-  !!me && (Boolean(me.isAdmin) || Boolean(me.ownedRoomIds?.includes(room?.id)));
+  !!me && (Boolean(me.isAdmin) || me.role === 'admin' || Boolean(me.ownedRoomIds?.includes(room?.id)));
+
+export const ROLES = {
+  admin: {
+    id: 'admin',
+    label: 'Quản trị viên Ban TC-KT',
+    badge: 'Admin',
+    color: 'red',
+    desc: 'Kiểm soát toàn bộ hệ thống, phân quyền và quản lý tài khoản cán bộ',
+  },
+  unit_lead: {
+    id: 'unit_lead',
+    label: 'Cán bộ phụ trách Đơn vị',
+    badge: 'Phụ trách Đơn vị',
+    color: 'purple',
+    desc: 'Giám sát và kiểm tra toàn bộ chi đoàn thuộc đơn vị được phân công',
+  },
+  floor_lead: {
+    id: 'floor_lead',
+    label: 'Cán bộ phụ trách Tầng',
+    badge: 'Phụ trách Tầng',
+    color: 'blue',
+    desc: 'Theo dõi và quản lý các phòng/lớp thuộc tầng/khu vực được phân công',
+  },
+  room_lead: {
+    id: 'room_lead',
+    label: 'Cán bộ kiểm tra Chi đoàn',
+    badge: 'Kiểm tra Chi đoàn',
+    color: 'green',
+    desc: 'Trực tiếp kiểm tra và tích nộp hồ sơ đại hội các chi đoàn được giao',
+  },
+};
+
+export function getScopedGroups(groups = [], me = null) {
+  if (!me || me.isAdmin || me.role === 'admin') {
+    return groups;
+  }
+
+  const role = me.role || 'room_lead';
+
+  if (role === 'unit_lead') {
+    const assignedUnits = new Set(me.assignedUnits || []);
+    return groups.filter((g) => {
+      const meta = parseGroupMeta(g.name);
+      return assignedUnits.has(meta.unit);
+    });
+  }
+
+  if (role === 'floor_lead') {
+    const assignedGroupIds = new Set((me.assignedGroupIds || []).map(Number));
+    return groups.filter((g) => assignedGroupIds.has(Number(g.id)));
+  }
+
+  if (role === 'room_lead') {
+    const allowed = new Set((me.assignedRoomIds || me.ownedRoomIds || []).map(Number));
+    return groups
+      .map((g) => ({
+        ...g,
+        rooms: (g.rooms || []).filter((r) => allowed.has(Number(r.id))),
+      }))
+      .filter((g) => g.rooms.length > 0);
+  }
+
+  return groups;
+}
 
 const mapRooms = (state, fn) => ({ ...state, groups: state.groups.map((g) => ({ ...g, rooms: g.rooms.map(fn) })) });
 
@@ -119,3 +183,4 @@ export const timeLabel = (ms) => (ms ? fmt.format(new Date(ms)) : '');
 
 export const removeTask = (state, taskId) =>
   mapRooms(state, (r) => (r.tasks.some((t) => t.id === taskId) ? { ...r, tasks: r.tasks.filter((t) => t.id !== taskId) } : r));
+

@@ -100,13 +100,33 @@ test('người dùng: danh sách có email và khu phụ trách, thêm, trùng 4
   try {
     const list = await t.call('GET', '/api/users', { as: A });
     const o = list.body.find((u) => u.email === 'owner@t.test');
-    assert.deepEqual(o, { email: 'owner@t.test', name: 'Chủ Khu', isAdmin: false, ownedRoomIds: [1, 2], hasToken: false });
+    assert.deepEqual(o, {
+      email: 'owner@t.test',
+      name: 'Chủ Khu',
+      isAdmin: false,
+      role: 'room_lead',
+      assignedUnits: [],
+      assignedGroupIds: [],
+      assignedRoomIds: [1, 2],
+      ownedRoomIds: [1, 2],
+      hasToken: false,
+    });
     const n = await t.call('POST', '/api/users', { as: A, body: { email: ' Moi@T.test ', name: 'Người Mới', isAdmin: false } });
-    assert.deepEqual(n.body, { email: 'moi@t.test', name: 'Người Mới', isAdmin: false, ownedRoomIds: [], hasToken: false });
+    assert.deepEqual(n.body, {
+      email: 'moi@t.test',
+      name: 'Người Mới',
+      isAdmin: false,
+      role: 'room_lead',
+      assignedUnits: [],
+      assignedGroupIds: [],
+      assignedRoomIds: [],
+      ownedRoomIds: [],
+      hasToken: false,
+    });
     assert.equal((await t.call('POST', '/api/users', { as: A, body: { email: 'moi@t.test', name: 'Lại' } })).status, 409);
     assert.equal((await t.call('POST', '/api/users', { as: A, body: { email: 'sai', name: 'X' } })).status, 400);
     const p = await t.call('PATCH', '/api/users/moi%40t.test', { as: A, body: { name: 'Tên Khác', isAdmin: true } });
-    assert.deepEqual({ name: p.body.name, isAdmin: p.body.isAdmin }, { name: 'Tên Khác', isAdmin: true });
+    assert.deepEqual({ name: p.body.name, isAdmin: p.body.isAdmin, role: p.body.role }, { name: 'Tên Khác', isAdmin: true, role: 'admin' });
     assert.equal((await t.call('PATCH', '/api/users/khong%40co.vn', { as: A, body: { name: 'X' } })).status, 404);
     assert.deepEqual((await t.call('DELETE', '/api/users/moi%40t.test', { as: A })).body, { ok: true });
   } finally { await t.close(); }
@@ -152,5 +172,64 @@ test('link đăng nhập riêng: tạo mới vô hiệu link cũ, link mới dù
     assert.equal((await t.call('POST', '/api/users/khong%40co.vn/token', { as: A })).status, 404);
     const list = await t.call('GET', '/api/users', { as: A });
     assert.equal(list.body.find((u) => u.email === 'owner@t.test').hasToken, true);
+  } finally { await t.close(); }
+});
+
+test('phân quyền theo vai trò: unit_lead, floor_lead, reset-password', async () => {
+  const t = await startApp();
+  try {
+    // 1. Tạo unit_lead
+    const uLead = await t.call('POST', '/api/users', {
+      as: A,
+      body: {
+        email: 'unitlead@t.test',
+        name: 'Trưởng Đơn Vị',
+        role: 'unit_lead',
+        assignedUnits: ['Trường CNTT & TT'],
+      },
+    });
+    assert.equal(uLead.status, 200);
+    assert.equal(uLead.body.role, 'unit_lead');
+    assert.deepEqual(uLead.body.assignedUnits, ['Trường CNTT & TT']);
+
+    // 2. Tạo floor_lead
+    const fLead = await t.call('POST', '/api/users', {
+      as: A,
+      body: {
+        email: 'floorlead@t.test',
+        name: 'Trưởng Tầng',
+        role: 'floor_lead',
+        assignedGroupIds: [1],
+      },
+    });
+    assert.equal(fLead.status, 200);
+    assert.equal(fLead.body.role, 'floor_lead');
+    assert.deepEqual(fLead.body.assignedGroupIds, [1]);
+
+    // 3. Reset password
+    const resetRes = await t.call('POST', '/api/users/unitlead%40t.test/reset-password', { as: A });
+    assert.equal(resetRes.status, 200);
+    assert.equal(resetRes.body.ok, true);
+
+    // Kiểm tra đăng nhập bằng mật khẩu mặc định mới reset
+    const loginRes = await t.call('POST', '/api/auth/login', {
+      body: { email: 'unitlead@t.test', password: 'Abc@123456767' },
+    });
+    assert.equal(loginRes.status, 200);
+    assert.equal(loginRes.body.user.email, 'unitlead@t.test');
+
+    // 4. Floor lead can edit room in their group (group 1 has room 1 and 2 in seed)
+    const patchOk = await t.call('PATCH', '/api/rooms/1/note', {
+      as: 'floorlead@t.test',
+      body: { note: 'Cập nhật bởi floor lead' },
+    });
+    assert.equal(patchOk.status, 200);
+
+    // Floor lead cannot edit room in another group (room 3 belongs to group 2)
+    const patchFail = await t.call('PATCH', '/api/rooms/3/note', {
+      as: 'floorlead@t.test',
+      body: { note: 'Không được phép' },
+    });
+    assert.equal(patchFail.status, 403);
   } finally { await t.close(); }
 });

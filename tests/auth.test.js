@@ -8,10 +8,21 @@ test('/api/me: khách → null; chủ khu; admin', async () => {
   try {
     assert.deepEqual((await t.call('GET', '/api/me')).body, null);
     const o = await t.call('GET', '/api/me', { as: 'owner@t.test' });
-    assert.deepEqual(o.body, { email: 'owner@t.test', name: 'Chủ Khu', isAdmin: false, ownedRoomIds: [1, 2] });
+    assert.deepEqual(o.body, {
+      email: 'owner@t.test',
+      name: 'Chủ Khu',
+      isAdmin: false,
+      role: 'room_lead',
+      assignedUnits: [],
+      assignedGroupIds: [],
+      assignedRoomIds: [1, 2],
+      ownedRoomIds: [1, 2],
+      hasToken: false,
+    });
     const a = await t.call('GET', '/api/me', { as: 'admin@t.test' });
     assert.equal(a.body.isAdmin, true);
-    assert.deepEqual(a.body.ownedRoomIds, []);
+    assert.equal(a.body.role, 'admin');
+    assert.deepEqual(a.body.ownedRoomIds, [1, 2, 3]);
   } finally { await t.close(); }
 });
 

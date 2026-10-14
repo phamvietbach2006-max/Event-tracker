@@ -1,5 +1,5 @@
 import { Menu, Search, Wifi, WifiOff, X, Users, Eye, Building2, LogIn, LogOut, UserRound } from 'lucide-react';
-import { ORDER, ST, KIPS, COHORTS, UNITS } from './logic.js';
+import { ORDER, ST, KIPS, COHORTS, UNITS, ROLES } from './logic.js';
 
 export default function Header({
   me,
@@ -11,6 +11,7 @@ export default function Header({
   filter,
   selectedUnit,
   onSelectUnit,
+  availableUnits,
   unitCounts,
   onOpenImport,
   kipFilter,
@@ -62,13 +63,13 @@ export default function Header({
 
         {me ? (
           <div className="header-user-badge">
-            <span className={`header-user-avatar ${me.isAdmin ? 'is-admin' : 'is-user'}`}>
+            <span className={`header-user-avatar role-avatar-${me.role || (me.isAdmin ? 'admin' : 'room_lead')}`}>
               {me.name?.charAt(0).toUpperCase() || 'U'}
             </span>
             <div className="header-user-info" title={me.email}>
               <span className="header-user-name">{me.name}</span>
-              <span className={`header-role-tag ${me.isAdmin ? 'is-admin' : 'is-supervisor'}`}>
-                {me.isAdmin ? 'Quản trị viên Ban TC-KT' : `Cán bộ (${me.ownedRoomIds?.length || 0} lớp)`}
+              <span className={`header-role-tag role-tag-${me.role || (me.isAdmin ? 'admin' : 'room_lead')}`}>
+                {ROLES[me.role || (me.isAdmin ? 'admin' : 'room_lead')]?.badge || (me.isAdmin ? 'Admin' : 'Cán bộ')}
               </span>
             </div>
             <button
@@ -99,7 +100,7 @@ export default function Header({
       <div className="filter-bar-stack">
         <div className="filter-toolbar" role="toolbar" aria-label="Thanh công cụ lọc">
           {/* 1. Chọn Đơn vị */}
-          <label className="unit-select-box" title="Chuyển đổi giữa 12 Đơn vị tổ chức Đại hội">
+          <label className="unit-select-box" title="Chuyển đổi Đơn vị tổ chức Đại hội">
             <Building2 size={15} className="unit-select-icon" />
             <select
               className="unit-select-control"
@@ -107,8 +108,10 @@ export default function Header({
               onChange={(e) => { onSelectUnit(e.target.value); onNavigate('overview'); }}
               aria-label="Chọn đơn vị tổ chức Đại hội"
             >
-              <option value="all">Tất cả 12 đơn vị ({unitCounts?.all ?? 0} lớp)</option>
-              {UNITS.map((u) => (
+              <option value="all">
+                {(availableUnits || UNITS).length > 1 ? `Tất cả ${(availableUnits || UNITS).length} đơn vị` : 'Đơn vị'} ({unitCounts?.all ?? 0} lớp)
+              </option>
+              {(availableUnits || UNITS).map((u) => (
                 <option key={u} value={u}>{u} ({unitCounts?.[u] ?? 0} lớp)</option>
               ))}
             </select>

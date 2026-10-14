@@ -56,6 +56,19 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
   const [docFilter, setDocFilter] = useState('all'); // 'all', 'done', 'doing', 'empty'
   const [search, setSearch] = useState('');
 
+  // Available units in the scoped dataset
+  const availableUnits = useMemo(() => {
+    const fromGroups = [...new Set((state?.groups ?? []).map((g) => parseGroupMeta(g.name).unit))].filter(Boolean);
+    return fromGroups.length > 0 ? fromGroups : UNITS;
+  }, [state]);
+
+  // Auto-align unitFilter if unitFilter is not in availableUnits
+  useState(() => {
+    if (availableUnits.length === 1) {
+      setUnitFilter(availableUnits[0]);
+    }
+  });
+
   // Sorting
   const [sortCol, setSortCol] = useState('stt'); // 'stt', 'className', 'roomCode', 'kip', 'status', 'progress'
   const [sortDir, setSortDir] = useState('asc'); // 'asc', 'desc'
@@ -391,8 +404,10 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
               }}
               className="ov-select"
             >
-              <option value="all">Tất cả 12 đơn vị</option>
-              {UNITS.map((u) => (
+              <option value="all">
+                {availableUnits.length > 1 ? `Tất cả ${availableUnits.length} đơn vị` : 'Đơn vị'}
+              </option>
+              {availableUnits.map((u) => (
                 <option key={u} value={u}>{u}</option>
               ))}
             </select>

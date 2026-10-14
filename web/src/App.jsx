@@ -2,7 +2,7 @@ import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from 'react
 import { Home, Star, Settings, Map, FileSpreadsheet, PlusCircle, LayoutDashboard, ClipboardList, ChevronsDown, ChevronsUp, ArrowUp, ShieldAlert, LogIn } from 'lucide-react';
 import { api } from './api.js';
 import { useLive } from './useLive.js';
-import { allRooms, canEdit, statusCounts, totals, ST, UNITS, parseRoomMeta, parseGroupMeta } from './logic.js';
+import { allRooms, canEdit, statusCounts, totals, ST, UNITS, parseRoomMeta, parseGroupMeta, getScopedGroups } from './logic.js';
 import Sidebar from './Sidebar.jsx';
 import Header from './Header.jsx';
 import GroupCard from './Group.jsx';
@@ -117,17 +117,38 @@ export default function App() {
     }
   };
 
+  const isSuperAdmin = !me || me.isAdmin || me.role === 'admin';
+  const isAdmin = Boolean(me && (me.isAdmin || me.role === 'admin'));
+
+  // Scoped groups according to user role to prevent clutter ("không bị loạn")
+  const scopedGroups = useMemo(() => getScopedGroups(state?.groups ?? [], me), [state?.groups, me]);
+  const scopedState = useMemo(() => (state ? { ...state, groups: scopedGroups } : state), [state, scopedGroups]);
+
+  // Available units for the current role
+  const availableUnits = useMemo(() => {
+    if (isSuperAdmin) return UNITS;
+    const units = [...new Set(scopedGroups.map((g) => parseGroupMeta(g.name).unit))].filter(Boolean);
+    return units.length > 0 ? units : UNITS;
+  }, [isSuperAdmin, scopedGroups]);
+
+  // Auto-switch selectedUnit if current selectedUnit is not in availableUnits
+  useEffect(() => {
+    if (!isSuperAdmin && availableUnits.length > 0 && selectedUnit !== 'all' && !availableUnits.includes(selectedUnit)) {
+      setSelectedUnit(availableUnits[0]);
+    }
+  }, [isSuperAdmin, availableUnits, selectedUnit]);
+
   const unitCounts = useMemo(() => {
     const map = { all: 0 };
     for (const u of UNITS) map[u] = 0;
-    for (const g of state?.groups ?? []) {
+    for (const g of scopedGroups) {
       const { unit } = parseGroupMeta(g.name);
       const count = g.rooms.length;
       map[unit] = (map[unit] ?? 0) + count;
       map.all += count;
     }
     return map;
-  }, [state]);
+  }, [scopedGroups]);
 
   if (authError || (!state && stateError)) return (
     <div className="load-error" role="alert">
@@ -139,8 +160,8 @@ export default function App() {
   if (!state || me === undefined) return <div className="sk" role="status" aria-label="Đang tải"><i className="h" /><i className="c" /><i className="c" /></div>;
 
   const unitGroups = selectedUnit === 'all'
-    ? state.groups
-    : state.groups.filter((g) => parseGroupMeta(g.name).unit === selectedUnit);
+    ? scopedGroups
+    : scopedGroups.filter((g) => parseGroupMeta(g.name).unit === selectedUnit);
   const rooms = unitGroups.flatMap((g) => g.rooms);
   const query = search.trim().toLocaleLowerCase('vi');
   const matches = (room, group) => {
@@ -170,10 +191,11 @@ export default function App() {
         groupId={groupId}
         selectedUnit={selectedUnit}
         onSelectUnit={setSelectedUnit}
+        availableUnits={availableUnits}
         unitCounts={unitCounts}
         onOpenImport={() => setImportOpen(true)}
         onNavigate={navigate}
-        groups={state.groups}
+        groups={scopedGroups}
         counts={statusCounts(rooms)}
         open={sidebarOpen}
         setOpen={setSidebarOpen}
@@ -195,6 +217,7 @@ export default function App() {
           filter={filter}
           selectedUnit={selectedUnit}
           onSelectUnit={setSelectedUnit}
+          availableUnits={availableUnits}
           unitCounts={unitCounts}
           onOpenImport={() => setImportOpen(true)}
           kipFilter={kipFilter}
@@ -231,12 +254,12 @@ export default function App() {
                 </div>
               </div>
             </main>
-          ) : !me.isAdmin ? (
+          ) : !isAdmin ? (
             <main id="main" className="manage-auth-gate">
               <div className="auth-gate-card">
                 <div className="auth-gate-icon"><ShieldAlert size={48} /></div>
                 <h2>Không có quyền truy cập</h2>
-                <p>Tài khoản <b>{me.name}</b> ({me.email}) là Cán bộ kiểm tra, không có quyền Quản trị hệ thống.</p>
+                <p>Tài khoản <b>{me.name}</b> ({me.email}) không có quyền Quản trị hệ thống.</p>
                 <div className="auth-gate-actions">
                   <button type="button" className="btn-secondary" onClick={() => navigate('overview')}>
                     Quay lại Bảng theo dõi
@@ -245,7 +268,7 @@ export default function App() {
               </div>
             </main>
           ) : (
-            <main id="main"><Manage state={state} say={setToast} toast={toast} onOpenImport={() => setImportOpen(true)} /></main>
+            <main id="main"><Manage state={state} me={me} say={setToast} toast={toast} /></main>
           )
         ) : mode === 'map' ? (
           <main id="main">
@@ -256,7 +279,7 @@ export default function App() {
         ) : mode === 'dashboard' ? (
           <main id="main" className="overview-page">
             <OverviewTable
-              state={state}
+              state={scopedState}
               me={me}
               act={act}
               onNavigate={navigate}

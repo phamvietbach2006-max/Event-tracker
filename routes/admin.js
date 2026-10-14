@@ -3,22 +3,66 @@ import { requireAdmin } from '../lib/perm.js';
 import { roomOr404, taskOr404, groupOr404, logActivity, tx, roomView, taskView } from '../lib/repo.js';
 import { text, int, email } from '../lib/validate.js';
 import { newToken, loginUrl } from '../auth/token.js';
+import { hashPassword } from '../auth/password.js';
 
 const nextSort = (db, sql, ...args) => db.prepare(sql).get(...args).n;
 const rowId = (info) => Number(info.lastInsertRowid);
 
-function userView(db, u) {
+export function userView(db, u) {
+  const email = u.email.toLowerCase();
+  const role = u.is_admin ? 'admin' : (u.role || 'room_lead');
+  const assignedUnits = db.prepare('SELECT unit FROM user_units WHERE LOWER(email) = ? ORDER BY unit')
+    .all(email).map((r) => r.unit);
+  const assignedGroupIds = db.prepare('SELECT group_id FROM user_groups WHERE LOWER(email) = ? ORDER BY group_id')
+    .all(email).map((r) => r.group_id);
+  const assignedRoomIds = db.prepare('SELECT room_id FROM room_owners WHERE LOWER(email) = ? ORDER BY room_id')
+    .all(email).map((r) => r.room_id);
+
+  let ownedRoomIds = [];
+  if (role === 'admin') {
+    ownedRoomIds = db.prepare('SELECT id FROM rooms ORDER BY id').all().map((r) => r.id);
+  } else if (role === 'unit_lead') {
+    if (assignedUnits.length > 0) {
+      const allGroups = db.prepare('SELECT id, name FROM groups').all();
+      const matchedGroupIds = allGroups
+        .filter((g) => {
+          const m = /^\[([^\]]+)\]/.exec(g.name);
+          const uName = m ? m[1].trim() : '';
+          return assignedUnits.includes(uName);
+        })
+        .map((g) => g.id);
+      if (matchedGroupIds.length > 0) {
+        const placeholders = matchedGroupIds.map(() => '?').join(',');
+        ownedRoomIds = db.prepare(`SELECT id FROM rooms WHERE group_id IN (${placeholders}) ORDER BY id`)
+          .all(...matchedGroupIds).map((r) => r.id);
+      }
+    }
+  } else if (role === 'floor_lead') {
+    if (assignedGroupIds.length > 0) {
+      const placeholders = assignedGroupIds.map(() => '?').join(',');
+      ownedRoomIds = db.prepare(`SELECT id FROM rooms WHERE group_id IN (${placeholders}) ORDER BY id`)
+        .all(...assignedGroupIds).map((r) => r.id);
+    }
+  } else {
+    // room_lead
+    ownedRoomIds = assignedRoomIds;
+  }
+
   return {
     email: u.email,
     name: u.name,
-    isAdmin: !!u.is_admin,
-    ownedRoomIds: db.prepare('SELECT room_id FROM room_owners WHERE email = ? ORDER BY room_id').all(u.email).map((r) => r.room_id),
+    isAdmin: role === 'admin',
+    role,
+    assignedUnits,
+    assignedGroupIds,
+    assignedRoomIds,
+    ownedRoomIds,
     hasToken: !!u.token,
   };
 }
 
 function userOr404(db, rawEmail) {
-  const u = db.prepare('SELECT * FROM users WHERE email = ?').get(String(rawEmail).trim().toLowerCase());
+  const u = db.prepare('SELECT * FROM users WHERE LOWER(email) = ?').get(String(rawEmail).trim().toLowerCase());
   if (!u) throw new HttpError(404, 'not_found', 'Không tìm thấy người dùng');
   return u;
 }
@@ -226,25 +270,110 @@ export function registerAdmin(router) {
   add('POST', '/api/users', ({ db, body }) => {
     const e = email(body.email);
     const name = text(body.name, 80, 'name');
-    if (db.prepare('SELECT 1 FROM users WHERE email = ?').get(e)) throw new HttpError(409, 'exists', 'Email này đã có');
-    db.prepare('INSERT INTO users(email, name, is_admin) VALUES (?,?,?)').run(e, name, body.isAdmin === true ? 1 : 0);
+    if (db.prepare('SELECT 1 FROM users WHERE LOWER(email) = ?').get(e.toLowerCase())) {
+      throw new HttpError(409, 'exists', 'Email này đã tồn tại trong hệ thống');
+    }
+    const role = ['admin', 'unit_lead', 'floor_lead', 'room_lead'].includes(body.role)
+      ? body.role
+      : (body.isAdmin === true ? 'admin' : 'room_lead');
+    const isAdmin = role === 'admin' ? 1 : 0;
+    const initialPassword = body.password ? String(body.password) : 'Abc@123456767';
+    const pwdHash = hashPassword(initialPassword);
+
+    tx(db, () => {
+      db.prepare('INSERT INTO users(email, name, is_admin, role, password_hash) VALUES (?,?,?,?,?)')
+        .run(e, name, isAdmin, role, pwdHash);
+
+      if (role === 'unit_lead' && Array.isArray(body.assignedUnits)) {
+        for (const unit of body.assignedUnits) {
+          db.prepare('INSERT OR IGNORE INTO user_units(email, unit) VALUES (?,?)').run(e, String(unit).trim());
+        }
+      } else if (role === 'floor_lead' && Array.isArray(body.assignedGroupIds)) {
+        for (const gid of body.assignedGroupIds) {
+          db.prepare('INSERT OR IGNORE INTO user_groups(email, group_id) VALUES (?,?)').run(e, Number(gid));
+        }
+      } else if (role === 'room_lead' && Array.isArray(body.assignedRoomIds)) {
+        for (const rid of body.assignedRoomIds) {
+          db.prepare('INSERT OR IGNORE INTO room_owners(room_id, email) VALUES (?,?)').run(Number(rid), e);
+        }
+      }
+    });
+
     return userView(db, userOr404(db, e));
   });
 
   add('PATCH', '/api/users/:email', ({ db, user, params, body, sse }) => {
     const u = userOr404(db, params.email);
     const name = 'name' in body ? text(body.name, 80, 'name') : u.name;
-    const isAdmin = 'isAdmin' in body ? (body.isAdmin === true ? 1 : 0) : u.is_admin;
-    if (u.email === user.email && !isAdmin) throw new HttpError(400, 'cannot_demote_self', 'Không thể tự bỏ quyền admin của mình');
-    db.prepare('UPDATE users SET name = ?, is_admin = ? WHERE email = ?').run(name, isAdmin, u.email);
+    const currentRole = u.is_admin ? 'admin' : (u.role || 'room_lead');
+    let nextRole = currentRole;
+    if ('role' in body && ['admin', 'unit_lead', 'floor_lead', 'room_lead'].includes(body.role)) {
+      nextRole = body.role;
+    } else if ('isAdmin' in body) {
+      nextRole = body.isAdmin === true ? 'admin' : 'room_lead';
+    }
+
+    if (u.email.toLowerCase() === user.email.toLowerCase() && nextRole !== 'admin') {
+      throw new HttpError(400, 'cannot_demote_self', 'Không thể tự bỏ quyền admin của chính mình');
+    }
+
+    const isAdmin = nextRole === 'admin' ? 1 : 0;
+
+    tx(db, () => {
+      db.prepare('UPDATE users SET name = ?, is_admin = ?, role = ? WHERE LOWER(email) = ?')
+        .run(name, isAdmin, nextRole, u.email.toLowerCase());
+
+      if ('password' in body && body.password) {
+        const pwdHash = hashPassword(String(body.password));
+        db.prepare('UPDATE users SET password_hash = ? WHERE LOWER(email) = ?').run(pwdHash, u.email.toLowerCase());
+      }
+
+      if ('assignedUnits' in body && Array.isArray(body.assignedUnits)) {
+        db.prepare('DELETE FROM user_units WHERE LOWER(email) = ?').run(u.email.toLowerCase());
+        for (const unit of body.assignedUnits) {
+          db.prepare('INSERT OR IGNORE INTO user_units(email, unit) VALUES (?,?)').run(u.email, String(unit).trim());
+        }
+      }
+
+      if ('assignedGroupIds' in body && Array.isArray(body.assignedGroupIds)) {
+        db.prepare('DELETE FROM user_groups WHERE LOWER(email) = ?').run(u.email.toLowerCase());
+        for (const gid of body.assignedGroupIds) {
+          db.prepare('INSERT OR IGNORE INTO user_groups(email, group_id) VALUES (?,?)').run(u.email, Number(gid));
+        }
+      }
+
+      if ('assignedRoomIds' in body && Array.isArray(body.assignedRoomIds)) {
+        db.prepare('DELETE FROM room_owners WHERE LOWER(email) = ?').run(u.email.toLowerCase());
+        for (const rid of body.assignedRoomIds) {
+          db.prepare('INSERT OR IGNORE INTO room_owners(room_id, email) VALUES (?,?)').run(Number(rid), u.email);
+        }
+      }
+    });
+
     sse.broadcast();
     return userView(db, userOr404(db, u.email));
   });
 
+  add('POST', '/api/users/:email/reset-password', ({ db, user, params }) => {
+    const u = userOr404(db, params.email);
+    const newPass = 'Abc@123456767';
+    const pwdHash = hashPassword(newPass);
+    db.prepare('UPDATE users SET password_hash = ? WHERE LOWER(email) = ?').run(pwdHash, u.email.toLowerCase());
+    return { ok: true, message: `Đã đặt lại mật khẩu của ${u.name} về ${newPass}` };
+  });
+
   add('DELETE', '/api/users/:email', ({ db, user, params, sse }) => {
     const u = userOr404(db, params.email);
-    if (u.email === user.email) throw new HttpError(400, 'cannot_delete_self', 'Không thể tự xoá chính mình');
-    db.prepare('DELETE FROM users WHERE email = ?').run(u.email);
+    if (u.email.toLowerCase() === user.email.toLowerCase()) {
+      throw new HttpError(400, 'cannot_delete_self', 'Không thể tự xoá chính mình');
+    }
+    tx(db, () => {
+      db.prepare('DELETE FROM user_units WHERE LOWER(email) = ?').run(u.email.toLowerCase());
+      db.prepare('DELETE FROM user_groups WHERE LOWER(email) = ?').run(u.email.toLowerCase());
+      db.prepare('DELETE FROM room_owners WHERE LOWER(email) = ?').run(u.email.toLowerCase());
+      db.prepare('DELETE FROM sessions WHERE LOWER(email) = ?').run(u.email.toLowerCase());
+      db.prepare('DELETE FROM users WHERE LOWER(email) = ?').run(u.email.toLowerCase());
+    });
     sse.broadcast();
     return { ok: true };
   });
@@ -252,7 +381,7 @@ export function registerAdmin(router) {
   add('POST', '/api/users/:email/token', ({ db, user, params, config }) => {
     const u = userOr404(db, params.email);
     const token = newToken();
-    db.prepare('UPDATE users SET token = ? WHERE email = ?').run(token, u.email);
+    db.prepare('UPDATE users SET token = ? WHERE LOWER(email) = ?').run(token, u.email.toLowerCase());
     logActivity(db, user, null, 'user.token', u.email);
     return { url: loginUrl(config, token) };
   });

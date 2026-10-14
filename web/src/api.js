@@ -48,5 +48,6 @@ export const api = {
   addUser: (user) => req('POST', '/api/users', user),
   patchUser: (email, p) => req('PATCH', `/api/users/${u(email)}`, p),
   delUser: (email) => req('DELETE', `/api/users/${u(email)}`),
+  resetUserPassword: (email) => req('POST', `/api/users/${u(email)}/reset-password`),
   userLink: (email) => req('POST', `/api/users/${u(email)}/token`),
 };

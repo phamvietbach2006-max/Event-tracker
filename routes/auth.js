@@ -8,11 +8,10 @@ import { verifyPassword, hashPassword } from '../auth/password.js';
 const ownedRoomIds = (db, email) =>
   db.prepare('SELECT room_id FROM room_owners WHERE email = ? ORDER BY room_id').all(email).map((r) => r.room_id);
 
+import { userView } from './admin.js';
+
 export function registerAuth(router) {
-  router.add('GET', '/api/me', ({ db, user }) =>
-    user
-      ? { email: user.email, name: user.name, isAdmin: !!user.is_admin, ownedRoomIds: ownedRoomIds(db, user.email) }
-      : null);
+  router.add('GET', '/api/me', ({ db, user }) => (user ? userView(db, user) : null));
 
   router.add('POST', '/api/auth/login', async ({ req, res, db, body }) => {
     const rawEmail = String(body.email ?? '').trim().toLowerCase();
@@ -35,12 +34,7 @@ export function registerAuth(router) {
     setSessionCookie(req, res, sid);
     return {
       ok: true,
-      user: {
-        email: u.email,
-        name: u.name,
-        isAdmin: !!u.is_admin,
-        ownedRoomIds: ownedRoomIds(db, u.email),
-      },
+      user: userView(db, u),
     };
   });
 

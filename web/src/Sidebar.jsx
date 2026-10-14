@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { LayoutDashboard, ClipboardList, Home, Star, Settings, LogOut, LogIn, X, Map as MapIcon, Building2, FileSpreadsheet, ChevronDown, ChevronRight } from 'lucide-react';
-import { UNITS, parseGroupMeta } from './logic.js';
+import { UNITS, ROLES, parseGroupMeta } from './logic.js';
 
 /* Nhóm groups theo tòa (ví dụ D9, C7, …) rồi theo đơn vị */
 function groupByBuilding(groups) {
@@ -28,6 +28,7 @@ export default function Sidebar({
   groupId,
   selectedUnit,
   onSelectUnit,
+  availableUnits,
   unitCounts,
   onOpenImport,
   onNavigate,
@@ -85,7 +86,7 @@ export default function Sidebar({
         <button className={`nav-item ${!managing && (mode === 'overview' || mode === 'group' || mode === 'status') ? 'active' : ''}`} onClick={() => choose('overview')}>
           <ClipboardList size={19} />Bảng theo dõi<span className="nav-badge">{tot.rooms}</span>
         </button>
-        {me?.isAdmin && (
+        {(me?.isAdmin || me?.role === 'admin') && (
           <button className="nav-item import-nav-btn" onClick={() => { setOpen(false); onOpenImport(); }}>
             <FileSpreadsheet size={19} />Nhập Excel / Thêm Lớp
           </button>
@@ -98,19 +99,19 @@ export default function Sidebar({
         <button className={`nav-item ${!managing && mode === 'map' ? 'active' : ''}`} onClick={() => choose('map')}>
           <MapIcon size={19} />Sơ đồ khu vực
         </button>
-        {me?.isAdmin && (
+        {(me?.isAdmin || me?.role === 'admin') && (
           <a className={`nav-item ${managing ? 'active' : ''}`} href="#/manage" onClick={() => setOpen(false)}>
             <Settings size={19} />Quản lý hệ thống
           </a>
         )}
 
-        {/* ── 12 ĐƠN VỊ TỔ CHỨC (accordion) ── */}
+        {/* ── ĐƠN VỊ TỔ CHỨC (accordion) ── */}
         <button
           className="sidebar-section-label sidebar-section-toggle"
           onClick={() => setUnitOpen((v) => !v)}
           aria-expanded={unitOpen}
         >
-          <span>12 ĐƠN VỊ TỔ CHỨC</span>
+          <span>{(availableUnits || UNITS).length > 1 ? `${(availableUnits || UNITS).length} ĐƠN VỊ TỔ CHỨC` : 'ĐƠN VỊ TỔ CHỨC'}</span>
           {unitOpen ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
         </button>
         {unitOpen && (
@@ -120,10 +121,10 @@ export default function Sidebar({
               onClick={() => pickUnit('all')}
             >
               <Building2 size={14} />
-              <span>Tất cả 12 đơn vị</span>
+              <span>{(availableUnits || UNITS).length > 1 ? `Tất cả ${(availableUnits || UNITS).length} đơn vị` : 'Tất cả'}</span>
               <b>{unitCounts?.all ?? 0}</b>
             </button>
-            {UNITS.map((u) => (
+            {(availableUnits || UNITS).map((u) => (
               <button
                 key={u}
                 className={`sidebar-shortcut unit-shortcut ${!managing && selectedUnit === u ? 'selected' : ''}`}
@@ -191,16 +192,14 @@ export default function Sidebar({
 
       <div className="sidebar-info-card"><strong>Tiến độ hồ sơ giấy tờ</strong><span>{tot.done}/{tot.total} mục đã đủ · {tot.pct}%</span><div className="info-progress-bar"><div className="info-progress-fill" style={{ width: `${tot.pct}%` }} /></div><small>{online ? 'Đang đồng bộ trực tiếp' : 'Đang kết nối lại'}</small></div>
       <div className="sidebar-profile">
-        <span className={`user-avatar-circle ${me?.isAdmin ? 'admin-avatar' : me ? 'user-avatar' : 'guest-avatar'}`}>
+        <span className={`user-avatar-circle role-avatar-${me?.role || (me?.isAdmin ? 'admin' : me ? 'room_lead' : 'guest')}`}>
           {me?.name?.charAt(0).toUpperCase() || 'K'}
         </span>
         <div className="profile-info">
           <strong>{me?.name || 'Khách (Chỉ xem)'}</strong>
           <small>
             {me
-              ? (me.isAdmin
-                  ? 'Quản trị viên Ban TC-KT'
-                  : `Cán bộ kiểm tra (${me.ownedRoomIds?.length || 0} lớp)`)
+              ? (ROLES[me.role || (me.isAdmin ? 'admin' : 'room_lead')]?.label || 'Cán bộ kiểm tra')
               : 'Nhấn Đăng nhập để sửa'}
           </small>
         </div>
