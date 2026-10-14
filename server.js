@@ -140,28 +140,28 @@ const rawPort = process.env.PORT;
 const listenPort = rawPort ? (isNaN(rawPort) ? rawPort : Number(rawPort)) : (config.port || 3000);
 const listenHost = '0.0.0.0';
 
-if (!isCloud) {
-  try {
-    if (typeof listenPort === 'string') {
-      server.listen(listenPort, () => {
-        console.log(`Event tracker listening on socket ${listenPort}`);
-      });
-    } else {
-      server.listen(listenPort, listenHost, () => {
-        console.log(`Event tracker listening on ${listenHost}:${listenPort} (DB ${config.dbPath})`);
-      });
-    }
-  } catch (err) {
-    console.warn('Cảnh báo server listen (sẽ tiếp tục qua handler):', err.message);
+try {
+  if (typeof listenPort === 'string') {
+    server.listen(listenPort, () => {
+      console.log(`[BOOT] Event tracker service listening on socket ${listenPort}`);
+    });
+  } else {
+    server.listen(listenPort, listenHost, () => {
+      console.log(`[BOOT] Event tracker service listening on ${listenHost}:${listenPort} (DB ${config.dbPath})`);
+    });
   }
+} catch (err) {
+  console.warn('Cảnh báo server listen:', err.message);
 }
 
 // Khởi tạo database sau khi server đã mở cổng
-try {
-  init();
-} catch (e) {
-  console.error('[EAGER INIT ERROR]', e.message);
-}
+setImmediate(() => {
+  try {
+    init();
+  } catch (e) {
+    console.error('[EAGER INIT ERROR]', e.message);
+  }
+});
 
 for (const sig of ['SIGINT', 'SIGTERM']) {
   process.on(sig, async () => {
