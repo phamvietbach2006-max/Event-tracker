@@ -1,7 +1,30 @@
-import { Menu, Search, Wifi, WifiOff, X, Users, Eye, Building2 } from 'lucide-react';
+import { Menu, Search, Wifi, WifiOff, X, Users, Eye, Building2, LogIn, LogOut, UserRound } from 'lucide-react';
 import { ORDER, ST, KIPS, COHORTS, UNITS } from './logic.js';
 
-export default function Header({ me, online, stats, counts, tot, mode, filter, selectedUnit, onSelectUnit, unitCounts, onOpenImport, kipFilter, setKipFilter, cohortFilter, setCohortFilter, onNavigate, search, setSearch, onOpenSidebar, managing }) {
+export default function Header({
+  me,
+  online,
+  stats,
+  counts,
+  tot,
+  mode,
+  filter,
+  selectedUnit,
+  onSelectUnit,
+  unitCounts,
+  onOpenImport,
+  kipFilter,
+  setKipFilter,
+  cohortFilter,
+  setCohortFilter,
+  onNavigate,
+  search,
+  setSearch,
+  onOpenSidebar,
+  managing,
+  onOpenLogin,
+  onLogout,
+}) {
   const onlineCount = Math.max(online ? 1 : 0, Number(stats?.online) || 0);
   const visitCount = Math.max(1, Number(stats?.visits) || 0);
 
@@ -21,18 +44,54 @@ export default function Header({ me, online, stats, counts, tot, mode, filter, s
           <p className="space-subtitle">{tot.rooms} lớp · {tot.done}/{tot.total} mục giấy tờ đã đủ ({tot.pct}%)</p>
         </div>
       </div>
-      <div className="header-stats-pill" aria-label={`${onlineCount} người đang online, ${visitCount} lượt truy cập`}>
-        <span className="header-stat-item online-item" title="Số người đang online trực tuyến">
-          <Users size={14} aria-hidden="true" />
-          <b>{onlineCount}</b>
-          <span className="header-stat-label">online</span>
-        </span>
-        <i className="header-stats-sep" aria-hidden="true" />
-        <span className="header-stat-item visit-item" title="Tổng số lượt truy cập hệ thống">
-          <Eye size={14} aria-hidden="true" />
-          <b>{visitCount.toLocaleString('vi-VN')}</b>
-          <span className="header-stat-label">lượt xem</span>
-        </span>
+
+      <div className="header-right-zone">
+        <div className="header-stats-pill" aria-label={`${onlineCount} người đang online, ${visitCount} lượt truy cập`}>
+          <span className="header-stat-item online-item" title="Số người đang online trực tuyến">
+            <Users size={14} aria-hidden="true" />
+            <b>{onlineCount}</b>
+            <span className="header-stat-label">online</span>
+          </span>
+          <i className="header-stats-sep" aria-hidden="true" />
+          <span className="header-stat-item visit-item" title="Tổng số lượt truy cập hệ thống">
+            <Eye size={14} aria-hidden="true" />
+            <b>{visitCount.toLocaleString('vi-VN')}</b>
+            <span className="header-stat-label">lượt xem</span>
+          </span>
+        </div>
+
+        {me ? (
+          <div className="header-user-badge">
+            <span className={`header-user-avatar ${me.isAdmin ? 'is-admin' : 'is-user'}`}>
+              {me.name?.charAt(0).toUpperCase() || 'U'}
+            </span>
+            <div className="header-user-info" title={me.email}>
+              <span className="header-user-name">{me.name}</span>
+              <span className={`header-role-tag ${me.isAdmin ? 'is-admin' : 'is-supervisor'}`}>
+                {me.isAdmin ? 'Quản trị viên Ban TC-KT' : `Cán bộ (${me.ownedRoomIds?.length || 0} lớp)`}
+              </span>
+            </div>
+            <button
+              type="button"
+              className="header-logout-btn"
+              onClick={onLogout}
+              title="Đăng xuất khỏi hệ thống"
+              aria-label="Đăng xuất"
+            >
+              <LogOut size={15} />
+            </button>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="header-login-btn"
+            onClick={onOpenLogin}
+            title="Đăng nhập cán bộ kiểm tra để cập nhật tiến độ"
+          >
+            <LogIn size={15} />
+            <span>Đăng nhập Cán bộ</span>
+          </button>
+        )}
       </div>
     </div>
 

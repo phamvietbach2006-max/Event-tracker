@@ -3,7 +3,7 @@ import { ChevronDown, Clock3, FileCheck2, MessageSquareText, Plus, Trash2, UserR
 import { api } from './api.js';
 import { ORDER, ST, TS, NEXT, NOTE_MAX, canEdit, doneCount, percent, statusCounts, patchRoom, patchTask, removeTask, timeLabel, parseRoomMeta, parseGroupMeta } from './logic.js';
 
-function NoteBox({ room, onSave, disabled }) {
+function NoteBox({ room, onSave, disabled, onBlocked }) {
   const [value, setValue] = useState(room.note ?? '');
   const typing = useRef(false);
   useEffect(() => { if (!typing.current) setValue(room.note ?? ''); }, [room.note]);
@@ -13,7 +13,15 @@ function NoteBox({ room, onSave, disabled }) {
     if (next !== (room.note ?? '')) onSave(next);
   };
   return (
-    <div className="note-input-wrap">
+    <div
+      className={`note-input-wrap ${disabled ? 'note-disabled' : ''}`}
+      onClickCapture={(e) => {
+        if (disabled) {
+          e.stopPropagation();
+          onBlocked?.();
+        }
+      }}
+    >
       <div className="note-label-row">
         <span><MessageSquareText size={14} aria-hidden="true" /> Ghi chú kiểm tra (Note)</span>
         <small>{value.length}/{NOTE_MAX}</small>
@@ -25,7 +33,7 @@ function NoteBox({ room, onSave, disabled }) {
           value={value}
           disabled={disabled}
           maxLength={NOTE_MAX}
-          placeholder="Nhập ghi chú kiểm tra hồ sơ, biên bản, tình hình đại hội của chi đoàn…"
+          placeholder={disabled ? "Chỉ cán bộ phụ trách hoặc quản trị viên mới có quyền viết ghi chú…" : "Nhập ghi chú kiểm tra hồ sơ, biên bản, tình hình đại hội của chi đoàn…"}
           onFocus={() => { typing.current = true; }}
           onChange={(e) => setValue(e.target.value)}
           onBlur={save}
@@ -47,12 +55,23 @@ function AddTask({ onAdd }) {
   return <div className="quick-add-task"><input className="quick-add-input" value={value} maxLength={200} placeholder="Thêm mục giấy tờ mới…" aria-label="Nội dung giấy tờ mới" onChange={(e) => setValue(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') submit(); }} /><button className="quick-add-btn" onClick={submit}><Plus size={17} /> Thêm</button></div>;
 }
 
-export function RoomCard({ room, me, act, initialOpen = false }) {
+export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, toast }) {
   const [open, setOpen] = useState(initialOpen);
-  const editor = !me || canEdit(me, room) || true;
+  const editor = canEdit(me, room);
   const done = doneCount(room);
   const progress = percent(room);
   const meta = parseRoomMeta(room.name);
+
+  const handleBlockedAction = (e, actionName = 'cập nhật thông tin') => {
+    e?.preventDefault?.();
+    e?.stopPropagation?.();
+    if (!me) {
+      onRequireLogin?.(`Vui lòng đăng nhập tài khoản cán bộ để ${actionName} chi đoàn ${meta.className}`);
+    } else {
+      toast?.(`Bạn chỉ có quyền cập nhật các chi đoàn được phân công phụ trách (${meta.className})`);
+    }
+  };
+
   const changeStatus = (status) => act((state) => patchRoom(state, room.id, { status }), () => api.setStatus(room.id, status));
   const changeTask = (task) => {
     const state = NEXT[task.state];
@@ -69,7 +88,7 @@ export function RoomCard({ room, me, act, initialOpen = false }) {
   const saveNote = (note) => act((state) => patchRoom(state, room.id, { note }), () => api.setNote(room.id, note));
   const ownerNames = room.owners.map((owner) => owner.name).join(', ') || 'Ban TC-KT / Trực tầng';
 
-  return <article className={`task-card room-card status-${room.status} ${open ? 'expanded' : ''}`}>
+  return <article className={`task-card room-card status-${room.status} ${open ? 'expanded' : ''} ${!editor ? 'is-read-only' : ''}`}>
     <div className="room-card-head" role="button" tabIndex={0} onClick={() => setOpen(!open)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(!open); } }} aria-expanded={open}>
       <div className="room-meta-badges">
         {meta.roomCode && <span className="room-code-badge">{meta.roomCode}</span>}
@@ -78,9 +97,16 @@ export function RoomCard({ room, me, act, initialOpen = false }) {
       </div>
       <ChevronDown size={18} className="room-chevron" aria-hidden="true" />
       <strong className="card-title">{meta.className}</strong>
-      <div className="card-status-dropdown-row" onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()}>
+      <div
+        className="card-status-dropdown-row"
+        onClick={(e) => {
+          e.stopPropagation();
+          if (!editor) handleBlockedAction(e, 'thay đổi trạng thái Đại hội của');
+        }}
+        onKeyDown={(e) => e.stopPropagation()}
+      >
         <select
-          className={`room-status-select ${room.status}`}
+          className={`room-status-select ${room.status} ${!editor ? 'read-only' : ''}`}
           value={room.status}
           disabled={!editor}
           onChange={(e) => changeStatus(e.target.value)}
@@ -90,6 +116,11 @@ export function RoomCard({ room, me, act, initialOpen = false }) {
             <option key={status} value={status}>{ST[status]}</option>
           ))}
         </select>
+        {!editor && (
+          <span className="read-only-badge" title={!me ? "Nhấn để đăng nhập cán bộ" : "Chỉ xem"}>
+            Chỉ xem
+          </span>
+        )}
       </div>
       <span className="room-owner"><UserRound size={15} aria-hidden="true" />{ownerNames}</span>
       <span className={`card-desc ${room.note ? 'has-note' : 'empty'}`}>{room.note ? `📝 ${room.note}` : 'Chưa có ghi chú kiểm tra'}</span>
@@ -100,33 +131,97 @@ export function RoomCard({ room, me, act, initialOpen = false }) {
       <div className="room-details">
         <div className="room-detail-title">
           <span>Trạng thái Đại hội</span>
-          <span>3 mức trạng thái</span>
+          <span>{editor ? '3 mức trạng thái' : 'Chế độ chỉ xem'}</span>
         </div>
-        <select
-          className={`room-status-select full-width ${room.status}`}
-          value={room.status}
-          disabled={!editor}
-          onChange={(e) => changeStatus(e.target.value)}
-          aria-label={`Chọn trạng thái Đại hội cho ${meta.className}`}
+        <div
+          className="room-status-select-wrap"
+          onClickCapture={(e) => {
+            if (!editor) {
+              e.stopPropagation();
+              handleBlockedAction(e, 'thay đổi trạng thái Đại hội của');
+            }
+          }}
         >
-          {ORDER.map((status) => (
-            <option key={status} value={status}>{ST[status]}</option>
-          ))}
-        </select>
+          <select
+            className={`room-status-select full-width ${room.status} ${!editor ? 'read-only' : ''}`}
+            value={room.status}
+            disabled={!editor}
+            onChange={(e) => changeStatus(e.target.value)}
+            aria-label={`Chọn trạng thái Đại hội cho ${meta.className}`}
+          >
+            {ORDER.map((status) => (
+              <option key={status} value={status}>{ST[status]}</option>
+            ))}
+          </select>
+        </div>
 
         <div className="room-detail-title">
           <span>Checklist giấy tờ ({meta.congressType})</span>
           <span>{done}/{room.tasks.length} đã đủ</span>
         </div>
         {room.tasks.length === 0 && <p className="room-empty">Lớp này chưa có danh mục giấy tờ nào.</p>}
-        <div className="card-checklist">{room.tasks.map((task) => <div className={`checklist-item ${task.state}`} key={task.id}>
-          <button className={`task-state-btn ${task.state}`} disabled={!editor} onClick={() => changeTask(task)} aria-label={`${task.text}: ${TS[task.state]}. Nhấn để đổi trạng thái`}>{TS[task.state]}</button>
-          {editor ? <input className="task-edit-input" key={task.text} defaultValue={task.text} maxLength={200} aria-label={`Sửa tên giấy tờ ${task.text}`} onBlur={(e) => { const text = e.target.value.trim(); if (text && text !== task.text) editTask(task, text); else e.target.value = task.text; }} onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); if (e.key === 'Escape') { e.currentTarget.value = task.text; e.currentTarget.blur(); } }} /> : <span className="task-label">{task.text}</span>}
-          {editor && <button className="task-del-btn" onClick={() => deleteTask(task)} aria-label={`Xóa mục ${task.text}`}><Trash2 size={16} /></button>}
-        </div>)}</div>
+        <div
+          className={`card-checklist ${!editor ? 'checklist-readonly' : ''}`}
+          onClickCapture={(e) => {
+            if (!editor) {
+              e.stopPropagation();
+              handleBlockedAction(e, 'đánh dấu hồ sơ giấy tờ của');
+            }
+          }}
+        >
+          {room.tasks.map((task) => (
+            <div className={`checklist-item ${task.state}`} key={task.id}>
+              <button
+                className={`task-state-btn ${task.state}`}
+                disabled={!editor}
+                onClick={() => changeTask(task)}
+                aria-label={`${task.text}: ${TS[task.state]}. Nhấn để đổi trạng thái`}
+              >
+                {TS[task.state]}
+              </button>
+              {editor ? (
+                <input
+                  className="task-edit-input"
+                  key={task.text}
+                  defaultValue={task.text}
+                  maxLength={200}
+                  aria-label={`Sửa tên giấy tờ ${task.text}`}
+                  onBlur={(e) => {
+                    const text = e.target.value.trim();
+                    if (text && text !== task.text) editTask(task, text);
+                    else e.target.value = task.text;
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') e.currentTarget.blur();
+                    if (e.key === 'Escape') {
+                      e.currentTarget.value = task.text;
+                      e.currentTarget.blur();
+                    }
+                  }}
+                />
+              ) : (
+                <span className="task-label">{task.text}</span>
+              )}
+              {editor && (
+                <button
+                  className="task-del-btn"
+                  onClick={() => deleteTask(task)}
+                  aria-label={`Xóa mục ${task.text}`}
+                >
+                  <Trash2 size={16} />
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
         {editor && <AddTask onAdd={addNewTask} />}
 
-        <NoteBox room={room} onSave={saveNote} disabled={!editor} />
+        <NoteBox
+          room={room}
+          onSave={saveNote}
+          disabled={!editor}
+          onBlocked={() => handleBlockedAction(null, 'viết ghi chú kiểm tra cho')}
+        />
 
         <div className="card-bottom-row"><Clock3 size={14} /><span>Cập nhật {timeLabel(room.updatedAt)}{room.updatedBy ? ` · ${room.updatedBy}` : ''}</span></div>
       </div>
@@ -134,7 +229,7 @@ export function RoomCard({ room, me, act, initialOpen = false }) {
   </article>;
 }
 
-export default function GroupCard({ group, rooms, me, act, detail = false, showUnit = false, forceOpen }) {
+export default function GroupCard({ group, rooms, me, act, detail = false, showUnit = false, forceOpen, onRequireLogin, toast }) {
   const [open, setOpen] = useState(detail || !!forceOpen);
   useEffect(() => {
     if (typeof forceOpen === 'boolean') setOpen(forceOpen);
@@ -199,9 +294,19 @@ export default function GroupCard({ group, rooms, me, act, detail = false, showU
 
     {open && (
       <div className="event-column-cards">
-        {rooms.map((room) => <RoomCard key={room.id} room={room} me={me} act={act} />)}
+        {rooms.map((room) => (
+          <RoomCard
+            key={room.id}
+            room={room}
+            me={me}
+            act={act}
+            onRequireLogin={onRequireLogin}
+            toast={toast}
+          />
+        ))}
         {rooms.length === 0 && <p className="column-empty">Không có lớp phù hợp bộ lọc.</p>}
       </div>
     )}
   </section>;
 }
+

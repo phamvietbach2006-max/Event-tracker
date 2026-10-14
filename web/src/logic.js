@@ -100,7 +100,8 @@ export function totals(rooms) {
   return { rooms: rooms.length, done, total, pct: total ? Math.round((done / total) * 100) : 0 };
 }
 
-export const canEdit = (me, room) => !!me && (me.isAdmin || me.ownedRoomIds.includes(room.id));
+export const canEdit = (me, room) =>
+  !!me && (Boolean(me.isAdmin) || Boolean(me.ownedRoomIds?.includes(room?.id)));
 
 const mapRooms = (state, fn) => ({ ...state, groups: state.groups.map((g) => ({ ...g, rooms: g.rooms.map(fn) })) });
 

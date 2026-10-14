@@ -98,7 +98,7 @@ export function registerAdmin(router) {
         while (db.prepare('SELECT 1 FROM users WHERE email = ?').get(candidate)) {
           candidate = `${base}.${suffix++}@hust.local`;
         }
-        db.prepare('INSERT INTO users(email, name, is_admin) VALUES (?,?,1)').run(candidate, n);
+        db.prepare('INSERT INTO users(email, name, is_admin) VALUES (?,?,0)').run(candidate, n);
         allUsers.push({ email: candidate, name: n });
         return candidate;
       };

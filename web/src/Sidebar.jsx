@@ -21,7 +21,27 @@ function groupByBuilding(groups) {
   return Array.from(map.values());
 }
 
-export default function Sidebar({ me, mode, filter, groupId, selectedUnit, onSelectUnit, unitCounts, onOpenImport, onNavigate, groups, counts, open, setOpen, tot, online, onLogout, toast, managing }) {
+export default function Sidebar({
+  me,
+  mode,
+  filter,
+  groupId,
+  selectedUnit,
+  onSelectUnit,
+  unitCounts,
+  onOpenImport,
+  onNavigate,
+  groups,
+  counts,
+  open,
+  setOpen,
+  tot,
+  online,
+  onLogout,
+  toast,
+  managing,
+  onOpenLogin,
+}) {
   const sso = !!import.meta.env.VITE_SSO;
   const choose = (nextMode, value) => { onNavigate(nextMode, value); setOpen(false); };
   const pickUnit = (u) => { onSelectUnit(u); onNavigate('overview'); setOpen(false); };
@@ -65,12 +85,24 @@ export default function Sidebar({ me, mode, filter, groupId, selectedUnit, onSel
         <button className={`nav-item ${!managing && (mode === 'overview' || mode === 'group' || mode === 'status') ? 'active' : ''}`} onClick={() => choose('overview')}>
           <ClipboardList size={19} />Bảng theo dõi<span className="nav-badge">{tot.rooms}</span>
         </button>
-        <button className="nav-item import-nav-btn" onClick={() => { setOpen(false); onOpenImport(); }}>
-          <FileSpreadsheet size={19} />Nhập Excel / Thêm Lớp
+        {me?.isAdmin && (
+          <button className="nav-item import-nav-btn" onClick={() => { setOpen(false); onOpenImport(); }}>
+            <FileSpreadsheet size={19} />Nhập Excel / Thêm Lớp
+          </button>
+        )}
+        {me && (
+          <button className={`nav-item ${!managing && mode === 'mine' ? 'active' : ''}`} onClick={() => choose('mine')}>
+            <Star size={19} />Lớp của tôi<span className="nav-badge">{me.ownedRoomIds?.length || 0}</span>
+          </button>
+        )}
+        <button className={`nav-item ${!managing && mode === 'map' ? 'active' : ''}`} onClick={() => choose('map')}>
+          <MapIcon size={19} />Sơ đồ khu vực
         </button>
-        {me && <button className={`nav-item ${!managing && mode === 'mine' ? 'active' : ''}`} onClick={() => choose('mine')}><Star size={19} />Lớp của tôi<span className="nav-badge">{me.ownedRoomIds?.length || 0}</span></button>}
-        <button className={`nav-item ${!managing && mode === 'map' ? 'active' : ''}`} onClick={() => choose('map')}><MapIcon size={19} />Sơ đồ khu vực</button>
-        <a className={`nav-item ${managing ? 'active' : ''}`} href="#/manage" onClick={() => setOpen(false)}><Settings size={19} />Quản lý hệ thống</a>
+        {me?.isAdmin && (
+          <a className={`nav-item ${managing ? 'active' : ''}`} href="#/manage" onClick={() => setOpen(false)}>
+            <Settings size={19} />Quản lý hệ thống
+          </a>
+        )}
 
         {/* ── 12 ĐƠN VỊ TỔ CHỨC (accordion) ── */}
         <button
@@ -158,8 +190,37 @@ export default function Sidebar({ me, mode, filter, groupId, selectedUnit, onSel
       </nav>
 
       <div className="sidebar-info-card"><strong>Tiến độ hồ sơ giấy tờ</strong><span>{tot.done}/{tot.total} mục đã đủ · {tot.pct}%</span><div className="info-progress-bar"><div className="info-progress-fill" style={{ width: `${tot.pct}%` }} /></div><small>{online ? 'Đang đồng bộ trực tiếp' : 'Đang kết nối lại'}</small></div>
-      <div className="sidebar-profile"><span className="user-avatar-circle">{me?.name?.charAt(0).toUpperCase() || 'T'}</span><span className="profile-info"><strong>{me?.name || 'Người kiểm tra'}</strong><small>{me ? (me.isAdmin ? 'Ban TC-KT / Quản trị' : `Phụ trách ${me.ownedRoomIds?.length || 0} lớp`) : 'Chế độ kiểm tra trực tiếp'}</small></span>
-        {me ? <button className="btn-logout" onClick={onLogout} aria-label="Đăng xuất" title="Đăng xuất"><LogOut size={19} /></button> : sso ? <a className="btn-logout" href="/auth/sso/start" aria-label="Đăng nhập" title="Đăng nhập"><LogIn size={19} /></a> : <button className="btn-logout" onClick={() => toast('Đang ở chế độ kiểm tra trực tiếp trên máy local.')} aria-label="Thông tin chế độ kiểm tra"><LogIn size={19} /></button>}
+      <div className="sidebar-profile">
+        <span className={`user-avatar-circle ${me?.isAdmin ? 'admin-avatar' : me ? 'user-avatar' : 'guest-avatar'}`}>
+          {me?.name?.charAt(0).toUpperCase() || 'K'}
+        </span>
+        <div className="profile-info">
+          <strong>{me?.name || 'Khách (Chỉ xem)'}</strong>
+          <small>
+            {me
+              ? (me.isAdmin
+                  ? 'Quản trị viên Ban TC-KT'
+                  : `Cán bộ kiểm tra (${me.ownedRoomIds?.length || 0} lớp)`)
+              : 'Nhấn Đăng nhập để sửa'}
+          </small>
+        </div>
+        {me ? (
+          <button className="btn-logout" onClick={onLogout} aria-label="Đăng xuất" title="Đăng xuất khỏi hệ thống">
+            <LogOut size={19} />
+          </button>
+        ) : (
+          <button
+            className="btn-login-sidebar"
+            onClick={() => {
+              setOpen(false);
+              onOpenLogin();
+            }}
+            aria-label="Đăng nhập cán bộ"
+            title="Đăng nhập tài khoản cán bộ"
+          >
+            <LogIn size={19} />
+          </button>
+        )}
       </div>
     </aside>
   </>;

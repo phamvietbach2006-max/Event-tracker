@@ -38,7 +38,16 @@ import {
 } from './logic.js';
 import { api } from './api.js';
 
-export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit }) {
+export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit, onRequireLogin, say }) {
+  const handleBlockedAction = (room, actionName = 'chỉnh sửa') => {
+    const meta = parseRoomMeta(room.name);
+    if (!me) {
+      onRequireLogin?.(`Vui lòng đăng nhập cán bộ kiểm tra để ${actionName} chi đoàn ${meta.className}`);
+    } else {
+      say?.(`Bạn chỉ có quyền cập nhật các chi đoàn được phân công phụ trách (${meta.className})`);
+    }
+  };
+
   // Filters
   const [unitFilter, setUnitFilter] = useState('all');
   const [kipFilter, setKipFilter] = useState('all');
@@ -621,12 +630,12 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
               paginatedRows.map((r, rowIdx) => {
                 const isEven = rowIdx % 2 === 0;
                 const statusColor = r.room.status; // 'red', 'yellow', 'green'
-                const canModify = !me || canEdit(me, r.room);
+                const canModify = canEdit(me, r.room);
 
                 return (
                   <tr
                     key={r.room.id}
-                    className={`excel-row ${isEven ? 'even' : 'odd'} status-row-${statusColor}`}
+                    className={`excel-row ${isEven ? 'even' : 'odd'} status-row-${statusColor} ${!canModify ? 'is-read-only-row' : ''}`}
                   >
                     {/* STT */}
                     <td className="td-stt">{r.stt}</td>
@@ -668,7 +677,15 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
                     </td>
 
                     {/* Trạng thái Đại hội */}
-                    <td className="td-status">
+                    <td
+                      className="td-status"
+                      onClickCapture={(e) => {
+                        if (!canModify) {
+                          e.stopPropagation();
+                          handleBlockedAction(r.room, 'thay đổi trạng thái Đại hội của');
+                        }
+                      }}
+                    >
                       {canModify ? (
                         <select
                           className={`status-select status-${statusColor}`}
@@ -681,7 +698,10 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
                           <option value="green">🟢 Đã xong</option>
                         </select>
                       ) : (
-                        <span className={`status-pill-static status-${statusColor}`}>
+                        <span
+                          className={`status-pill-static status-${statusColor} read-only-clickable`}
+                          title={!me ? "Nhấn để đăng nhập cán bộ và chỉnh sửa" : "Chỉ xem"}
+                        >
                           {statusColor === 'green' ? '🟢 Đã xong' : statusColor === 'yellow' ? '🟡 Đang tiến hành' : '🔴 Chưa tổ chức'}
                         </span>
                       )}
@@ -708,7 +728,15 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
                     </td>
 
                     {/* Chi tiết Checklist từng mục */}
-                    <td className="td-checklist">
+                    <td
+                      className="td-checklist"
+                      onClickCapture={(e) => {
+                        if (!canModify) {
+                          e.stopPropagation();
+                          handleBlockedAction(r.room, 'đánh dấu hồ sơ giấy tờ của');
+                        }
+                      }}
+                    >
                       <div className="checklist-chips-row">
                         {r.room.tasks.map((task, tIdx) => {
                           const isDone = task.state === 'done';
@@ -717,9 +745,11 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
                             <button
                               key={task.id}
                               type="button"
-                              className={`task-chip-btn ${isDone ? 'is-done' : isDoing ? 'is-doing' : 'is-todo'}`}
-                              onClick={() => handleTaskToggle(task)}
-                              title={`${task.text}: ${isDone ? 'Đã đủ' : isDoing ? 'Đang kiểm' : 'Chưa đủ'} (Click để chuyển)`}
+                              className={`task-chip-btn ${isDone ? 'is-done' : isDoing ? 'is-doing' : 'is-todo'} ${!canModify ? 'chip-readonly' : ''}`}
+                              onClick={() => {
+                                if (canModify) handleTaskToggle(task);
+                              }}
+                              title={`${task.text}: ${isDone ? 'Đã đủ' : isDoing ? 'Đang kiểm' : 'Chưa đủ'} ${canModify ? '(Click để chuyển)' : '(Chỉ xem)'}`}
                             >
                               <span className="task-chip-idx">{tIdx + 1}</span>
                               <span className="task-chip-icon">
@@ -866,13 +896,24 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
 
             <div className="inspect-modal-body">
               {/* Status switch */}
-              <div className="inspect-status-row">
-                <span className="inspect-label">Trạng thái Đại hội:</span>
+              <div
+                className="inspect-status-row"
+                onClickCapture={(e) => {
+                  if (!canEdit(me, inspectRoom.room)) {
+                    e.stopPropagation();
+                    handleBlockedAction(inspectRoom.room, 'thay đổi trạng thái Đại hội của');
+                  }
+                }}
+              >
+                <span className="inspect-label">
+                  Trạng thái Đại hội: {!canEdit(me, inspectRoom.room) && <small className="inspect-ro-tag">(Chỉ xem)</small>}
+                </span>
                 <div className="inspect-status-buttons">
                   {ORDER.map((st) => (
                     <button
                       key={st}
                       type="button"
+                      disabled={!canEdit(me, inspectRoom.room)}
                       className={`inspect-st-btn status-${st} ${inspectRoom.room.status === st ? 'active' : ''}`}
                       onClick={() => handleStatusChange(inspectRoom.room.id, st)}
                     >
@@ -883,20 +924,33 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
               </div>
 
               {/* Checklist items */}
-              <div className="inspect-tasks-section">
+              <div
+                className="inspect-tasks-section"
+                onClickCapture={(e) => {
+                  if (!canEdit(me, inspectRoom.room)) {
+                    e.stopPropagation();
+                    handleBlockedAction(inspectRoom.room, 'đánh dấu hồ sơ giấy tờ của');
+                  }
+                }}
+              >
                 <div className="inspect-tasks-head">
                   <strong>Danh mục hồ sơ giấy tờ ({inspectRoom.done}/{inspectRoom.total} mục đã đủ - {inspectRoom.pct}%)</strong>
-                  <span className="inspect-note-hint">Nhấp vào từng mục để đổi trạng thái hoàn thành</span>
+                  <span className="inspect-note-hint">
+                    {canEdit(me, inspectRoom.room) ? 'Nhấp vào từng mục để đổi trạng thái hoàn thành' : 'Chế độ chỉ xem'}
+                  </span>
                 </div>
 
                 <div className="inspect-tasks-list">
                   {inspectRoom.room.tasks.map((task, tIdx) => {
                     const isDone = task.state === 'done';
+                    const canEditThis = canEdit(me, inspectRoom.room);
                     return (
                       <div
                         key={task.id}
-                        className={`inspect-task-item ${isDone ? 'done' : 'todo'}`}
-                        onClick={() => handleTaskToggle(task)}
+                        className={`inspect-task-item ${isDone ? 'done' : 'todo'} ${!canEditThis ? 'item-readonly' : ''}`}
+                        onClick={() => {
+                          if (canEditThis) handleTaskToggle(task);
+                        }}
                       >
                         <div className="inspect-task-checkbox">
                           {isDone ? <CheckSquare size={18} className="icon-checked" /> : <Square size={18} className="icon-unchecked" />}

@@ -1,5 +1,5 @@
 import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from 'react';
-import { Home, Star, Settings, Map, FileSpreadsheet, PlusCircle, LayoutDashboard, ClipboardList, ChevronsDown, ChevronsUp, ArrowUp } from 'lucide-react';
+import { Home, Star, Settings, Map, FileSpreadsheet, PlusCircle, LayoutDashboard, ClipboardList, ChevronsDown, ChevronsUp, ArrowUp, ShieldAlert, LogIn } from 'lucide-react';
 import { api } from './api.js';
 import { useLive } from './useLive.js';
 import { allRooms, canEdit, statusCounts, totals, ST, UNITS, parseRoomMeta, parseGroupMeta } from './logic.js';
@@ -10,6 +10,7 @@ import Manage from './Manage.jsx';
 import Footer from './Footer.jsx';
 import UnitImportModal from './UnitImportModal.jsx';
 import OverviewTable from './OverviewTable.jsx';
+import LoginModal from './LoginModal.jsx';
 const MapView = lazy(() => import('./MapView.jsx')); // maplibre-gl nặng, chỉ tải khi mở Sơ đồ
 
 function useHash() {
@@ -25,6 +26,8 @@ function useHash() {
 export default function App() {
   const { state, setState, online, reload, error: stateError, stats } = useLive();
   const [me, setMe] = useState(undefined);
+  const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [loginNotice, setLoginNotice] = useState('');
   const [selectedUnit, setSelectedUnit] = useState(UNITS[0]);
   const [importOpen, setImportOpen] = useState(false);
   const [filter, setFilter] = useState('all');
@@ -39,6 +42,11 @@ export default function App() {
   const [expandAll, setExpandAll] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
   const hash = useHash();
+
+  const handleRequireLogin = useCallback((notice = '') => {
+    setLoginNotice(notice);
+    setLoginModalOpen(true);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setShowScrollTop(window.scrollY > 280);
@@ -155,11 +163,97 @@ export default function App() {
   return (
     <div className="app-shell">
       <a className="skip" href="#main">Bỏ qua, đến nội dung</a>
-      <Sidebar me={me} mode={mode} filter={filter} groupId={groupId} selectedUnit={selectedUnit} onSelectUnit={setSelectedUnit} unitCounts={unitCounts} onOpenImport={() => setImportOpen(true)} onNavigate={navigate} groups={state.groups} counts={statusCounts(rooms)} open={sidebarOpen} setOpen={setSidebarOpen} tot={totals(rooms)} online={online} onLogout={logout} toast={setToast} managing={managing} />
+      <Sidebar
+        me={me}
+        mode={mode}
+        filter={filter}
+        groupId={groupId}
+        selectedUnit={selectedUnit}
+        onSelectUnit={setSelectedUnit}
+        unitCounts={unitCounts}
+        onOpenImport={() => setImportOpen(true)}
+        onNavigate={navigate}
+        groups={state.groups}
+        counts={statusCounts(rooms)}
+        open={sidebarOpen}
+        setOpen={setSidebarOpen}
+        tot={totals(rooms)}
+        online={online}
+        onLogout={logout}
+        toast={setToast}
+        managing={managing}
+        onOpenLogin={() => handleRequireLogin()}
+      />
       <div className="app-main">
-        <Header me={me} online={online} stats={stats} counts={statusCounts(rooms)} tot={totals(rooms)} mode={mode} filter={filter} selectedUnit={selectedUnit} onSelectUnit={setSelectedUnit} unitCounts={unitCounts} onOpenImport={() => setImportOpen(true)} kipFilter={kipFilter} setKipFilter={setKipFilter} cohortFilter={cohortFilter} setCohortFilter={setCohortFilter} onNavigate={navigate} search={search} setSearch={setSearch} onOpenSidebar={() => setSidebarOpen(true)} managing={managing} />
+        <Header
+          me={me}
+          online={online}
+          stats={stats}
+          counts={statusCounts(rooms)}
+          tot={totals(rooms)}
+          mode={mode}
+          filter={filter}
+          selectedUnit={selectedUnit}
+          onSelectUnit={setSelectedUnit}
+          unitCounts={unitCounts}
+          onOpenImport={() => setImportOpen(true)}
+          kipFilter={kipFilter}
+          setKipFilter={setKipFilter}
+          cohortFilter={cohortFilter}
+          setCohortFilter={setCohortFilter}
+          onNavigate={navigate}
+          search={search}
+          setSearch={setSearch}
+          onOpenSidebar={() => setSidebarOpen(true)}
+          managing={managing}
+          onOpenLogin={() => handleRequireLogin()}
+          onLogout={logout}
+        />
         {!online && <div className="offline-banner" role="status">Đang kết nối lại để nhận cập nhật mới…</div>}
-        {managing ? <main id="main"><Manage state={state} say={setToast} toast={toast} onOpenImport={() => setImportOpen(true)} /></main> : mode === 'map' ? <main id="main"><Suspense fallback={<div className="sk" role="status" aria-label="Đang tải bản đồ"><i className="h" /><i className="c" /></div>}><MapView groups={unitGroups} me={me} act={act} /></Suspense></main> : mode === 'dashboard' ? (
+        {managing ? (
+          !me ? (
+            <main id="main" className="manage-auth-gate">
+              <div className="auth-gate-card">
+                <div className="auth-gate-icon"><ShieldAlert size={48} /></div>
+                <h2>Yêu cầu quyền Quản trị viên</h2>
+                <p>Khu vực Quản lý hệ thống chỉ dành riêng cho Cán bộ Quản trị Ban Tổ chức - Kiểm tra.</p>
+                <div className="auth-gate-actions">
+                  <button
+                    type="button"
+                    className="btn-primary"
+                    onClick={() => handleRequireLogin('Vui lòng đăng nhập tài khoản Quản trị viên Ban TC-KT để vào Quản lý')}
+                  >
+                    <LogIn size={16} /> Đăng nhập Quản trị viên
+                  </button>
+                  <button type="button" className="btn-secondary" onClick={() => navigate('overview')}>
+                    Quay lại Bảng theo dõi
+                  </button>
+                </div>
+              </div>
+            </main>
+          ) : !me.isAdmin ? (
+            <main id="main" className="manage-auth-gate">
+              <div className="auth-gate-card">
+                <div className="auth-gate-icon"><ShieldAlert size={48} /></div>
+                <h2>Không có quyền truy cập</h2>
+                <p>Tài khoản <b>{me.name}</b> ({me.email}) là Cán bộ kiểm tra, không có quyền Quản trị hệ thống.</p>
+                <div className="auth-gate-actions">
+                  <button type="button" className="btn-secondary" onClick={() => navigate('overview')}>
+                    Quay lại Bảng theo dõi
+                  </button>
+                </div>
+              </div>
+            </main>
+          ) : (
+            <main id="main"><Manage state={state} say={setToast} toast={toast} onOpenImport={() => setImportOpen(true)} /></main>
+          )
+        ) : mode === 'map' ? (
+          <main id="main">
+            <Suspense fallback={<div className="sk" role="status" aria-label="Đang tải bản đồ"><i className="h" /><i className="c" /></div>}>
+              <MapView groups={unitGroups} me={me} act={act} />
+            </Suspense>
+          </main>
+        ) : mode === 'dashboard' ? (
           <main id="main" className="overview-page">
             <OverviewTable
               state={state}
@@ -167,79 +261,87 @@ export default function App() {
               act={act}
               onNavigate={navigate}
               onSelectUnit={setSelectedUnit}
+              onRequireLogin={handleRequireLogin}
+              say={setToast}
             />
           </main>
-        ) : <main id="main" className={`event-board ${mode === 'overview' ? '' : 'detail-board'}`}>
-          {mode !== 'overview' && (
-            <div className="detail-heading">
-              <div>
-                <span className="detail-kicker">{selectedUnit.toUpperCase()}</span>
-                <h2>{detailTitle}</h2>
-                <p>{shownRooms.length} lớp · {totals(shownRooms).done}/{totals(shownRooms).total} giấy tờ đã đủ</p>
-              </div>
-              <div className="detail-stats">
-                <strong>{shownRooms.length}</strong><span>lớp</span>
-                <strong>{totals(shownRooms).pct}%</strong><span>đủ giấy tờ</span>
-              </div>
-            </div>
-          )}
-
-          {unitGroups.length > 0 && (
-            <>
-              <div className="board-sub-toolbar">
-                <div className="board-sub-summary">
-                  <span className="summary-chip"><b>{shownGroups.length}</b> tầng</span>
-                  <span className="summary-dot">·</span>
-                  <span className="summary-chip"><b>{shownRooms.length}</b> lớp</span>
-                  <span className="summary-dot">·</span>
-                  <span className="summary-chip highlight"><b>{totals(shownRooms).done}/{totals(shownRooms).total}</b> giấy tờ ({totals(shownRooms).pct}%)</span>
+        ) : (
+          <main id="main" className={`event-board ${mode === 'overview' ? '' : 'detail-board'}`}>
+            {mode !== 'overview' && (
+              <div className="detail-heading">
+                <div>
+                  <span className="detail-kicker">{selectedUnit.toUpperCase()}</span>
+                  <h2>{detailTitle}</h2>
+                  <p>{shownRooms.length} lớp · {totals(shownRooms).done}/{totals(shownRooms).total} giấy tờ đã đủ</p>
                 </div>
-                <button
-                  type="button"
-                  className="toggle-all-floors-btn"
-                  onClick={() => setExpandAll(!expandAll)}
-                  title={expandAll ? 'Thu gọn tất cả các tầng' : 'Mở xem danh sách lớp của tất cả các tầng'}
-                >
-                  {expandAll ? <ChevronsUp size={15} /> : <ChevronsDown size={15} />}
-                  <span>{expandAll ? 'Thu gọn tất cả tầng' : 'Mở tất cả tầng'}</span>
-                </button>
+                <div className="detail-stats">
+                  <strong>{shownRooms.length}</strong><span>lớp</span>
+                  <strong>{totals(shownRooms).pct}%</strong><span>đủ giấy tờ</span>
+                </div>
               </div>
+            )}
 
-              <div className="event-columns">
-                {shownGroups.map((group) => (
-                  <GroupCard
-                    key={`${group.id}-${mode}`}
-                    group={group}
-                    rooms={group.rooms.filter((room) => matches(room, group))}
-                    me={me}
-                    act={act}
-                    detail={mode !== 'overview'}
-                    showUnit={selectedUnit === 'all'}
-                    forceOpen={query ? true : expandAll}
-                  />
-                ))}
-              </div>
-            </>
-          )}
+            {unitGroups.length > 0 && (
+              <>
+                <div className="board-sub-toolbar">
+                  <div className="board-sub-summary">
+                    <span className="summary-chip"><b>{shownGroups.length}</b> tầng</span>
+                    <span className="summary-dot">·</span>
+                    <span className="summary-chip"><b>{shownRooms.length}</b> lớp</span>
+                    <span className="summary-dot">·</span>
+                    <span className="summary-chip highlight"><b>{totals(shownRooms).done}/{totals(shownRooms).total}</b> giấy tờ ({totals(shownRooms).pct}%)</span>
+                  </div>
+                  <button
+                    type="button"
+                    className="toggle-all-floors-btn"
+                    onClick={() => setExpandAll(!expandAll)}
+                    title={expandAll ? 'Thu gọn tất cả các tầng' : 'Mở xem danh sách lớp của tất cả các tầng'}
+                  >
+                    {expandAll ? <ChevronsUp size={15} /> : <ChevronsDown size={15} />}
+                    <span>{expandAll ? 'Thu gọn tất cả tầng' : 'Mở tất cả tầng'}</span>
+                  </button>
+                </div>
 
-          {unitGroups.length === 0 ? (
-            <div className="empty-state unit-empty-state">
-              <b>{selectedUnit} chưa có danh sách phân kíp Đại hội</b>
-              <span>Bạn có thể tải lên file Excel phân kíp (.xlsx) hoặc thêm nhanh từng Tầng &amp; Lớp cho đơn vị này (tự động gắn checklist giấy tờ K71 / K70).</span>
-              <div className="empty-state-actions">
-                <button className="btn-primary" onClick={() => setImportOpen(true)}>
-                  <FileSpreadsheet size={16} /> Nhập từ file Excel / Thêm Lớp cho {selectedUnit}
-                </button>
+                <div className="event-columns">
+                  {shownGroups.map((group) => (
+                    <GroupCard
+                      key={`${group.id}-${mode}`}
+                      group={group}
+                      rooms={group.rooms.filter((room) => matches(room, group))}
+                      me={me}
+                      act={act}
+                      detail={mode !== 'overview'}
+                      showUnit={selectedUnit === 'all'}
+                      forceOpen={query ? true : expandAll}
+                      onRequireLogin={handleRequireLogin}
+                      toast={setToast}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
+
+            {unitGroups.length === 0 ? (
+              <div className="empty-state unit-empty-state">
+                <b>{selectedUnit} chưa có danh sách phân kíp Đại hội</b>
+                <span>Bạn có thể tải lên file Excel phân kíp (.xlsx) hoặc thêm nhanh từng Tầng &amp; Lớp cho đơn vị này (tự động gắn checklist giấy tờ K71 / K70).</span>
+                {me?.isAdmin && (
+                  <div className="empty-state-actions">
+                    <button className="btn-primary" onClick={() => setImportOpen(true)}>
+                      <FileSpreadsheet size={16} /> Nhập từ file Excel / Thêm Lớp cho {selectedUnit}
+                    </button>
+                  </div>
+                )}
               </div>
-            </div>
-          ) : shownRooms.length === 0 && (
-            <div className="empty-state">
-              <b>Không có lớp phù hợp bộ lọc</b>
-              <span>Thử đổi bộ lọc Kíp, Khóa hoặc từ khóa tìm kiếm.</span>
-              <button onClick={() => { setKipFilter('all'); setCohortFilter('all'); navigate('overview'); }}>Xóa bộ lọc</button>
-            </div>
-          )}
-        </main>}
+            ) : shownRooms.length === 0 && (
+              <div className="empty-state">
+                <b>Không có lớp phù hợp bộ lọc</b>
+                <span>Thử đổi bộ lọc Kíp, Khóa hoặc từ khóa tìm kiếm.</span>
+                <button onClick={() => { setKipFilter('all'); setCohortFilter('all'); navigate('overview'); }}>Xóa bộ lọc</button>
+              </div>
+            )}
+          </main>
+        )}
         <Footer tot={totals(allRooms(state))} online={online} stats={stats} />
       </div>
       <button
@@ -255,7 +357,17 @@ export default function App() {
         <button className={!managing && mode === 'dashboard' ? 'active' : ''} onClick={() => navigate('dashboard')}><LayoutDashboard size={20} />Tổng quan</button>
         <button className={!managing && (mode === 'overview' || mode === 'group' || mode === 'status' || mode === 'mine') ? 'active' : ''} onClick={() => navigate('overview')}><ClipboardList size={20} />Bảng theo dõi</button>
         <button className={!managing && mode === 'map' ? 'active' : ''} onClick={() => navigate('map')}><Map size={20} />Sơ đồ</button>
-        <a className={managing ? 'active' : ''} href="#/manage"><Settings size={20} />Quản lý</a>
+        {me?.isAdmin ? (
+          <a className={managing ? 'active' : ''} href="#/manage"><Settings size={20} />Quản lý</a>
+        ) : me ? (
+          <button className={!managing && mode === 'mine' ? 'active' : ''} onClick={() => navigate('mine')}>
+            <Star size={20} />Lớp của tôi
+          </button>
+        ) : (
+          <button className="login-bottom-btn" onClick={() => handleRequireLogin('Vui lòng đăng nhập để kiểm tra hồ sơ và cập nhật tiến độ')}>
+            <LogIn size={20} />Đăng nhập
+          </button>
+        )}
       </nav>
       <UnitImportModal
         open={importOpen}
@@ -272,7 +384,21 @@ export default function App() {
         say={setToast}
         reload={reload}
       />
+      <LoginModal
+        open={loginModalOpen}
+        onClose={() => {
+          setLoginModalOpen(false);
+          setLoginNotice('');
+        }}
+        onSuccess={(user) => {
+          setMe(user);
+          setToast(`Đăng nhập thành công: ${user.name}`);
+          refreshMe();
+        }}
+        initialNotice={loginNotice}
+      />
       <div className={`toast ${toast ? 'show' : ''}`} role="alert">{toast}</div>
     </div>
   );
+
 }
