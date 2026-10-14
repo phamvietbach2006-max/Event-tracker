@@ -4,11 +4,12 @@ import { openDb } from './lib/db.js';
 import { createApp } from './lib/app.js';
 import { isEmpty, applySeed, ensureTokens } from './lib/seed.js';
 
+const baseUrl = (process.env.WEB_URL ?? process.env.BASE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
 const config = {
   port: Number(process.env.PORT ?? 3000),
   host: process.env.HOST ?? '127.0.0.1',
   dbPath: process.env.DB_PATH ?? 'app.db',
-  baseUrl: (process.env.BASE_URL ?? 'http://localhost:3000').replace(/\/$/, ''),
+  baseUrl,
   // Bật SSO khi có đủ biến môi trường (xem docs/SSO.md)
   sso: process.env.SSO_CLIENT_ID && process.env.SSO_CLIENT_SECRET && process.env.SSO_TENANT_ID
     ? {
@@ -16,7 +17,7 @@ const config = {
         clientId: process.env.SSO_CLIENT_ID,
         clientSecret: process.env.SSO_CLIENT_SECRET,
         authority: `https://login.microsoftonline.com/${process.env.SSO_TENANT_ID}/v2.0`,
-        redirectUri: `${(process.env.BASE_URL ?? 'http://localhost:3000').replace(/\/$/, '')}/auth/callback`,
+        redirectUri: `${baseUrl}/auth/callback`,
       }
     : null,
   seedFile: process.env.SEED_FILE ?? fileURLToPath(new URL('./seed.json', import.meta.url)),

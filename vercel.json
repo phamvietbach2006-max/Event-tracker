@@ -1,10 +1,56 @@
 {
-  "version": 2,
-  "buildCommand": "npm run build",
-  "outputDirectory": "web/dist",
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "app": {
+      "root": ".",
+      "runtime": "nodejs22.x",
+      "entrypoint": "api/index.js",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "web",
+          "format": "url",
+          "env": "WEB_URL"
+        }
+      ]
+    },
+    "web": {
+      "root": "web",
+      "framework": "vite",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "app",
+          "format": "url",
+          "env": "APP_URL"
+        }
+      ]
+    }
+  },
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index.js" },
-    { "source": "/events", "destination": "/api/index.js" },
-    { "source": "/auth/(.*)", "destination": "/api/index.js" }
+    {
+      "source": "/api/(.*)",
+      "destination": {
+        "service": "app"
+      }
+    },
+    {
+      "source": "/events",
+      "destination": {
+        "service": "app"
+      }
+    },
+    {
+      "source": "/auth/(.*)",
+      "destination": {
+        "service": "app"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "web"
+      }
+    }
   ]
 }
