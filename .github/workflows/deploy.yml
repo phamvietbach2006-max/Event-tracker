@@ -18,6 +18,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Install root dependencies
+        run: npm ci || npm install --no-audit
       - name: Kiểm tra cú pháp backend
         run: |
           for f in server.js $(find lib routes auth api -name '*.js' 2>/dev/null); do node --check "$f"; done
