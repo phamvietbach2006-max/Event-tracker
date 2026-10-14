@@ -6904,3 +6904,330 @@ a {
   font-size: 10.5px;
   font-weight: 500;
 }
+
+/* Sidebar Directory Button */
+.nav-item-directory {
+  white-space: nowrap;
+}
+.nav-item-directory span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Card Status Pill Row (Single Status Display) */
+.card-status-pill-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.card-status-pill-row .room-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 999px;
+  text-transform: none;
+}
+.card-status-pill-row .room-status-badge.red {
+  background: #FEE2E2;
+  color: #B91C1C;
+  border: 1px solid #FECACA;
+}
+.card-status-pill-row .room-status-badge.yellow {
+  background: #FEF3C7;
+  color: #B45309;
+  border: 1px solid #FDE68A;
+}
+.card-status-pill-row .room-status-badge.green {
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #BBF7D0;
+}
+.card-status-pill-row .status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.room-att-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-family: var(--font-mono, monospace);
+}
+.room-att-pill.att-ok {
+  background: #F0FDF4;
+  color: #166534;
+  border: 1px solid #BBF7D0;
+}
+.room-att-pill.att-warn {
+  background: #FFFBEB;
+  color: #B45309;
+  border: 1px solid #FDE68A;
+}
+
+/* Attendance Box in RoomCard */
+.attendance-box-wrap {
+  margin-bottom: 14px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: #F8FAFC;
+  border: 1px solid #E2E8F0;
+}
+.att-box-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 11.5px;
+}
+.att-box-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: #1E293B;
+}
+.att-ratio-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+.att-ratio-tag.tag-ok {
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #86EFAC;
+}
+.att-ratio-tag.tag-warn {
+  background: #FEF3C7;
+  color: #B45309;
+  border: 1px solid #FCD34D;
+}
+.att-inputs-grid {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.att-field {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.att-field label {
+  font-size: 10.5px;
+  font-weight: 600;
+  color: #64748B;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.att-field input {
+  width: 100%;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 7px;
+  border: 1px solid #CBD5E1;
+  background: #FFFFFF;
+  color: #0F172A;
+  font-size: 13.5px;
+  font-weight: 600;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.att-field input:focus {
+  border-color: #2563EB;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+.att-field input:disabled {
+  background: #F1F5F9;
+  color: #94A3B8;
+  cursor: not-allowed;
+}
+.att-divider {
+  font-size: 18px;
+  font-weight: 700;
+  color: #94A3B8;
+  padding-top: 16px;
+}
+.att-pct-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 65px;
+  padding: 4px 8px;
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  margin-top: 14px;
+}
+.att-pct-val {
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.att-pct-val.val-good {
+  color: #15803D;
+}
+.att-pct-val.val-warn {
+  color: #D97706;
+}
+.att-pct-sub {
+  font-size: 9.5px;
+  font-weight: 600;
+  color: #64748B;
+}
+
+/* Congress Condition Banner */
+.congress-condition-banner {
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  line-height: 1.35;
+}
+.congress-condition-banner.eligible {
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #86EFAC;
+}
+.congress-condition-banner.locked {
+  background: #FFFBEB;
+  color: #92400E;
+  border: 1px solid #FDE68A;
+}
+.congress-condition-banner svg {
+  flex-shrink: 0;
+}
+
+/* Overview Table Inspect Modal Readonly */
+.inspect-readonly-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #F8FAFC;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+  margin-bottom: 10px;
+}
+.inspect-status-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.inspect-status-pill {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+}
+.inspect-status-pill.status-red {
+  background: #FEE2E2;
+  color: #B91C1C;
+  border: 1px solid #FECACA;
+}
+.inspect-status-pill.status-yellow {
+  background: #FEF3C7;
+  color: #B45309;
+  border: 1px solid #FDE68A;
+}
+.inspect-status-pill.status-green {
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #BBF7D0;
+}
+.inspect-attendance-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: #F8FAFC;
+  border-radius: 8px;
+  border: 1px solid #E2E8F0;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+.inspect-att-details {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.inspect-att-count strong {
+  color: #0F172A;
+}
+.inspect-att-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.inspect-att-tag.tag-ok {
+  background: #DCFCE7;
+  color: #15803D;
+  border: 1px solid #86EFAC;
+}
+.inspect-att-tag.tag-warn {
+  background: #FEF3C7;
+  color: #B45309;
+  border: 1px solid #FCD34D;
+}
+.inspect-att-empty {
+  color: #94A3B8;
+  font-style: italic;
+}
+.inspect-task-item.item-readonly {
+  cursor: default !important;
+}
+.inspect-task-item.item-readonly:hover {
+  background: inherit !important;
+}
+.attendance-cell-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11.5px;
+  font-family: var(--font-mono, monospace);
+  padding: 2px 6px;
+  border-radius: 5px;
+  background: #F1F5F9;
+  color: #334155;
+  white-space: nowrap;
+}
+.attendance-cell-pill .att-ratio-tag {
+  font-size: 9.5px;
+  padding: 1px 4px;
+}
+
+@media(max-width: 420px) {
+  .mobile-bottom-nav {
+    padding-left: 2px;
+    padding-right: 2px;
+  }
+  .mobile-bottom-nav button, .mobile-bottom-nav a {
+    font-size: 10px;
+    gap: 1px;
+  }
+  .mobile-bottom-nav button svg, .mobile-bottom-nav a svg {
+    width: 18px;
+    height: 18px;
+  }
+}

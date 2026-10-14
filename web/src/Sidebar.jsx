@@ -100,8 +100,9 @@ export default function Sidebar({
         <button className={`nav-item ${!managing && mode === 'map' ? 'active' : ''}`} onClick={() => choose('map')}>
           <MapIcon size={19} />Sơ đồ khu vực
         </button>
-        <button className="nav-item" onClick={() => { setOpen(false); onOpenDirectory?.(); }}>
-          <BookUser size={19} />Danh bạ cán bộ Ban TC-KT
+        <button className="nav-item nav-item-directory" onClick={() => { setOpen(false); onOpenDirectory?.(); }} title="Danh bạ cán bộ Ban Tổ chức - Kiểm tra">
+          <BookUser size={19} />
+          <span>Danh bạ Ban TC-KT</span>
         </button>
         {(me?.isAdmin || me?.role === 'admin') && (
           <a className={`nav-item ${managing ? 'active' : ''}`} href="#/manage" onClick={() => setOpen(false)}>

@@ -173,3 +173,41 @@ test('thêm/xoá việc cập nhật "cập nhật lúc/bởi" của khu và ph�
     sse.abort();
   } finally { await t.close(); }
 });
+
+test('điểm danh và sĩ số: cập nhật, chặn khi chưa đủ 2/3 hoặc chưa đủ giấy tờ', async () => {
+  const t = await startApp();
+  try {
+    // 1. Cập nhật sĩ số: khách 401, chủ phòng được
+    assert.equal((await t.call('PATCH', '/api/rooms/1/attendance', { body: { attendees: 20, totalMembers: 30 } })).status, 401);
+    const rAtt = await t.call('PATCH', '/api/rooms/1/attendance', { as: 'owner@t.test', body: { attendees: 15, totalMembers: 30 } });
+    assert.equal(rAtt.status, 200);
+    assert.equal(rAtt.body.attendees, 15);
+    assert.equal(rAtt.body.totalMembers, 30);
+
+    // 2. 15/30 = 50% (< 2/3) -> Đổi sang yellow bị chặn 400
+    const rFailAtt = await t.call('PATCH', '/api/rooms/1/status', { as: 'owner@t.test', body: { status: 'yellow' } });
+    assert.equal(rFailAtt.status, 400);
+    assert.equal(rFailAtt.body.error, 'attendance_not_met');
+
+    // 3. Cập nhật đủ 20/30 (2/3) nhưng task chưa 100% done (room 1 có 1 todo, 1 done)
+    await t.call('PATCH', '/api/rooms/1/attendance', { as: 'owner@t.test', body: { attendees: 20, totalMembers: 30 } });
+    const rFailTask = await t.call('PATCH', '/api/rooms/1/status', { as: 'owner@t.test', body: { status: 'yellow' } });
+    assert.equal(rFailTask.status, 400);
+    assert.equal(rFailTask.body.error, 'checklist_incomplete');
+
+    // 4. Hoàn thành task còn lại (task 1: 'Sắp xếp ghế')
+    await t.call('PATCH', '/api/tasks/1', { as: 'owner@t.test', body: { state: 'done' } });
+
+    // 5. Bây giờ đủ cả 2 điều kiện -> Đổi sang yellow thành công
+    const rOk = await t.call('PATCH', '/api/rooms/1/status', { as: 'owner@t.test', body: { status: 'yellow' } });
+    assert.equal(rOk.status, 200);
+    assert.equal(rOk.body.status, 'yellow');
+
+    // 6. Admin có thể override dù điều kiện chưa đủ
+    await t.call('PATCH', '/api/rooms/2/attendance', { as: 'owner@t.test', body: { attendees: 5, totalMembers: 40 } });
+    const rAdmin = await t.call('PATCH', '/api/rooms/2/status', { as: 'admin@t.test', body: { status: 'green' } });
+    assert.equal(rAdmin.status, 200);
+    assert.equal(rAdmin.body.status, 'green');
+  } finally { await t.close(); }
+});
+

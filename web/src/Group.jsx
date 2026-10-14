@@ -1,7 +1,93 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, Clock3, FileCheck2, MessageSquareText, Plus, Trash2, UserRound, PhoneCall } from 'lucide-react';
+import { ChevronDown, Clock3, FileCheck2, MessageSquareText, Plus, Trash2, UserRound, PhoneCall, Users, CheckCircle2, AlertCircle } from 'lucide-react';
 import { api } from './api.js';
-import { ORDER, ST, TS, NEXT, NOTE_MAX, canEdit, doneCount, percent, statusCounts, patchRoom, patchTask, removeTask, timeLabel, parseRoomMeta, parseGroupMeta } from './logic.js';
+import { ORDER, ST, TS, NEXT, NOTE_MAX, canEdit, doneCount, percent, statusCounts, patchRoom, patchTask, removeTask, timeLabel, parseRoomMeta, parseGroupMeta, isAttendanceValid, isChecklistComplete, canStartCongress } from './logic.js';
+
+function AttendanceBox({ room, onSave, disabled, onBlocked }) {
+  const [attendees, setAttendees] = useState(room.attendees || '');
+  const [totalMembers, setTotalMembers] = useState(room.totalMembers || '');
+
+  useEffect(() => {
+    setAttendees(room.attendees || '');
+    setTotalMembers(room.totalMembers || '');
+  }, [room.attendees, room.totalMembers]);
+
+  const att = Number(attendees) || 0;
+  const tot = Number(totalMembers) || 0;
+  const pct = tot > 0 ? Math.round((att / tot) * 100) : 0;
+  const valid = tot > 0 && (att * 3 >= tot * 2);
+  const minRequired = tot > 0 ? Math.ceil((tot * 2) / 3) : 0;
+
+  const handleSave = () => {
+    if (disabled) return;
+    const a = Math.max(0, parseInt(attendees, 10) || 0);
+    const t = Math.max(0, parseInt(totalMembers, 10) || 0);
+    if (a !== (room.attendees ?? 0) || t !== (room.totalMembers ?? 0)) {
+      onSave(a, t);
+    }
+  };
+
+  return (
+    <div
+      className={`attendance-box-wrap ${disabled ? 'att-disabled' : ''}`}
+      onClickCapture={(e) => {
+        if (disabled) {
+          e.stopPropagation();
+          onBlocked?.();
+        }
+      }}
+    >
+      <div className="att-label-row">
+        <span><Users size={14} aria-hidden="true" /> Điểm danh & Sĩ số Đoàn viên</span>
+        {tot > 0 ? (
+          <span className={`att-ratio-tag ${valid ? 'valid' : 'invalid'}`}>
+            {valid ? `✓ Đủ điều kiện (≥ 2/3: ${att}/${tot})` : `⚠️ Chưa đủ 2/3 (cần ≥ ${minRequired}/${tot})`}
+          </span>
+        ) : (
+          <span className="att-ratio-tag waiting">Chưa nhập sĩ số</span>
+        )}
+      </div>
+
+      <div className="att-inputs-grid">
+        <div className="att-field">
+          <label htmlFor={`att-present-${room.id}`}>Đoàn viên có mặt</label>
+          <input
+            id={`att-present-${room.id}`}
+            type="number"
+            min="0"
+            max={tot || 999}
+            value={attendees}
+            disabled={disabled}
+            placeholder="Số có mặt"
+            onChange={(e) => setAttendees(e.target.value)}
+            onBlur={handleSave}
+            onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }}
+          />
+        </div>
+        <div className="att-divider">/</div>
+        <div className="att-field">
+          <label htmlFor={`att-total-${room.id}`}>Sĩ số lớp (Tổng)</label>
+          <input
+            id={`att-total-${room.id}`}
+            type="number"
+            min="0"
+            max="999"
+            value={totalMembers}
+            disabled={disabled}
+            placeholder="Sĩ số lớp"
+            onChange={(e) => setTotalMembers(e.target.value)}
+            onBlur={handleSave}
+            onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }}
+          />
+        </div>
+        <div className="att-pct-display">
+          <span className={`att-pct-val ${valid ? 'val-good' : 'val-warn'}`}>{pct}%</span>
+          <span className="att-pct-sub">tỷ lệ có mặt</span>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function NoteBox({ room, onSave, disabled, onBlocked }) {
   const [value, setValue] = useState(room.note ?? '');
@@ -62,6 +148,10 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
   const progress = percent(room);
   const meta = parseRoomMeta(room.name);
 
+  const isAttOk = isAttendanceValid(room.attendees, room.totalMembers);
+  const isDocOk = isChecklistComplete(room);
+  const canStart = isAttOk && isDocOk;
+
   const handleBlockedAction = (e, actionName = 'cập nhật thông tin') => {
     e?.preventDefault?.();
     e?.stopPropagation?.();
@@ -72,7 +162,23 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
     }
   };
 
-  const changeStatus = (status) => act((state) => patchRoom(state, room.id, { status }), () => api.setStatus(room.id, status));
+  const changeStatus = (status) => {
+    if (status !== 'red' && !canStart && !me?.isAdmin && me?.role !== 'admin') {
+      if (!isAttOk) {
+        toast?.(`Chưa đủ điều kiện tổ chức Đại hội: Số đoàn viên có mặt (${room.attendees || 0}/${room.totalMembers || 0}) chưa đạt tối thiểu 2/3 sĩ số lớp.`);
+      } else if (!isDocOk) {
+        toast?.(`Chưa đủ điều kiện tổ chức Đại hội: Checklist giấy tờ chưa hoàn thành 100% (${done}/${room.tasks.length} mục đã đủ).`);
+      }
+      return;
+    }
+    act((state) => patchRoom(state, room.id, { status }), () => api.setStatus(room.id, status));
+  };
+
+  const saveAttendance = (attendees, totalMembers) => act(
+    (state) => patchRoom(state, room.id, { attendees, totalMembers }),
+    () => api.setAttendance(room.id, attendees, totalMembers),
+  );
+
   const changeTask = (task) => {
     const state = NEXT[task.state];
     act((current) => patchTask(current, task.id, { state }), () => api.setTask(task.id, state));
@@ -96,31 +202,25 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
       </div>
       <ChevronDown size={18} className="room-chevron" aria-hidden="true" />
       <strong className="card-title">{meta.className}</strong>
-      <div
-        className="card-status-dropdown-row"
-        onClick={(e) => {
-          e.stopPropagation();
-          if (!editor) handleBlockedAction(e, 'thay đổi trạng thái Đại hội của');
-        }}
-        onKeyDown={(e) => e.stopPropagation()}
-      >
-        <select
-          className={`room-status-select ${room.status} ${!editor ? 'read-only' : ''}`}
-          value={room.status}
-          disabled={!editor}
-          onChange={(e) => changeStatus(e.target.value)}
-          aria-label={`Trạng thái tổ chức của ${meta.className}`}
-        >
-          {ORDER.map((status) => (
-            <option key={status} value={status}>{ST[status]}</option>
-          ))}
-        </select>
+      
+      {/* Thanh hiển thị trạng thái duy nhất ở đầu card: Dạng Badge/Pill tinh gọn, không dùng dropdown trùng lặp */}
+      <div className="card-status-pill-row">
+        <span className={`room-status-badge ${room.status}`}>
+          <span className="status-dot" />
+          {ST[room.status]}
+        </span>
+        {room.totalMembers > 0 && (
+          <span className={`room-att-pill ${isAttOk ? 'att-ok' : 'att-warn'}`} title={`Số lượng đoàn viên: ${room.attendees || 0}/${room.totalMembers} (${Math.round(((room.attendees || 0) / room.totalMembers) * 100)}%)`}>
+            {room.attendees || 0}/{room.totalMembers} ĐV {isAttOk ? '✓' : '⚠️'}
+          </span>
+        )}
         {!editor && (
           <span className="read-only-badge" title={!me ? "Nhấn để đăng nhập cán bộ" : "Chỉ xem"}>
             Chỉ xem
           </span>
         )}
       </div>
+
       <div className="room-owner" onClick={(e) => e.stopPropagation()}>
         <UserRound size={14} aria-hidden="true" />
         {room.owners && room.owners.length > 0 ? (
@@ -155,10 +255,31 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
     </div>
     <div className="room-details-shell" inert={!open ? '' : undefined} aria-hidden={!open}>
       <div className="room-details">
+        {/* 1. MỤC NHẬP SỐ LƯỢNG ĐOÀN VIÊN CÓ MẶT / SĨ SỐ LỚP */}
+        <AttendanceBox
+          room={room}
+          onSave={saveAttendance}
+          disabled={!editor}
+          onBlocked={() => handleBlockedAction(null, 'cập nhật điểm danh và sĩ số của')}
+        />
+
+        {/* 2. THANH DROPDOWN TRẠNG THÁI ĐẠI HỘI DUY NHẤT */}
         <div className="room-detail-title">
           <span>Trạng thái Đại hội</span>
           <span>{editor ? '3 mức trạng thái' : 'Chế độ chỉ xem'}</span>
         </div>
+
+        {/* Thông báo điều kiện tổ chức trực quan */}
+        <div className={`congress-condition-banner ${canStart ? 'eligible' : 'locked'}`}>
+          {canStart ? (
+            <span><CheckCircle2 size={14} /> Đã đủ điều kiện tiến hành Đại hội (≥ 2/3 sĩ số & 100% giấy tờ)</span>
+          ) : (
+            <span>
+              <AlertCircle size={14} /> Chưa đủ điều kiện tổ chức: {!isAttOk ? 'Thiếu ≥ 2/3 đoàn viên có mặt' : ''} {!isAttOk && !isDocOk ? 'và ' : ''} {!isDocOk ? 'Chưa đủ 100% giấy tờ' : ''}
+            </span>
+          )}
+        </div>
+
         <div
           className="room-status-select-wrap"
           onClickCapture={(e) => {
@@ -175,9 +296,13 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
             onChange={(e) => changeStatus(e.target.value)}
             aria-label={`Chọn trạng thái Đại hội cho ${meta.className}`}
           >
-            {ORDER.map((status) => (
-              <option key={status} value={status}>{ST[status]}</option>
-            ))}
+            <option value="red">{ST.red}</option>
+            <option value="yellow" disabled={!canStart && !me?.isAdmin && me?.role !== 'admin' && room.status === 'red'}>
+              {ST.yellow} {!canStart && !me?.isAdmin && me?.role !== 'admin' && room.status === 'red' ? '(Chưa đủ điều kiện)' : ''}
+            </option>
+            <option value="green" disabled={!canStart && !me?.isAdmin && me?.role !== 'admin' && room.status === 'red'}>
+              {ST.green} {!canStart && !me?.isAdmin && me?.role !== 'admin' && room.status === 'red' ? '(Chưa đủ điều kiện)' : ''}
+            </option>
           </select>
         </div>
 

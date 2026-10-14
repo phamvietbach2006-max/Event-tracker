@@ -34,21 +34,10 @@ import {
   doneCount,
   percent,
   timeLabel,
-  patchRoom,
-  patchTask,
-  canEdit,
+  isAttendanceValid,
 } from './logic.js';
-import { api } from './api.js';
 
-export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit, onRequireLogin, say, onSelectOfficer }) {
-  const handleBlockedAction = (room, actionName = 'chỉnh sửa') => {
-    const meta = parseRoomMeta(room.name);
-    if (!me) {
-      onRequireLogin?.(`Vui lòng đăng nhập cán bộ kiểm tra để ${actionName} chi đoàn ${meta.className}`);
-    } else {
-      say?.(`Bạn chỉ có quyền cập nhật các chi đoàn được phân công phụ trách (${meta.className})`);
-    }
-  };
+export default function OverviewTable({ state, me, onNavigate, onSelectUnit, onSelectOfficer }) {
 
   // Filters
   const [unitFilter, setUnitFilter] = useState('all');
@@ -218,22 +207,7 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
     }
   };
 
-  const handleStatusChange = (roomId, newStatus) => {
-    act(
-      (current) => patchRoom(current, roomId, { status: newStatus }),
-      () => api.setStatus(roomId, newStatus)
-    );
-  };
-
-  const handleTaskToggle = (task) => {
-    const nextState = NEXT[task.state];
-    act(
-      (current) => patchTask(current, task.id, { state: nextState }),
-      () => api.setTask(task.id, nextState)
-    );
-  };
-
-  // Export to Excel function
+  // Export to Excel function (Chỉ đọc dữ liệu để xuất báo cáo)
   const handleExportExcel = () => {
     const dataToExport = sortedRows.map((r, idx) => ({
       STT: idx + 1,
@@ -244,6 +218,10 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
       'Tên Chi đoàn': r.meta.className,
       'Khóa': r.meta.cohort || 'Khác',
       'Loại Đại hội': r.meta.congressType,
+      'Sĩ số lớp': r.room.totalMembers || 0,
+      'Đoàn viên có mặt': r.room.attendees || 0,
+      'Tỷ lệ có mặt': r.room.totalMembers ? `${Math.round(((r.room.attendees || 0) / r.room.totalMembers) * 100)}%` : '0%',
+      'Đủ điều kiện sĩ số': isAttendanceValid(r.room.attendees, r.room.totalMembers) ? 'Đạt (>= 2/3)' : 'Chưa đạt',
       'Trạng thái': ST[r.room.status] || r.room.status,
       'Tiến độ hồ sơ': `${r.done}/${r.total} (${r.pct}%)`,
       'Mục đã nộp': r.room.tasks.filter((t) => t.state === 'done').map((t) => t.text).join('; '),
@@ -593,6 +571,8 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
 
               <th className="th-cohort">Khóa</th>
 
+              <th className="th-attendance">Sĩ số / Có mặt</th>
+
               <th className="th-status" onClick={() => toggleSort('status')}>
                 <div className="th-cell">
                   <span>Trạng thái Đại hội</span>
@@ -628,7 +608,7 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
           <tbody>
             {paginatedRows.length === 0 ? (
               <tr>
-                <td colSpan={13} className="empty-table-cell">
+                <td colSpan={14} className="empty-table-cell">
                   <div className="empty-table-state">
                     <FileSpreadsheet size={40} className="empty-icon" />
                     <p className="empty-title">Không tìm thấy dữ liệu phù hợp</p>
@@ -693,35 +673,28 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
                       </span>
                     </td>
 
-                    {/* Trạng thái Đại hội */}
-                    <td
-                      className="td-status"
-                      onClickCapture={(e) => {
-                        if (!canModify) {
-                          e.stopPropagation();
-                          handleBlockedAction(r.room, 'thay đổi trạng thái Đại hội của');
-                        }
-                      }}
-                    >
-                      {canModify ? (
-                        <select
-                          className={`status-select status-${statusColor}`}
-                          value={statusColor}
-                          onChange={(e) => handleStatusChange(r.room.id, e.target.value)}
-                          aria-label={`Trạng thái lớp ${r.meta.className}`}
-                        >
-                          <option value="red">🔴 Chưa tổ chức</option>
-                          <option value="yellow">🟡 Đang tiến hành</option>
-                          <option value="green">🟢 Đã xong</option>
-                        </select>
+                    {/* Sĩ số & Đoàn viên có mặt */}
+                    <td className="td-attendance">
+                      {r.room.totalMembers > 0 ? (
+                        <div className="attendance-cell-pill">
+                          <span className="att-count"><b>{r.room.attendees || 0}</b>/{r.room.totalMembers}</span>
+                          <span className={`att-badge ${isAttendanceValid(r.room.attendees, r.room.totalMembers) ? 'ok' : 'warn'}`}>
+                            {isAttendanceValid(r.room.attendees, r.room.totalMembers) ? '≥ 2/3' : '< 2/3'}
+                          </span>
+                        </div>
                       ) : (
-                        <span
-                          className={`status-pill-static status-${statusColor} read-only-clickable`}
-                          title={!me ? "Nhấn để đăng nhập cán bộ và chỉnh sửa" : "Chỉ xem"}
-                        >
-                          {statusColor === 'green' ? '🟢 Đã xong' : statusColor === 'yellow' ? '🟡 Đang tiến hành' : '🔴 Chưa tổ chức'}
-                        </span>
+                        <span className="text-muted">—</span>
                       )}
+                    </td>
+
+                    {/* Trạng thái Đại hội - CHỈ XEM */}
+                    <td className="td-status">
+                      <span
+                        className={`status-pill-static status-${statusColor}`}
+                        title={statusColor === 'green' ? 'Đã xong' : statusColor === 'yellow' ? 'Đang tiến hành' : 'Chưa tổ chức'}
+                      >
+                        {statusColor === 'green' ? '🟢 Đã xong' : statusColor === 'yellow' ? '🟡 Đang tiến hành' : '🔴 Chưa tổ chức'}
+                      </span>
                     </td>
 
                     {/* Tiến độ hồ sơ */}
@@ -744,35 +717,23 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
                       </div>
                     </td>
 
-                    {/* Chi tiết Checklist từng mục */}
-                    <td
-                      className="td-checklist"
-                      onClickCapture={(e) => {
-                        if (!canModify) {
-                          e.stopPropagation();
-                          handleBlockedAction(r.room, 'đánh dấu hồ sơ giấy tờ của');
-                        }
-                      }}
-                    >
+                    {/* Chi tiết Checklist từng mục - CHỈ XEM */}
+                    <td className="td-checklist">
                       <div className="checklist-chips-row">
                         {r.room.tasks.map((task, tIdx) => {
                           const isDone = task.state === 'done';
                           const isDoing = task.state === 'doing';
                           return (
-                            <button
+                            <span
                               key={task.id}
-                              type="button"
-                              className={`task-chip-btn ${isDone ? 'is-done' : isDoing ? 'is-doing' : 'is-todo'} ${!canModify ? 'chip-readonly' : ''}`}
-                              onClick={() => {
-                                if (canModify) handleTaskToggle(task);
-                              }}
-                              title={`${task.text}: ${isDone ? 'Đã đủ' : isDoing ? 'Đang kiểm' : 'Chưa đủ'} ${canModify ? '(Click để chuyển)' : '(Chỉ xem)'}`}
+                              className={`task-chip-btn ${isDone ? 'is-done' : isDoing ? 'is-doing' : 'is-todo'} chip-readonly`}
+                              title={`${task.text}: ${isDone ? 'Đã đủ' : isDoing ? 'Đang kiểm' : 'Chưa đủ'} (Chỉ xem)`}
                             >
                               <span className="task-chip-idx">{tIdx + 1}</span>
                               <span className="task-chip-icon">
                                 {isDone ? '✓' : isDoing ? '◐' : '·'}
                               </span>
-                            </button>
+                            </span>
                           );
                         })}
                       </div>
@@ -921,62 +882,51 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
             </div>
 
             <div className="inspect-modal-body">
-              {/* Status switch */}
-              <div
-                className="inspect-status-row"
-                onClickCapture={(e) => {
-                  if (!canEdit(me, inspectRoom.room)) {
-                    e.stopPropagation();
-                    handleBlockedAction(inspectRoom.room, 'thay đổi trạng thái Đại hội của');
-                  }
-                }}
-              >
-                <span className="inspect-label">
-                  Trạng thái Đại hội: {!canEdit(me, inspectRoom.room) && <small className="inspect-ro-tag">(Chỉ xem)</small>}
-                </span>
-                <div className="inspect-status-buttons">
-                  {ORDER.map((st) => (
-                    <button
-                      key={st}
-                      type="button"
-                      disabled={!canEdit(me, inspectRoom.room)}
-                      className={`inspect-st-btn status-${st} ${inspectRoom.room.status === st ? 'active' : ''}`}
-                      onClick={() => handleStatusChange(inspectRoom.room.id, st)}
-                    >
-                      {st === 'red' ? '🔴 Chưa tổ chức' : st === 'yellow' ? '🟡 Đang tiến hành' : '🟢 Đã xong'}
-                    </button>
-                  ))}
+              {/* Status display (Chỉ xem) */}
+              <div className="inspect-status-row inspect-readonly-row">
+                <span className="inspect-label">Trạng thái Đại hội:</span>
+                <div className="inspect-status-display">
+                  <span className={`inspect-status-pill status-${inspectRoom.room.status}`}>
+                    {inspectRoom.room.status === 'red' ? '🔴 Chưa tổ chức' : inspectRoom.room.status === 'yellow' ? '🟡 Đang tiến hành' : '🟢 Đã xong'}
+                  </span>
+                  <span className="inspect-ro-tag">Chỉ xem</span>
                 </div>
               </div>
 
-              {/* Checklist items */}
-              <div
-                className="inspect-tasks-section"
-                onClickCapture={(e) => {
-                  if (!canEdit(me, inspectRoom.room)) {
-                    e.stopPropagation();
-                    handleBlockedAction(inspectRoom.room, 'đánh dấu hồ sơ giấy tờ của');
-                  }
-                }}
-              >
+              {/* Attendance display (Sĩ số & Có mặt) */}
+              <div className="inspect-attendance-row">
+                <span className="inspect-label">Điểm danh / Sĩ số:</span>
+                {inspectRoom.room.totalMembers > 0 ? (
+                  <div className="inspect-att-details">
+                    <span className="inspect-att-count">
+                      Có mặt: <strong>{inspectRoom.room.attendees || 0}</strong> / <strong>{inspectRoom.room.totalMembers}</strong> đoàn viên
+                      ({Math.round(((inspectRoom.room.attendees || 0) / inspectRoom.room.totalMembers) * 100)}%)
+                    </span>
+                    <span className={`inspect-att-tag ${isAttendanceValid(inspectRoom.room.attendees, inspectRoom.room.totalMembers) ? 'tag-ok' : 'tag-warn'}`}>
+                      {isAttendanceValid(inspectRoom.room.attendees, inspectRoom.room.totalMembers) ? '✓ Đủ điều kiện (≥ 2/3)' : '⚠️ Chưa đủ 2/3 sĩ số'}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="inspect-att-empty">Chưa cập nhật sĩ số</span>
+                )}
+              </div>
+
+              {/* Checklist items (Chỉ xem) */}
+              <div className="inspect-tasks-section">
                 <div className="inspect-tasks-head">
                   <strong>Danh mục hồ sơ giấy tờ ({inspectRoom.done}/{inspectRoom.total} mục đã đủ - {inspectRoom.pct}%)</strong>
                   <span className="inspect-note-hint">
-                    {canEdit(me, inspectRoom.room) ? 'Nhấp vào từng mục để đổi trạng thái hoàn thành' : 'Chế độ chỉ xem'}
+                    Chế độ chỉ xem · Để cập nhật hồ sơ, vui lòng mở trên Bảng theo dõi
                   </span>
                 </div>
 
                 <div className="inspect-tasks-list">
-                  {inspectRoom.room.tasks.map((task, tIdx) => {
+                  {inspectRoom.room.tasks.map((task) => {
                     const isDone = task.state === 'done';
-                    const canEditThis = canEdit(me, inspectRoom.room);
                     return (
                       <div
                         key={task.id}
-                        className={`inspect-task-item ${isDone ? 'done' : 'todo'} ${!canEditThis ? 'item-readonly' : ''}`}
-                        onClick={() => {
-                          if (canEditThis) handleTaskToggle(task);
-                        }}
+                        className={`inspect-task-item ${isDone ? 'done' : 'todo'} item-readonly`}
                       >
                         <div className="inspect-task-checkbox">
                           {isDone ? <CheckSquare size={18} className="icon-checked" /> : <Square size={18} className="icon-unchecked" />}

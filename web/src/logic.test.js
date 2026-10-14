@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { ST, NEXT, percent, doneCount, statusCounts, totals, canEdit, patchRoom, patchTask, allRooms, timeLabel, getScopedGroups } from './logic.js';
+import { ST, NEXT, percent, doneCount, statusCounts, totals, canEdit, patchRoom, patchTask, allRooms, timeLabel, getScopedGroups, isAttendanceValid, isChecklistComplete, canStartCongress } from './logic.js';
 
 const state = {
   version: 1,
@@ -91,5 +91,61 @@ test('getScopedGroups: phân quyền hiển thị theo vai trò', () => {
 
   const rNone = getScopedGroups(state.groups, { role: 'room_lead', assignedRoomIds: [999] });
   assert.equal(rNone.length, 0);
+});
+
+test('isAttendanceValid: đạt >= 2/3 sĩ số lớp', () => {
+  // Sĩ số 30, có mặt 20 (20/30 = 2/3) -> true
+  assert.equal(isAttendanceValid(20, 30), true);
+  // Sĩ số 30, có mặt 25 (> 2/3) -> true
+  assert.equal(isAttendanceValid(25, 30), true);
+  // Sĩ số 50, có mặt 40 (80%) -> true
+  assert.equal(isAttendanceValid(40, 50), true);
+  // Sĩ số 30, có mặt 19 (< 2/3) -> false
+  assert.equal(isAttendanceValid(19, 30), false);
+  // Sĩ số 0, có mặt 0 -> false
+  assert.equal(isAttendanceValid(0, 0), false);
+  // Chưa nhập hoặc null -> false
+  assert.equal(isAttendanceValid(null, 50), false);
+  assert.equal(isAttendanceValid(30, null), false);
+  // Số âm -> false
+  assert.equal(isAttendanceValid(-5, 30), false);
+});
+
+test('isChecklistComplete: hoàn thành 100% checklist giấy tờ', () => {
+  const completeRoom = { tasks: [{ id: 1, state: 'done' }, { id: 2, state: 'done' }] };
+  const incompleteRoom1 = { tasks: [{ id: 1, state: 'done' }, { id: 2, state: 'doing' }] };
+  const incompleteRoom2 = { tasks: [{ id: 1, state: 'todo' }] };
+  const emptyTasksRoom = { tasks: [] };
+
+  assert.equal(isChecklistComplete(completeRoom), true);
+  assert.equal(isChecklistComplete(incompleteRoom1), false);
+  assert.equal(isChecklistComplete(incompleteRoom2), false);
+  assert.equal(isChecklistComplete(emptyTasksRoom), true);
+  assert.equal(isChecklistComplete(null), false);
+});
+
+test('canStartCongress: cả 2 điều kiện (>= 2/3 sĩ số và 100% giấy tờ)', () => {
+  const okRoom = {
+    attendees: 35,
+    totalMembers: 45,
+    tasks: [{ id: 1, state: 'done' }, { id: 2, state: 'done' }],
+  };
+  assert.equal(canStartCongress(okRoom), true);
+
+  // Thiếu sĩ số
+  const lowAttRoom = {
+    attendees: 20,
+    totalMembers: 45,
+    tasks: [{ id: 1, state: 'done' }],
+  };
+  assert.equal(canStartCongress(lowAttRoom), false);
+
+  // Thiếu giấy tờ
+  const lowDocRoom = {
+    attendees: 40,
+    totalMembers: 45,
+    tasks: [{ id: 1, state: 'done' }, { id: 2, state: 'todo' }],
+  };
+  assert.equal(canStartCongress(lowDocRoom), false);
 });
 

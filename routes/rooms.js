@@ -22,10 +22,39 @@ export function registerRooms(router) {
     const room = roomOr404(db, params.id);
     const actor = resolveActor(db, user, config, room.id);
     const status = oneOf(body.status, STATUSES, 'status');
+
+    // Kiểm tra điều kiện tổ chức đại hội: Bắt buộc >= 2/3 đoàn viên có mặt và 100% checklist giấy tờ
+    if (status !== 'red' && !body.force && !actor.is_admin && (room.total_members > 0 || body.enforceRules)) {
+      const attendees = room.attendees ?? 0;
+      const totalMembers = room.total_members ?? 0;
+      if (totalMembers <= 0 || (attendees * 3 < totalMembers * 2)) {
+        throw new HttpError(400, 'attendance_not_met', 'Chưa đủ điều kiện: Số lượng đoàn viên có mặt phải đạt từ 2/3 sĩ số lớp trở lên.');
+      }
+      const pendingTasks = db.prepare("SELECT COUNT(*) AS count FROM tasks WHERE room_id = ? AND state != 'done'").get(room.id)?.count ?? 0;
+      if (pendingTasks > 0) {
+        throw new HttpError(400, 'checklist_incomplete', 'Chưa đủ điều kiện: Checklist giấy tờ chưa hoàn thành 100%.');
+      }
+    }
+
     tx(db, () => {
       db.prepare('UPDATE rooms SET status = ? WHERE id = ?').run(status, room.id);
       touchRoom(db, actor, room.id);
       logActivity(db, actor, room.id, 'room.status', `${room.status} -> ${status}`);
+    });
+    sse.broadcast();
+    return roomView(roomOr404(db, room.id));
+  });
+
+  router.add('PATCH', '/api/rooms/:id/attendance', ({ db, user, config, params, body, sse }) => {
+    if (!config?.openAccess) requireUser(user);
+    const room = roomOr404(db, params.id);
+    const actor = resolveActor(db, user, config, room.id);
+    const attendees = Math.max(0, parseInt(body.attendees ?? 0, 10) || 0);
+    const totalMembers = Math.max(0, parseInt(body.totalMembers ?? body.total_members ?? 0, 10) || 0);
+    tx(db, () => {
+      db.prepare('UPDATE rooms SET attendees = ?, total_members = ? WHERE id = ?').run(attendees, totalMembers, room.id);
+      touchRoom(db, actor, room.id);
+      logActivity(db, actor, room.id, 'room.attendance', `Sĩ số: ${attendees}/${totalMembers}`);
     });
     sse.broadcast();
     return roomView(roomOr404(db, room.id));

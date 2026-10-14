@@ -1,5 +1,5 @@
 import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from 'react';
-import { Home, Star, Settings, Map, FileSpreadsheet, PlusCircle, LayoutDashboard, ClipboardList, ChevronsDown, ChevronsUp, ArrowUp, ShieldAlert, LogIn } from 'lucide-react';
+import { Home, Star, Settings, Map, FileSpreadsheet, PlusCircle, LayoutDashboard, ClipboardList, ChevronsDown, ChevronsUp, ArrowUp, ShieldAlert, LogIn, BookUser } from 'lucide-react';
 import { api } from './api.js';
 import { useLive } from './useLive.js';
 import { allRooms, canEdit, statusCounts, totals, ST, UNITS, parseRoomMeta, parseGroupMeta, getScopedGroups } from './logic.js';
@@ -466,6 +466,7 @@ export default function App() {
         <button className={!managing && mode === 'dashboard' ? 'active' : ''} onClick={() => navigate('dashboard')}><LayoutDashboard size={20} />Tổng quan</button>
         <button className={!managing && (mode === 'overview' || mode === 'group' || mode === 'status' || mode === 'mine') ? 'active' : ''} onClick={() => navigate('overview')}><ClipboardList size={20} />Bảng theo dõi</button>
         <button className={!managing && mode === 'map' ? 'active' : ''} onClick={() => navigate('map')}><Map size={20} />Sơ đồ</button>
+        <button className={directoryOpen ? 'active' : ''} onClick={handleOpenDirectory}><BookUser size={20} />Danh bạ</button>
         {isAdmin ? (
           <a className={managing ? 'active' : ''} href="#/manage"><Settings size={20} />Quản lý</a>
         ) : me ? (

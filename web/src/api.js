@@ -38,7 +38,8 @@ export const api = {
   login: (email, password) => req('POST', '/api/auth/login', { email, password }),
   changePassword: (oldPassword, newPassword) => req('POST', '/api/auth/change-password', { oldPassword, newPassword }),
   logout: () => req('POST', '/auth/logout'),
-  setStatus: (id, status) => req('PATCH', `/api/rooms/${id}/status`, { status }),
+  setStatus: (id, status, force = false) => req('PATCH', `/api/rooms/${id}/status`, { status, force }),
+  setAttendance: (id, attendees, totalMembers) => req('PATCH', `/api/rooms/${id}/attendance`, { attendees, totalMembers }),
   setNote: (id, note) => req('PATCH', `/api/rooms/${id}/note`, { note }),
   setTask: (id, state) => req('PATCH', `/api/tasks/${id}`, { state }),
   // quản trị
