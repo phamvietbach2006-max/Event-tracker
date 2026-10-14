@@ -9,7 +9,7 @@ const defaultBaseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
 const baseUrl = (process.env.BASE_URL ?? defaultBaseUrl).replace(/\/$/, '');
 const tursoUrl = process.env.TURSO_DATABASE_URL ?? process.env.LIBSQL_URL;
 const dbPath = tursoUrl ? tursoUrl : (process.env.VERCEL ? '/tmp/app.db' : (process.env.DB_PATH ?? 'app.db'));
-const host = process.env.HOST ?? (process.env.VERCEL ? '0.0.0.0' : '127.0.0.1');
+const host = process.env.HOST ?? '0.0.0.0';
 
 const config = {
   port: Number(process.env.PORT ?? 3000),
@@ -60,17 +60,16 @@ try {
 
 const app = createApp({ db, config });
 
-if (!process.env.VERCEL) {
-  app.server.on('error', (err) => {
-    console.warn('Cảnh báo server listen:', err.message);
+app.server.on('error', (err) => {
+  console.warn('Cảnh báo server listen:', err.message);
+});
+
+try {
+  app.server.listen(config.port, config.host, () => {
+    console.log(`Event tracker: http://${config.host}:${config.port} (DB ${config.dbPath})`);
   });
-  try {
-    app.server.listen(config.port, config.host, () => {
-      console.log(`Event tracker: http://${config.host}:${config.port} (DB ${config.dbPath})`);
-    });
-  } catch (err) {
-    console.warn('Không thể khởi động server listen:', err.message);
-  }
+} catch (err) {
+  console.warn('Không thể khởi động server listen:', err.message);
 }
 
 for (const sig of ['SIGINT', 'SIGTERM']) {
