@@ -56,7 +56,7 @@ export default function App() {
 
   const refreshMe = useCallback(() => {
     setAuthError(false);
-    api.me().then(setMe).catch(() => setAuthError(true));
+    api.me().then(setMe).catch(() => setMe(null));
   }, []);
   useEffect(refreshMe, [refreshMe]);
   useEffect(() => {

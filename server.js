@@ -1,8 +1,7 @@
-import { existsSync, readFileSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
 import { openDb } from './lib/db.js';
 import { createApp } from './lib/app.js';
 import { isEmpty, applySeed, ensureTokens } from './lib/seed.js';
+import seedData from './seed.json' with { type: 'json' };
 
 const defaultBaseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
   ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
@@ -27,22 +26,38 @@ const config = {
         redirectUri: `${baseUrl}/auth/callback`,
       }
     : null,
-  seedFile: process.env.SEED_FILE ?? fileURLToPath(new URL('./seed.json', import.meta.url)),
   openAccess: process.env.OPEN_ACCESS === '1',
 };
 
 const db = openDb(config.dbPath);
-if (isEmpty(db) && existsSync(config.seedFile)) {
-  applySeed(db, JSON.parse(readFileSync(config.seedFile, 'utf8')));
-  console.log(`Đã nạp dữ liệu từ ${config.seedFile}`);
+if (isEmpty(db)) {
+  try {
+    applySeed(db, seedData);
+    console.log('Đã nạp dữ liệu từ seed.json');
+  } catch (err) {
+    console.error('Lỗi khi nạp seed.json:', err);
+  }
 }
 ensureTokens(db);
 
 const app = createApp({ db, config });
-app.server.listen(config.port, config.host, () => {
-  console.log(`Event tracker: http://${config.host}:${config.port} (DB ${config.dbPath})`);
+
+app.server.on('error', (err) => {
+  console.warn('Cảnh báo server listen:', err.message);
 });
+
+try {
+  app.server.listen(config.port, config.host, () => {
+    console.log(`Event tracker: http://${config.host}:${config.port} (DB ${config.dbPath})`);
+  });
+} catch (err) {
+  console.warn('Không thể khởi động server listen:', err.message);
+}
 
 for (const sig of ['SIGINT', 'SIGTERM']) {
   process.on(sig, async () => { await app.close(); db.close(); process.exit(0); });
+}
+
+export default async function handler(req, res) {
+  return app.handleRequest(req, res);
 }
