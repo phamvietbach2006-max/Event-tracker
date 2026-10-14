@@ -28,7 +28,7 @@ function getApp() {
             redirectUri: `${baseUrl}/auth/callback`,
           }
         : null,
-      openAccess: process.env.OPEN_ACCESS === '1',
+      openAccess: process.env.NODE_ENV !== 'production' && process.env.OPEN_ACCESS === '1',
     };
 
   const db = openDb(dbPath);
