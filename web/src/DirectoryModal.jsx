@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react';
-import { Search, Phone, PhoneCall, X, Building, Users, ExternalLink, ShieldCheck } from 'lucide-react';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { Search, Phone, PhoneCall, X, Building, Users, RefreshCw } from 'lucide-react';
+import { api } from './api.js';
 
 function cleanPhone(raw) {
   if (!raw) return '';
@@ -14,6 +15,14 @@ function formatPhoneDisplay(raw) {
   return clean;
 }
 
+function getInitials(name) {
+  if (!name || typeof name !== 'string') return 'U';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 0 || !parts[0]) return 'U';
+  const last = parts[parts.length - 1];
+  return last.charAt(0).toUpperCase() || 'U';
+}
+
 const TEAMS = [
   'Tất cả',
   'Ban Điều hành',
@@ -24,34 +33,72 @@ const TEAMS = [
   'Cộng tác viên K70/K71',
 ];
 
-export default function DirectoryModal({ open, contacts = [], onSelectOfficer, onClose }) {
+export default function DirectoryModal({ open, contacts = [], onSelectOfficer, onClose, onRefreshContacts }) {
   const [search, setSearch] = useState('');
   const [selectedTeam, setSelectedTeam] = useState('Tất cả');
+  const [loading, setLoading] = useState(false);
+  const [localContacts, setLocalContacts] = useState(contacts);
 
-  if (!open) return null;
+  useEffect(() => {
+    if (contacts && contacts.length > 0) {
+      setLocalContacts(contacts);
+    }
+  }, [contacts]);
+
+  const loadContacts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const data = await api.contacts();
+      if (Array.isArray(data)) {
+        setLocalContacts(data);
+        onRefreshContacts?.(data);
+      }
+    } catch (e) {
+      console.warn('Lỗi tải danh bạ:', e);
+    } finally {
+      setLoading(false);
+    }
+  }, [onRefreshContacts]);
+
+  useEffect(() => {
+    if (open && (!localContacts || localContacts.length === 0)) {
+      loadContacts();
+    }
+  }, [open, localContacts, loadContacts]);
 
   const filtered = useMemo(() => {
+    const list = Array.isArray(localContacts) ? localContacts : [];
     const q = search.trim().toLowerCase();
-    return contacts.filter((c) => {
+    const qDigits = q.replace(/\D/g, '');
+
+    return list.filter((c) => {
+      if (!c) return false;
       if (selectedTeam !== 'Tất cả') {
+        const teamStr = String(c.team || '').toLowerCase();
         if (selectedTeam === 'Cộng tác viên K70/K71') {
-          if (!c.team?.includes('Cộng tác viên') && c.position !== 'CTV') return false;
-        } else if (!c.team?.toLowerCase().includes(selectedTeam.toLowerCase())) {
+          if (!teamStr.includes('cộng tác viên') && c.position !== 'CTV') return false;
+        } else if (!teamStr.includes(selectedTeam.toLowerCase())) {
           return false;
         }
       }
       if (!q) return true;
-      const matchName = c.name?.toLowerCase().includes(q);
-      const matchPhone = c.phone?.replace(/\D/g, '').includes(q.replace(/\D/g, ''));
-      const matchDept = c.department?.toLowerCase().includes(q);
-      const matchPos = c.position?.toLowerCase().includes(q);
-      const matchEmail = c.email?.toLowerCase().includes(q);
-      return matchName || matchPhone || matchDept || matchPos || matchEmail;
+
+      const matchName = String(c.name || '').toLowerCase().includes(q);
+      const phoneDigits = String(c.phone || '').replace(/\D/g, '');
+      const matchPhone = qDigits ? phoneDigits.includes(qDigits) : false;
+      const matchDept = String(c.department || '').toLowerCase().includes(q);
+      const matchPos = String(c.position || '').toLowerCase().includes(q);
+      const matchEmail = String(c.email || '').toLowerCase().includes(q);
+      const matchStudentId = String(c.student_id || '').toLowerCase().includes(q);
+
+      return matchName || matchPhone || matchDept || matchPos || matchEmail || matchStudentId;
     });
-  }, [contacts, search, selectedTeam]);
+  }, [localContacts, search, selectedTeam]);
+
+  if (!open) return null;
 
   return (
-    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="modal-backdrop directory-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div className="modal-card directory-modal-card" onClick={(e) => e.stopPropagation()}>
         <div className="directory-header">
           <div className="directory-title-row">
@@ -59,9 +106,19 @@ export default function DirectoryModal({ open, contacts = [], onSelectOfficer, o
               <Users size={22} className="directory-header-icon" />
               <h2>Danh bạ Cán bộ Ban Tổ chức - Kiểm tra</h2>
             </div>
-            <button type="button" className="modal-close" onClick={onClose} aria-label="Đóng danh bạ">
-              <X size={20} />
-            </button>
+            <div className="directory-header-actions">
+              <button
+                type="button"
+                className="directory-refresh-btn"
+                onClick={loadContacts}
+                title="Tải lại danh bạ"
+              >
+                <RefreshCw size={15} className={loading ? 'spinning' : ''} />
+              </button>
+              <button type="button" className="modal-close" onClick={onClose} aria-label="Đóng danh bạ">
+                <X size={20} />
+              </button>
+            </div>
           </div>
           <p className="directory-subtitle">
             Danh sách nhân sự, chức vụ và số điện thoại liên lạc trực tiếp các mảng công tác
@@ -105,10 +162,24 @@ export default function DirectoryModal({ open, contacts = [], onSelectOfficer, o
             <span>Hiển thị <b>{filtered.length}</b> cán bộ</span>
           </div>
 
-          {filtered.length === 0 ? (
+          {loading && (!localContacts || localContacts.length === 0) ? (
+            <div className="directory-loading-state">
+              <RefreshCw size={32} className="spinning directory-loading-spinner" />
+              <p>Đang tải danh bạ cán bộ Ban TC-KT...</p>
+            </div>
+          ) : filtered.length === 0 ? (
             <div className="directory-empty-state">
               <Users size={40} className="empty-icon" />
               <p>Không tìm thấy cán bộ nào khớp với nội dung tìm kiếm</p>
+              {(search || selectedTeam !== 'Tất cả') && (
+                <button
+                  type="button"
+                  className="btn-clear-filter"
+                  onClick={() => { setSearch(''); setSelectedTeam('Tất cả'); }}
+                >
+                  Xóa bộ lọc
+                </button>
+              )}
             </div>
           ) : (
             <div className="directory-grid">
@@ -124,7 +195,7 @@ export default function DirectoryModal({ open, contacts = [], onSelectOfficer, o
                     onClick={() => onSelectOfficer(officer)}
                   >
                     <div className="doc-avatar">
-                      {officer.name ? officer.name.charAt(officer.name.lastIndexOf(' ') + 1) || officer.name.charAt(0) : 'U'}
+                      {getInitials(officer.name)}
                     </div>
                     <div className="doc-content">
                       <div className="doc-name-row">

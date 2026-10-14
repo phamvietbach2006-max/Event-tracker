@@ -17,6 +17,7 @@ import {
   CheckCircle2,
   AlertCircle,
   RefreshCw,
+  Phone,
 } from 'lucide-react';
 import { api } from './api.js';
 import { UNITS, ROLES, parseGroupMeta, parseRoomMeta } from './logic.js';
@@ -35,7 +36,7 @@ export default function Manage({ state, me, say, toast }) {
     setLoading(true);
     try {
       const data = await api.users();
-      setUsers(data);
+      setUsers(Array.isArray(data) ? data : []);
     } catch (e) {
       say(e.message);
     } finally {
@@ -67,6 +68,7 @@ export default function Manage({ state, me, say, toast }) {
   // Filtered users
   const filteredUsers = useMemo(() => {
     const q = search.trim().toLowerCase();
+    const qDigits = q.replace(/\D/g, '');
     return users.filter((u) => {
       const role = u.role || (u.isAdmin ? 'admin' : 'room_lead');
       if (roleFilter !== 'all' && role !== roleFilter) return false;
@@ -74,10 +76,19 @@ export default function Manage({ state, me, say, toast }) {
       const haystack = [
         u.name,
         u.email,
+        u.team,
+        u.position,
+        u.department,
+        u.student_id,
         ROLES[role]?.label,
         ...(u.assignedUnits || []),
-      ].join(' ').toLowerCase();
-      return haystack.includes(q);
+      ].filter(Boolean).join(' ').toLowerCase();
+
+      const matchText = haystack.includes(q);
+      const phoneDigits = String(u.phone || '').replace(/\D/g, '');
+      const matchPhone = qDigits ? phoneDigits.includes(qDigits) : false;
+
+      return matchText || matchPhone;
     });
   }, [users, search, roleFilter]);
 
@@ -298,6 +309,23 @@ export default function Manage({ state, me, say, toast }) {
                             {isSelf && <span className="self-pill">Bạn</span>}
                           </div>
                           <span className="user-email-line">{u.email}</span>
+                          {(u.phone || u.team || u.position) && (
+                            <div className="manage-user-chips">
+                              {u.phone && (
+                                <a
+                                  href={`tel:${String(u.phone).replace(/\D/g, '')}`}
+                                  className="manage-phone-chip"
+                                  title={`Bấm để gọi: ${u.phone}`}
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  <Phone size={10} />
+                                  <span>{u.phone}</span>
+                                </a>
+                              )}
+                              {u.position && <span className="manage-pos-chip">{u.position}</span>}
+                              {u.team && <span className="manage-team-chip">{u.team}</span>}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </td>
@@ -515,6 +543,10 @@ function UserPermissionModal({ type, user, groups, onClose, onSuccess }) {
   const [email, setEmail] = useState(user?.email || '');
   const [password, setPassword] = useState(isEdit ? '' : 'Abc@123456767');
   const [role, setRole] = useState(user?.role || (user?.isAdmin ? 'admin' : 'room_lead'));
+  const [phone, setPhone] = useState(user?.phone || '');
+  const [team, setTeam] = useState(user?.team || '');
+  const [position, setPosition] = useState(user?.position || '');
+  const [department, setDepartment] = useState(user?.department || '');
 
   // Scope states
   const [selectedUnits, setSelectedUnits] = useState(new Set(user?.assignedUnits || []));
@@ -600,6 +632,10 @@ function UserPermissionModal({ type, user, groups, onClose, onSuccess }) {
       const payload = {
         name: cleanName,
         role,
+        phone: phone.trim() || null,
+        team: team.trim() || null,
+        position: position.trim() || null,
+        department: department.trim() || null,
         assignedUnits: role === 'unit_lead' ? Array.from(selectedUnits) : [],
         assignedGroupIds: role === 'floor_lead' ? Array.from(selectedGroupIds).map(Number) : [],
         assignedRoomIds: role === 'room_lead' ? Array.from(selectedRoomIds).map(Number) : [],
@@ -672,6 +708,50 @@ function UserPermissionModal({ type, user, groups, onClose, onSuccess }) {
                     placeholder="VD: a.nguyen@hust.edu.vn"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                  />
+                </label>
+              </div>
+
+              <div className="form-row-2">
+                <label className="field-group">
+                  <span className="field-label">Số điện thoại</span>
+                  <input
+                    type="tel"
+                    placeholder="VD: 0983849463"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                </label>
+
+                <label className="field-group">
+                  <span className="field-label">Chức vụ / Vị trí</span>
+                  <input
+                    type="text"
+                    placeholder="VD: Phó Ban / UV BTV / CTV..."
+                    value={position}
+                    onChange={(e) => setPosition(e.target.value)}
+                  />
+                </label>
+              </div>
+
+              <div className="form-row-2">
+                <label className="field-group">
+                  <span className="field-label">Mảng công tác / Ban bộ phận</span>
+                  <input
+                    type="text"
+                    placeholder="VD: Ban Điều hành / Truyền thông..."
+                    value={team}
+                    onChange={(e) => setTeam(e.target.value)}
+                  />
+                </label>
+
+                <label className="field-group">
+                  <span className="field-label">Đơn vị / Trường - Khoa</span>
+                  <input
+                    type="text"
+                    placeholder="VD: Trường CNTT&TT"
+                    value={department}
+                    onChange={(e) => setDepartment(e.target.value)}
                   />
                 </label>
               </div>

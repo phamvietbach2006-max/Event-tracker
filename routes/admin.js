@@ -48,7 +48,7 @@ export function userView(db, u) {
     ownedRoomIds = assignedRoomIds;
   }
 
-  return {
+  const res = {
     email: u.email,
     name: u.name,
     isAdmin: role === 'admin',
@@ -59,6 +59,110 @@ export function userView(db, u) {
     ownedRoomIds,
     hasToken: !!u.token,
   };
+  if (u.phone != null) res.phone = u.phone;
+  if (u.position != null) res.position = u.position;
+  if (u.department != null) res.department = u.department;
+  if (u.team != null) res.team = u.team;
+  if (u.cohort != null) res.cohort = u.cohort;
+  if (u.student_id != null) res.student_id = u.student_id;
+  return res;
+}
+
+export function getAllUsers(db) {
+  const users = db.prepare('SELECT email, name, is_admin, role, token, phone, position, department, team, cohort, student_id FROM users ORDER BY is_admin DESC, name').all();
+  const allUserUnits = db.prepare('SELECT email, unit FROM user_units ORDER BY unit').all();
+  const allUserGroups = db.prepare('SELECT email, group_id FROM user_groups ORDER BY group_id').all();
+  const allRoomOwners = db.prepare('SELECT email, room_id FROM room_owners ORDER BY room_id').all();
+  const allRooms = db.prepare('SELECT id, group_id FROM rooms ORDER BY id').all();
+  const allGroups = db.prepare('SELECT id, name FROM groups').all();
+
+  const unitsByEmail = new Map();
+  for (const row of allUserUnits) {
+    const k = row.email.toLowerCase();
+    if (!unitsByEmail.has(k)) unitsByEmail.set(k, []);
+    unitsByEmail.get(k).push(row.unit);
+  }
+
+  const groupsByEmail = new Map();
+  for (const row of allUserGroups) {
+    const k = row.email.toLowerCase();
+    if (!groupsByEmail.has(k)) groupsByEmail.set(k, []);
+    groupsByEmail.get(k).push(row.group_id);
+  }
+
+  const roomsByEmail = new Map();
+  for (const row of allRoomOwners) {
+    const k = row.email.toLowerCase();
+    if (!roomsByEmail.has(k)) roomsByEmail.set(k, []);
+    roomsByEmail.get(k).push(row.room_id);
+  }
+
+  const groupIdsByUnit = new Map();
+  for (const g of allGroups) {
+    const m = /^\[([^\]]+)\]/.exec(g.name);
+    const uName = m ? m[1].trim() : '';
+    if (uName) {
+      if (!groupIdsByUnit.has(uName)) groupIdsByUnit.set(uName, []);
+      groupIdsByUnit.get(uName).push(g.id);
+    }
+  }
+
+  const roomIdsByGroupId = new Map();
+  const allRoomIds = allRooms.map((r) => r.id);
+  for (const r of allRooms) {
+    if (!roomIdsByGroupId.has(r.group_id)) roomIdsByGroupId.set(r.group_id, []);
+    roomIdsByGroupId.get(r.group_id).push(r.id);
+  }
+
+  return users.map((u) => {
+    const email = u.email.toLowerCase();
+    const role = u.is_admin ? 'admin' : (u.role || 'room_lead');
+    const assignedUnits = unitsByEmail.get(email) ?? [];
+    const assignedGroupIds = groupsByEmail.get(email) ?? [];
+    const assignedRoomIds = roomsByEmail.get(email) ?? [];
+
+    let ownedRoomIds = [];
+    if (role === 'admin') {
+      ownedRoomIds = allRoomIds;
+    } else if (role === 'unit_lead') {
+      const gids = new Set();
+      for (const un of assignedUnits) {
+        for (const gid of (groupIdsByUnit.get(un) ?? [])) gids.add(gid);
+      }
+      const rids = [];
+      for (const gid of gids) {
+        for (const rid of (roomIdsByGroupId.get(gid) ?? [])) rids.push(rid);
+      }
+      ownedRoomIds = rids.sort((a, b) => a - b);
+    } else if (role === 'floor_lead') {
+      const rids = [];
+      for (const gid of assignedGroupIds) {
+        for (const rid of (roomIdsByGroupId.get(gid) ?? [])) rids.push(rid);
+      }
+      ownedRoomIds = rids.sort((a, b) => a - b);
+    } else {
+      ownedRoomIds = assignedRoomIds;
+    }
+
+    const item = {
+      email: u.email,
+      name: u.name,
+      isAdmin: role === 'admin',
+      role,
+      assignedUnits,
+      assignedGroupIds,
+      assignedRoomIds,
+      ownedRoomIds,
+      hasToken: !!u.token,
+    };
+    if (u.phone != null) item.phone = u.phone;
+    if (u.position != null) item.position = u.position;
+    if (u.department != null) item.department = u.department;
+    if (u.team != null) item.team = u.team;
+    if (u.cohort != null) item.cohort = u.cohort;
+    if (u.student_id != null) item.student_id = u.student_id;
+    return item;
+  });
 }
 
 function userOr404(db, rawEmail) {
@@ -264,8 +368,7 @@ export function registerAdmin(router) {
   });
 
   // ---- người dùng ----
-  add('GET', '/api/users', ({ db }) =>
-    db.prepare('SELECT * FROM users ORDER BY is_admin DESC, name').all().map((u) => userView(db, u)));
+  add('GET', '/api/users', ({ db }) => getAllUsers(db));
 
   add('POST', '/api/users', ({ db, body }) => {
     const e = email(body.email);
@@ -279,10 +382,18 @@ export function registerAdmin(router) {
     const isAdmin = role === 'admin' ? 1 : 0;
     const initialPassword = body.password ? String(body.password) : 'Abc@123456767';
     const pwdHash = hashPassword(initialPassword);
+    const phone = body.phone ? String(body.phone).trim() : null;
+    const team = body.team ? String(body.team).trim() : null;
+    const position = body.position ? String(body.position).trim() : null;
+    const department = body.department ? String(body.department).trim() : null;
+    const cohort = body.cohort ? String(body.cohort).trim() : null;
+    const studentId = (body.student_id ?? body.studentId) ? String(body.student_id ?? body.studentId).trim() : null;
 
     tx(db, () => {
-      db.prepare('INSERT INTO users(email, name, is_admin, role, password_hash) VALUES (?,?,?,?,?)')
-        .run(e, name, isAdmin, role, pwdHash);
+      db.prepare(`
+        INSERT INTO users(email, name, is_admin, role, password_hash, phone, team, position, department, cohort, student_id)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?)
+      `).run(e, name, isAdmin, role, pwdHash, phone, team, position, department, cohort, studentId);
 
       if (role === 'unit_lead' && Array.isArray(body.assignedUnits)) {
         for (const unit of body.assignedUnits) {
@@ -318,10 +429,21 @@ export function registerAdmin(router) {
     }
 
     const isAdmin = nextRole === 'admin' ? 1 : 0;
+    const phone = 'phone' in body ? (body.phone ? String(body.phone).trim() : null) : u.phone;
+    const team = 'team' in body ? (body.team ? String(body.team).trim() : null) : u.team;
+    const position = 'position' in body ? (body.position ? String(body.position).trim() : null) : u.position;
+    const department = 'department' in body ? (body.department ? String(body.department).trim() : null) : u.department;
+    const cohort = 'cohort' in body ? (body.cohort ? String(body.cohort).trim() : null) : u.cohort;
+    const studentId = 'student_id' in body || 'studentId' in body
+      ? (body.student_id ?? body.studentId ? String(body.student_id ?? body.studentId).trim() : null)
+      : u.student_id;
 
     tx(db, () => {
-      db.prepare('UPDATE users SET name = ?, is_admin = ?, role = ? WHERE LOWER(email) = ?')
-        .run(name, isAdmin, nextRole, u.email.toLowerCase());
+      db.prepare(`
+        UPDATE users
+        SET name = ?, is_admin = ?, role = ?, phone = ?, team = ?, position = ?, department = ?, cohort = ?, student_id = ?
+        WHERE LOWER(email) = ?
+      `).run(name, isAdmin, nextRole, phone, team, position, department, cohort, studentId, u.email.toLowerCase());
 
       if ('password' in body && body.password) {
         const pwdHash = hashPassword(String(body.password));

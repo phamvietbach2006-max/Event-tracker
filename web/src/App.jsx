@@ -57,9 +57,20 @@ export default function App() {
     setLoadTimeout(false);
   }, [state, me]);
 
-  useEffect(() => {
+  const refreshContacts = useCallback(() => {
     api.contacts().then(setContacts).catch(() => {});
   }, []);
+
+  useEffect(() => {
+    refreshContacts();
+  }, [refreshContacts]);
+
+  const handleOpenDirectory = useCallback(() => {
+    setDirectoryOpen(true);
+    if (!contacts || contacts.length === 0) {
+      refreshContacts();
+    }
+  }, [contacts, refreshContacts]);
 
   const handleSelectOfficer = useCallback((input) => {
     if (!input) return;
@@ -269,7 +280,7 @@ export default function App() {
         toast={setToast}
         managing={managing}
         onOpenLogin={() => handleRequireLogin()}
-        onOpenDirectory={() => setDirectoryOpen(true)}
+        onOpenDirectory={handleOpenDirectory}
       />
       <div className="app-main">
         <Header
@@ -296,7 +307,7 @@ export default function App() {
           managing={managing}
           onOpenLogin={() => handleRequireLogin()}
           onLogout={logout}
-          onOpenDirectory={() => setDirectoryOpen(true)}
+          onOpenDirectory={handleOpenDirectory}
         />
         {!online && <div className="offline-banner" role="status">Đang kết nối lại để nhận cập nhật mới…</div>}
         {managing ? (
@@ -488,17 +499,18 @@ export default function App() {
         }}
         initialNotice={loginNotice}
       />
-      <OfficerModal
-        officer={selectedOfficer}
-        onClose={() => setSelectedOfficer(null)}
-      />
       <DirectoryModal
         open={directoryOpen}
         contacts={contacts}
+        onRefreshContacts={setContacts}
         onSelectOfficer={(officer) => {
           setSelectedOfficer(officer);
         }}
         onClose={() => setDirectoryOpen(false)}
+      />
+      <OfficerModal
+        officer={selectedOfficer}
+        onClose={() => setSelectedOfficer(null)}
       />
       <div className={`toast ${toast ? 'show' : ''}`} role="alert">{toast}</div>
     </div>

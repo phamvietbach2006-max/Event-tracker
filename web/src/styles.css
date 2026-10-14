@@ -6761,3 +6761,120 @@ a {
     padding: 8px 10px;
   }
 }
+
+/* Officer modal sits on top of directory modal */
+.directory-modal-backdrop {
+  z-index: 200;
+}
+.officer-modal-backdrop {
+  z-index: 250;
+}
+
+/* Directory Modal Refresh & Loading */
+.directory-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.directory-refresh-btn {
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  color: #475569;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.directory-refresh-btn:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+
+.directory-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  color: #64748B;
+  gap: 14px;
+}
+
+.directory-loading-spinner {
+  color: #DC2626;
+}
+
+.btn-clear-filter {
+  margin-top: 10px;
+  padding: 6px 14px;
+  background: #F1F5F9;
+  border: 1px solid #CBD5E1;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #334155;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.btn-clear-filter:hover {
+  background: #E2E8F0;
+  color: #0F172A;
+}
+
+/* Manage Table Officer Chips */
+.manage-user-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.manage-phone-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: #DCFCE7;
+  border: 1px solid #86EFAC;
+  color: #15803D;
+  padding: 2px 7px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  text-decoration: none;
+  font-family: monospace;
+  transition: background 0.15s ease;
+}
+
+.manage-phone-chip:hover {
+  background: #BBF7D0;
+  color: #166534;
+}
+
+.manage-pos-chip {
+  display: inline-block;
+  background: #FEE2E2;
+  border: 1px solid #FECACA;
+  color: #991B1B;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 700;
+}
+
+.manage-team-chip {
+  display: inline-block;
+  background: #F1F5F9;
+  border: 1px solid #E2E8F0;
+  color: #475569;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-size: 10.5px;
+  font-weight: 500;
+}

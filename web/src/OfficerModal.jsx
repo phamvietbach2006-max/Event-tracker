@@ -10,6 +10,14 @@ function formatPhoneDisplay(raw) {
   return clean;
 }
 
+function getInitials(name) {
+  if (!name || typeof name !== 'string') return 'U';
+  const parts = name.trim().split(/\s+/);
+  if (parts.length === 0 || !parts[0]) return 'U';
+  const last = parts[parts.length - 1];
+  return last.charAt(0).toUpperCase() || 'U';
+}
+
 export default function OfficerModal({ officer, onClose }) {
   const [copied, setCopied] = useState(false);
 
@@ -49,7 +57,7 @@ export default function OfficerModal({ officer, onClose }) {
   const teamClass = getTeamColor(officer.team);
 
   return (
-    <div className="modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <div className="modal-backdrop officer-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div className="modal-card officer-card-modal" onClick={(e) => e.stopPropagation()}>
         <button type="button" className="modal-close" onClick={onClose} aria-label="Đóng cửa sổ">
           <X size={20} />
@@ -57,7 +65,7 @@ export default function OfficerModal({ officer, onClose }) {
 
         <div className={`officer-modal-header ${teamClass}`}>
           <div className="officer-avatar-circle">
-            {officer.name ? officer.name.charAt(officer.name.lastIndexOf(' ') + 1) || officer.name.charAt(0) : 'U'}
+            {getInitials(officer.name)}
           </div>
           <div className="officer-header-text">
             <h2 className="officer-name">{officer.name}</h2>
