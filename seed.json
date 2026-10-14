@@ -3,67 +3,200 @@
     {
       "email": "admin@example.com",
       "name": "Quản trị viên (Ban TC-KT)",
-      "isAdmin": true
+      "isAdmin": true,
+      "role": "admin"
     },
     {
-      "email": "nguyen.long.vu@seee.hust.edu.vn",
-      "name": "Nguyễn Long Vũ",
-      "isAdmin": true
+      "email": "bui.hoang.tuan.minh@hust.local",
+      "name": "Bùi Hoàng Tuấn Minh",
+      "isAdmin": false,
+      "role": "room_lead"
     },
     {
-      "email": "truong.tuan.kiet@seee.hust.edu.vn",
-      "name": "Trương Tuấn Kiệt",
-      "isAdmin": true
+      "email": "diem.quynh.hoa@hust.local",
+      "name": "Diêm Quỳnh Hoa",
+      "isAdmin": false,
+      "role": "room_lead"
     },
     {
-      "email": "nguyen.thu.hang@seee.hust.edu.vn",
-      "name": "Nguyễn Thu Hằng",
-      "isAdmin": true
+      "email": "hoang.ngoc.tuong.linh@hust.local",
+      "name": "Hoàng Ngọc Tường Linh",
+      "isAdmin": false,
+      "role": "room_lead"
     },
     {
-      "email": "nguyen.tran.khang.vu@seee.hust.edu.vn",
-      "name": "Nguyễn Trần Khang Vũ",
-      "isAdmin": true
+      "email": "le.mai.trang@hust.local",
+      "name": "Lê Mai Trang",
+      "isAdmin": false,
+      "role": "room_lead"
     },
     {
-      "email": "doan.nhat.minh@seee.hust.edu.vn",
-      "name": "Đoàn Nhật Minh",
-      "isAdmin": true
+      "email": "le.tran.cam.dung@hust.local",
+      "name": "Lê Trần Cẩm Dung",
+      "isAdmin": false,
+      "role": "room_lead"
     },
     {
-      "email": "nguyen.minh.quan@seee.hust.edu.vn",
-      "name": "Nguyễn Minh Quân",
-      "isAdmin": true
+      "email": "ly.thu.diep@hust.local",
+      "name": "Lý Thu Diệp",
+      "isAdmin": false,
+      "role": "room_lead"
     },
     {
-      "email": "nguyen.thi.thu.ha@seee.hust.edu.vn",
-      "name": "Nguyễn Thị Thu Hà",
-      "isAdmin": true
-    },
-    {
-      "email": "tran.trong.duc@seee.hust.edu.vn",
-      "name": "Trần Trọng Đức",
-      "isAdmin": true
-    },
-    {
-      "email": "pham.van.minh@seee.hust.edu.vn",
-      "name": "Phạm Văn Minh",
-      "isAdmin": true
-    },
-    {
-      "email": "nguyen.the.hung@seee.hust.edu.vn",
-      "name": "Nguyễn Thế Hùng",
-      "isAdmin": true
-    },
-    {
-      "email": "nguyen.hai.long@seee.hust.edu.vn",
-      "name": "Nguyễn Hải Long",
-      "isAdmin": true
+      "email": "nguyen.hung.quang@hust.local",
+      "name": "Nguyễn Hưng Quang",
+      "isAdmin": false,
+      "role": "room_lead"
     },
     {
       "email": "nguyen.hai.anh@seee.hust.edu.vn",
       "name": "Nguyễn Hải Anh",
-      "isAdmin": true
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "nguyen.hai.long@seee.hust.edu.vn",
+      "name": "Nguyễn Hải Long",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "nguyen.long.vu@seee.hust.edu.vn",
+      "name": "Nguyễn Long Vũ",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "nguyen.minh.quan@seee.hust.edu.vn",
+      "name": "Nguyễn Minh Quân",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "nguyen.phuong.thao@hust.local",
+      "name": "Nguyễn Phương Thảo",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "nguyen.quynh.anh@hust.local",
+      "name": "Nguyễn Quỳnh Anh",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "nguyen.thu.hang@seee.hust.edu.vn",
+      "name": "Nguyễn Thu Hằng",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "nguyen.the.hung@seee.hust.edu.vn",
+      "name": "Nguyễn Thế Hùng",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "nguyen.thi.thu.ha@seee.hust.edu.vn",
+      "name": "Nguyễn Thị Thu Hà",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "nguyen.tran.khang.vu@seee.hust.edu.vn",
+      "name": "Nguyễn Trần Khang Vũ",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "ngo.dinh.quang.duc@hust.local",
+      "name": "Ngô Đình Quảng Đức",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "p.hoang.trung.nghia@hust.local",
+      "name": "P.Hoàng Trung Nghĩa",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "phan.tuan.duong@hust.local",
+      "name": "Phan Tuấn Dương",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "pham.nguyen.bao.anh@hust.local",
+      "name": "Phạm Nguyễn Bảo Anh",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "pham.van.minh@seee.hust.edu.vn",
+      "name": "Phạm Văn Minh",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "pham.dang.khoi@hust.local",
+      "name": "Phạm Đăng Khôi",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "truong.tuan.kiet@seee.hust.edu.vn",
+      "name": "Trương Tuấn Kiệt",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "tran.trong.duc@seee.hust.edu.vn",
+      "name": "Trần Trọng Đức",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "vu.gia.huy@hust.local",
+      "name": "Vũ Gia Huy",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "vu.xuan.manh@hust.local",
+      "name": "Vũ Xuân Mạnh",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "doan.nhat.minh@seee.hust.edu.vn",
+      "name": "Đoàn Nhật Minh",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "dang.huong.lien@hust.local",
+      "name": "Đặng Hương Liên",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "dang.ngoc.anh@hust.local",
+      "name": "Đặng Ngọc Ánh",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "dang.thi.tra.my@hust.local",
+      "name": "Đặng Thị Trà My",
+      "isAdmin": false,
+      "role": "room_lead"
+    },
+    {
+      "email": "do.nhat.quang@hust.local",
+      "name": "Đỗ Nhật Quang",
+      "isAdmin": false,
+      "role": "room_lead"
     }
   ],
   "groups": [
@@ -603,8 +736,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "tran.trong.duc@seee.hust.edu.vn",
-            "nguyen.the.hung@seee.hust.edu.vn"
+            "nguyen.the.hung@seee.hust.edu.vn",
+            "tran.trong.duc@seee.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -1110,8 +1243,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "nguyen.thi.thu.ha@seee.hust.edu.vn",
-            "nguyen.minh.quan@seee.hust.edu.vn"
+            "nguyen.minh.quan@seee.hust.edu.vn",
+            "nguyen.thi.thu.ha@seee.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -1203,8 +1336,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "tran.trong.duc@seee.hust.edu.vn",
-            "nguyen.the.hung@seee.hust.edu.vn"
+            "nguyen.the.hung@seee.hust.edu.vn",
+            "tran.trong.duc@seee.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3288,6 +3421,3803 @@
             ],
             [
               "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "[Trường CNTT & TT] Tầng 1 tòa D7",
+      "rooms": [
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 106] Kỹ thuật máy tính 02- K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "dang.thi.tra.my@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 101] Việt Nhật 02 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "p.hoang.trung.nghia@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 -  105] Việt Nhật 03 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "do.nhat.quang@hust.local",
+            "nguyen.hung.quang@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-106] Khoa học máy tính 04 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.thu.hang@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-105] Khoa học máy tính 07 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "do.nhat.quang@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7 - 101] Việt Nhật 04 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "ngo.dinh.quang.duc@hust.local",
+            "nguyen.hung.quang@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h10 – 14h30) · D7-106] ICT 03 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "hoang.ngoc.tuong.linh@hust.local",
+            "pham.nguyen.bao.anh@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h10 – 14h30) · D7-105] Khoa học máy tính 02 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "le.tran.cam.dung@hust.local",
+            "vu.xuan.manh@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-106] Khoa học máy tính 02 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "le.tran.cam.dung@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-105] Kỹ thuật máy tính 05 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "diem.quynh.hoa@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-101] Việt Pháp 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "bui.hoang.tuan.minh@hust.local",
+            "dang.ngoc.anh@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 106] Kỹ thuật máy tính 02- K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "dang.thi.tra.my@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 101] Việt Nhật 02 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "p.hoang.trung.nghia@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 -  105] Việt Nhật 03 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "do.nhat.quang@hust.local",
+            "nguyen.hung.quang@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-106] Khoa học máy tính 04 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.thu.hang@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-105] Khoa học máy tính 07 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "do.nhat.quang@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7 - 101] Việt Nhật 04 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "ngo.dinh.quang.duc@hust.local",
+            "nguyen.hung.quang@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h10 – 14h30) · D7-106] ICT 03 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "hoang.ngoc.tuong.linh@hust.local",
+            "pham.nguyen.bao.anh@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h10 – 14h30) · D7-105] Khoa học máy tính 02 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "le.tran.cam.dung@hust.local",
+            "vu.xuan.manh@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-106] Khoa học máy tính 02 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "le.tran.cam.dung@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-105] Kỹ thuật máy tính 05 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "diem.quynh.hoa@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-101] Việt Pháp 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "bui.hoang.tuan.minh@hust.local",
+            "dang.ngoc.anh@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 106] Kỹ thuật máy tính 02- K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "dang.thi.tra.my@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 101] Việt Nhật 02 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "p.hoang.trung.nghia@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 -  105] Việt Nhật 03 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "do.nhat.quang@hust.local",
+            "nguyen.hung.quang@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-106] Khoa học máy tính 04 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.thu.hang@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-105] Khoa học máy tính 07 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "do.nhat.quang@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7 - 101] Việt Nhật 04 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "ngo.dinh.quang.duc@hust.local",
+            "nguyen.hung.quang@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h10 – 14h30) · D7-106] ICT 03 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "hoang.ngoc.tuong.linh@hust.local",
+            "pham.nguyen.bao.anh@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h10 – 14h30) · D7-105] Khoa học máy tính 02 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "le.tran.cam.dung@hust.local",
+            "vu.xuan.manh@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-106] Khoa học máy tính 02 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "le.tran.cam.dung@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-105] Kỹ thuật máy tính 05 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "diem.quynh.hoa@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-101] Việt Pháp 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "bui.hoang.tuan.minh@hust.local",
+            "dang.ngoc.anh@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "[Trường CNTT & TT] Tầng 2 tòa D7",
+      "rooms": [
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 203] KSTN Khoa học máy tính - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 204] Kỹ thuật máy tính 03 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 202] Việt Nhật 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.thu.hang@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-204] Khoa học máy tính 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-203] Khoa học máy tính 06 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "p.hoang.trung.nghia@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-202] Kỹ thuật máy tính 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7 - 203] Khoa học máy tính 06 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "le.mai.trang@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-204] Việt Nhật 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-202] Data Science & AI 02 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 203] KSTN Khoa học máy tính - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 204] Kỹ thuật máy tính 03 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 202] Việt Nhật 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.thu.hang@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-204] Khoa học máy tính 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-203] Khoa học máy tính 06 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "p.hoang.trung.nghia@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-202] Kỹ thuật máy tính 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7 - 203] Khoa học máy tính 06 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "le.mai.trang@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-204] Việt Nhật 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-202] Data Science & AI 02 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 203] KSTN Khoa học máy tính - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 204] Kỹ thuật máy tính 03 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 202] Việt Nhật 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.thu.hang@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-204] Khoa học máy tính 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-203] Khoa học máy tính 06 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "p.hoang.trung.nghia@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-202] Kỹ thuật máy tính 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7 - 203] Khoa học máy tính 06 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "le.mai.trang@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-204] Việt Nhật 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-202] Data Science & AI 02 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "[Trường CNTT & TT] Tầng 3 tòa D7",
+      "rooms": [
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 302] ICT 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 306] Khoa học máy tính 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "ngo.dinh.quang.duc@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 307] Khoa học máy tính 05 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-301] CTTT Data Science & AI 03 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "vu.gia.huy@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-302] Khoa học máy tính 05 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "dang.huong.lien@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-306] Việt Nhật 02 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "ly.thu.diep@hust.local",
+            "pham.dang.khoi@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7 - 301] Kỹ thuật Máy tính 02 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7 - 302] Kỹ thuật Máy tính 03 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "phan.tuan.duong@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-306] Việt Nhật 03 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-307] Việt Pháp 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 302] ICT 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 306] Khoa học máy tính 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "ngo.dinh.quang.duc@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 307] Khoa học máy tính 05 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-301] CTTT Data Science & AI 03 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "vu.gia.huy@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-302] Khoa học máy tính 05 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "dang.huong.lien@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-306] Việt Nhật 02 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "ly.thu.diep@hust.local",
+            "pham.dang.khoi@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7 - 301] Kỹ thuật Máy tính 02 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7 - 302] Kỹ thuật Máy tính 03 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "phan.tuan.duong@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-306] Việt Nhật 03 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-307] Việt Pháp 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 302] ICT 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 306] Khoa học máy tính 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "ngo.dinh.quang.duc@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 307] Khoa học máy tính 05 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-301] CTTT Data Science & AI 03 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "vu.gia.huy@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-302] Khoa học máy tính 05 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "dang.huong.lien@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-306] Việt Nhật 02 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "ly.thu.diep@hust.local",
+            "pham.dang.khoi@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7 - 301] Kỹ thuật Máy tính 02 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7 - 302] Kỹ thuật Máy tính 03 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "phan.tuan.duong@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-306] Việt Nhật 03 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-307] Việt Pháp 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "[Trường CNTT & TT] Tầng 4 tòa D7",
+      "rooms": [
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 401] CTTT Data Science & AI 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "tran.trong.duc@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 403] Kỹ thuật Máy tính 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "dang.huong.lien@hust.local",
+            "nguyen.phuong.thao@hust.local",
+            "vu.gia.huy@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 405] Data Science & AI 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 404] Khoa học máy tính 03 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.quynh.anh@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 402] Kỹ thuật máy tính 04 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-405] ICT 02 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-401] Kỹ thuật máy tính 04 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-403] CTTT An toàn không gian số 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-404] Khoa học máy tính 03 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-401] Khoa học máy tính 04 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-402] Việt Nhật 04 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 401] CTTT Data Science & AI 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "tran.trong.duc@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 403] Kỹ thuật Máy tính 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "dang.huong.lien@hust.local",
+            "nguyen.phuong.thao@hust.local",
+            "vu.gia.huy@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 405] Data Science & AI 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 404] Khoa học máy tính 03 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.quynh.anh@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 402] Kỹ thuật máy tính 04 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-405] ICT 02 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-401] Kỹ thuật máy tính 04 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-403] CTTT An toàn không gian số 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-404] Khoa học máy tính 03 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-401] Khoa học máy tính 04 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-402] Việt Nhật 04 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 401] CTTT Data Science & AI 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "tran.trong.duc@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 403] Kỹ thuật Máy tính 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "dang.huong.lien@hust.local",
+            "nguyen.phuong.thao@hust.local",
+            "vu.gia.huy@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 405] Data Science & AI 01 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 404] Khoa học máy tính 03 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.quynh.anh@hust.local"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 402] Kỹ thuật máy tính 04 - K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-405] ICT 02 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h10 – 11h30) · D7-401] Kỹ thuật máy tính 04 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-403] CTTT An toàn không gian số 01 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-404] Khoa học máy tính 03 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-401] Khoa học máy tính 04 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-402] Việt Nhật 04 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "[Trường CNTT & TT] Tầng 5 tòa D7",
+      "rooms": [
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 502] ICT 04 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7-503] Khoa học máy tính 07 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 507] CTTN Khoa học máy tính - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 505] Kỹ thuật Máy tính 05 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-507] ICT 02 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Nhiệm vụ 1",
+              "todo"
+            ],
+            [
+              "2. Nhiệm vụ 2",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 502] ICT 04 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7-503] Khoa học máy tính 07 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 507] CTTN Khoa học máy tính - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 505] Kỹ thuật Máy tính 05 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-507] ICT 02 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 502] ICT 04 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7-503] Khoa học máy tính 07 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 507] CTTN Khoa học máy tính - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h40 – 9h55) · D7 - 505] Kỹ thuật Máy tính 05 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h25 – 16h30) · D7-507] ICT 02 - K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
               "todo"
             ]
           ]
