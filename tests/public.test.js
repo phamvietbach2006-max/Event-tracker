@@ -86,3 +86,18 @@ test('GET /api/stats: đếm đúng số người đang online và tổng lượ
   } finally { a.abort(); b.abort(); await t.close(); }
 });
 
+test('GET /api/contacts: trả về danh bạ cán bộ có số điện thoại và mảng công tác', async () => {
+  const t = await startApp();
+  try {
+    t.db.prepare("INSERT INTO users(email, name, phone, position, team, department) VALUES ('officer@hust.edu.vn', 'Cán bộ A', '0912345678', 'Trưởng mảng', 'Mảng Đoàn vụ', 'CNTT&TT')").run();
+    const r = await t.call('GET', '/api/contacts');
+    assert.equal(r.status, 200);
+    assert.ok(Array.isArray(r.body));
+    const officer = r.body.find((u) => u.email === 'officer@hust.edu.vn');
+    assert.ok(officer);
+    assert.equal(officer.name, 'Cán bộ A');
+    assert.equal(officer.phone, '0912345678');
+    assert.equal(officer.position, 'Trưởng mảng');
+  } finally { await t.close(); }
+});
+

@@ -11,6 +11,8 @@ import Footer from './Footer.jsx';
 import UnitImportModal from './UnitImportModal.jsx';
 import OverviewTable from './OverviewTable.jsx';
 import LoginModal from './LoginModal.jsx';
+import OfficerModal from './OfficerModal.jsx';
+import DirectoryModal from './DirectoryModal.jsx';
 const MapView = lazy(() => import('./MapView.jsx')); // maplibre-gl nặng, chỉ tải khi mở Sơ đồ
 
 function useHash() {
@@ -41,7 +43,28 @@ export default function App() {
   const [authError, setAuthError] = useState(false);
   const [expandAll, setExpandAll] = useState(false);
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const [contacts, setContacts] = useState([]);
+  const [selectedOfficer, setSelectedOfficer] = useState(null);
+  const [directoryOpen, setDirectoryOpen] = useState(false);
   const hash = useHash();
+
+  useEffect(() => {
+    api.contacts().then(setContacts).catch(() => {});
+  }, []);
+
+  const handleSelectOfficer = useCallback((input) => {
+    if (!input) return;
+    if (typeof input === 'object' && input.name) {
+      const full = contacts.find((c) =>
+        (input.email && c.email?.toLowerCase() === input.email?.toLowerCase()) ||
+        c.name?.toLowerCase().trim() === input.name?.toLowerCase().trim()
+      );
+      setSelectedOfficer(full ? { ...input, ...full } : input);
+    } else if (typeof input === 'string') {
+      const full = contacts.find((c) => c.name?.toLowerCase().trim() === input.toLowerCase().trim());
+      setSelectedOfficer(full || { name: input });
+    }
+  }, [contacts]);
 
   const handleRequireLogin = useCallback((notice = '') => {
     setLoginNotice(notice);
@@ -205,6 +228,7 @@ export default function App() {
         toast={setToast}
         managing={managing}
         onOpenLogin={() => handleRequireLogin()}
+        onOpenDirectory={() => setDirectoryOpen(true)}
       />
       <div className="app-main">
         <Header
@@ -231,6 +255,7 @@ export default function App() {
           managing={managing}
           onOpenLogin={() => handleRequireLogin()}
           onLogout={logout}
+          onOpenDirectory={() => setDirectoryOpen(true)}
         />
         {!online && <div className="offline-banner" role="status">Đang kết nối lại để nhận cập nhật mới…</div>}
         {managing ? (
@@ -286,6 +311,7 @@ export default function App() {
               onSelectUnit={setSelectedUnit}
               onRequireLogin={handleRequireLogin}
               say={setToast}
+              onSelectOfficer={handleSelectOfficer}
             />
           </main>
         ) : (
@@ -338,6 +364,7 @@ export default function App() {
                       forceOpen={query ? true : expandAll}
                       onRequireLogin={handleRequireLogin}
                       toast={setToast}
+                      onSelectOfficer={handleSelectOfficer}
                     />
                   ))}
                 </div>
@@ -419,6 +446,18 @@ export default function App() {
           refreshMe();
         }}
         initialNotice={loginNotice}
+      />
+      <OfficerModal
+        officer={selectedOfficer}
+        onClose={() => setSelectedOfficer(null)}
+      />
+      <DirectoryModal
+        open={directoryOpen}
+        contacts={contacts}
+        onSelectOfficer={(officer) => {
+          setSelectedOfficer(officer);
+        }}
+        onClose={() => setDirectoryOpen(false)}
       />
       <div className={`toast ${toast ? 'show' : ''}`} role="alert">{toast}</div>
     </div>

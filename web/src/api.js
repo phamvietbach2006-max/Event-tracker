@@ -24,6 +24,7 @@ const u = encodeURIComponent;
 
 export const api = {
   state: () => req('GET', '/api/state'),
+  contacts: () => req('GET', '/api/contacts'),
   me: () => req('GET', '/api/me'),
   login: (email, password) => req('POST', '/api/auth/login', { email, password }),
   changePassword: (oldPassword, newPassword) => req('POST', '/api/auth/change-password', { oldPassword, newPassword }),

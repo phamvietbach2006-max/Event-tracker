@@ -1,4 +1,4 @@
-import { Menu, Search, Wifi, WifiOff, X, Users, Eye, Building2, LogIn, LogOut, UserRound } from 'lucide-react';
+import { Menu, Search, Wifi, WifiOff, X, Users, Eye, Building2, LogIn, LogOut, UserRound, BookUser } from 'lucide-react';
 import { ORDER, ST, KIPS, COHORTS, UNITS, ROLES } from './logic.js';
 
 export default function Header({
@@ -25,6 +25,7 @@ export default function Header({
   managing,
   onOpenLogin,
   onLogout,
+  onOpenDirectory,
 }) {
   const onlineCount = Math.max(online ? 1 : 0, Number(stats?.online) || 0);
   const visitCount = Math.max(1, Number(stats?.visits) || 0);
@@ -47,6 +48,17 @@ export default function Header({
       </div>
 
       <div className="header-right-zone">
+        <button
+          type="button"
+          className="header-directory-btn"
+          onClick={onOpenDirectory}
+          title="Xem danh bạ cán bộ Ban Tổ chức - Kiểm tra và số điện thoại"
+          aria-label="Danh bạ cán bộ"
+        >
+          <BookUser size={15} />
+          <span className="btn-text">Danh bạ</span>
+        </button>
+
         <div className="header-stats-pill" aria-label={`${onlineCount} người đang online, ${visitCount} lượt truy cập`}>
           <span className="header-stat-item online-item" title="Số người đang online trực tuyến">
             <Users size={14} aria-hidden="true" />

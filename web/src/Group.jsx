@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, Clock3, FileCheck2, MessageSquareText, Plus, Trash2, UserRound } from 'lucide-react';
+import { ChevronDown, Clock3, FileCheck2, MessageSquareText, Plus, Trash2, UserRound, PhoneCall } from 'lucide-react';
 import { api } from './api.js';
 import { ORDER, ST, TS, NEXT, NOTE_MAX, canEdit, doneCount, percent, statusCounts, patchRoom, patchTask, removeTask, timeLabel, parseRoomMeta, parseGroupMeta } from './logic.js';
 
@@ -55,7 +55,7 @@ function AddTask({ onAdd }) {
   return <div className="quick-add-task"><input className="quick-add-input" value={value} maxLength={200} placeholder="Thêm mục giấy tờ mới…" aria-label="Nội dung giấy tờ mới" onChange={(e) => setValue(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') submit(); }} /><button className="quick-add-btn" onClick={submit}><Plus size={17} /> Thêm</button></div>;
 }
 
-export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, toast }) {
+export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, toast, onSelectOfficer }) {
   const [open, setOpen] = useState(initialOpen);
   const editor = canEdit(me, room);
   const done = doneCount(room);
@@ -86,7 +86,6 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
     () => api.addTask(room.id, text),
   );
   const saveNote = (note) => act((state) => patchRoom(state, room.id, { note }), () => api.setNote(room.id, note));
-  const ownerNames = room.owners.map((owner) => owner.name).join(', ') || 'Ban TC-KT / Trực tầng';
 
   return <article className={`task-card room-card status-${room.status} ${open ? 'expanded' : ''} ${!editor ? 'is-read-only' : ''}`}>
     <div className="room-card-head" role="button" tabIndex={0} onClick={() => setOpen(!open)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(!open); } }} aria-expanded={open}>
@@ -122,7 +121,34 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
           </span>
         )}
       </div>
-      <span className="room-owner"><UserRound size={15} aria-hidden="true" />{ownerNames}</span>
+      <div className="room-owner" onClick={(e) => e.stopPropagation()}>
+        <UserRound size={14} aria-hidden="true" />
+        {room.owners && room.owners.length > 0 ? (
+          <span className="room-owner-chips-row">
+            {room.owners.map((owner, idx) => {
+              const name = typeof owner === 'string' ? owner : owner.name;
+              const hasPhone = typeof owner === 'object' && Boolean(owner.phone);
+              return (
+                <button
+                  key={idx}
+                  type="button"
+                  className="room-owner-chip-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onSelectOfficer?.(owner);
+                  }}
+                  title={`Bấm để xem SĐT và gọi điện cho ${name}`}
+                >
+                  <span>{name}</span>
+                  {hasPhone && <PhoneCall size={11} className="inline-phone-icon" />}
+                </button>
+              );
+            })}
+          </span>
+        ) : (
+          <span className="room-owner-default">Ban TC-KT / Trực tầng</span>
+        )}
+      </div>
       <span className={`card-desc ${room.note ? 'has-note' : 'empty'}`}>{room.note ? `📝 ${room.note}` : 'Chưa có ghi chú kiểm tra'}</span>
       <span className="card-progress-meta"><span><FileCheck2 size={13} style={{ verticalAlign: '-2px', marginRight: '4px' }} />{done}/{room.tasks.length} giấy tờ đã đủ</span><span>{progress}%</span></span>
       <span className="card-progress-track" role="progressbar" aria-label={`Tiến độ hồ sơ ${meta.className}`} aria-valuenow={progress} aria-valuemin={0} aria-valuemax={100}><span className={`card-progress-bar ${room.status}`} style={{ width: `${progress}%` }} /></span>
@@ -229,7 +255,7 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
   </article>;
 }
 
-export default function GroupCard({ group, rooms, me, act, detail = false, showUnit = false, forceOpen, onRequireLogin, toast }) {
+export default function GroupCard({ group, rooms, me, act, detail = false, showUnit = false, forceOpen, onRequireLogin, toast, onSelectOfficer }) {
   const [open, setOpen] = useState(detail || !!forceOpen);
   useEffect(() => {
     if (typeof forceOpen === 'boolean') setOpen(forceOpen);
@@ -302,6 +328,7 @@ export default function GroupCard({ group, rooms, me, act, detail = false, showU
             act={act}
             onRequireLogin={onRequireLogin}
             toast={toast}
+            onSelectOfficer={onSelectOfficer}
           />
         ))}
         {rooms.length === 0 && <p className="column-empty">Không có lớp phù hợp bộ lọc.</p>}

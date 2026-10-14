@@ -10,19 +10,32 @@
       "email": "bui.hoang.tuan.minh@hust.local",
       "name": "Bùi Hoàng Tuấn Minh",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "position": "CTV",
+      "team": "Cộng tác viên K70/K71",
+      "student_id": "202612253"
     },
     {
       "email": "diem.quynh.hoa@hust.local",
       "name": "Diêm Quỳnh Hoa",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0983849463",
+      "position": "CTV",
+      "department": "Trường Điện - Điện tử",
+      "team": "Truyền thông, Sự kiện & PTNB",
+      "cohort": "70"
     },
     {
       "email": "hoang.ngoc.tuong.linh@hust.local",
       "name": "Hoàng Ngọc Tường Linh",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0979358285",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Cộng tác viên K70/K71",
+      "student_id": "202614447"
     },
     {
       "email": "le.mai.trang@hust.local",
@@ -34,19 +47,32 @@
       "email": "le.tran.cam.dung@hust.local",
       "name": "Lê Trần Cẩm Dung",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0904716909",
+      "position": "Trưởng mảng",
+      "department": "Hóa & KHSS",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "69"
     },
     {
       "email": "ly.thu.diep@hust.local",
       "name": "Lý Thu Diệp",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "position": "CTV",
+      "team": "Cộng tác viên K70/K71",
+      "student_id": "202612438"
     },
     {
       "email": "nguyen.hung.quang@hust.local",
       "name": "Nguyễn Hưng Quang",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0387252458",
+      "position": "CTV",
+      "department": "Trường Cơ Khí",
+      "team": "Cộng tác viên K70/K71",
+      "student_id": "202617030"
     },
     {
       "email": "nguyen.hai.anh@seee.hust.edu.vn",
@@ -58,13 +84,23 @@
       "email": "nguyen.hai.long@seee.hust.edu.vn",
       "name": "Nguyễn Hải Long",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0364902700",
+      "position": "Ủy viên",
+      "department": "Trường Điện - Điện tử",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "69"
     },
     {
       "email": "nguyen.long.vu@seee.hust.edu.vn",
       "name": "Nguyễn Long Vũ",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0973027635",
+      "position": "Phó mảng",
+      "department": "Điện - Điện tử",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "69"
     },
     {
       "email": "nguyen.minh.quan@seee.hust.edu.vn",
@@ -82,13 +118,21 @@
       "email": "nguyen.quynh.anh@hust.local",
       "name": "Nguyễn Quỳnh Anh",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "position": "CTV",
+      "team": "Cộng tác viên K70/K71",
+      "student_id": "202619924"
     },
     {
       "email": "nguyen.thu.hang@seee.hust.edu.vn",
       "name": "Nguyễn Thu Hằng",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0973407207",
+      "position": "CTV",
+      "department": "Khoa Toán Tin",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "70"
     },
     {
       "email": "nguyen.the.hung@seee.hust.edu.vn",
@@ -112,37 +156,67 @@
       "email": "ngo.dinh.quang.duc@hust.local",
       "name": "Ngô Đình Quảng Đức",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0973572504",
+      "position": "CTV",
+      "department": "Trường Điện-Điện tử",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "70"
     },
     {
       "email": "p.hoang.trung.nghia@hust.local",
       "name": "P.Hoàng Trung Nghĩa",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0842022888",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "70"
     },
     {
       "email": "phan.tuan.duong@hust.local",
       "name": "Phan Tuấn Dương",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0932633638",
+      "position": "Ủy viên",
+      "department": "Khoa Toán - Tin",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "70"
     },
     {
       "email": "pham.nguyen.bao.anh@hust.local",
       "name": "Phạm Nguyễn Bảo Anh",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0567258120",
+      "position": "CTV",
+      "department": "Trường Kinh Tế",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "69"
     },
     {
       "email": "pham.van.minh@seee.hust.edu.vn",
       "name": "Phạm Văn Minh",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0563036120",
+      "position": "Ủy viên",
+      "department": "Điện - Điện tử",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "68"
     },
     {
       "email": "pham.dang.khoi@hust.local",
       "name": "Phạm Đăng Khôi",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0963300577",
+      "position": "CTV",
+      "department": "Trường Điện - Điện tử",
+      "team": "Cộng tác viên K70/K71",
+      "student_id": "202618309"
     },
     {
       "email": "truong.tuan.kiet@seee.hust.edu.vn",
@@ -160,13 +234,23 @@
       "email": "vu.gia.huy@hust.local",
       "name": "Vũ Gia Huy",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0378905686",
+      "position": "Phó mảng",
+      "department": "Trường CNTT&TT",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "70"
     },
     {
       "email": "vu.xuan.manh@hust.local",
       "name": "Vũ Xuân Mạnh",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0936622008",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Cộng tác viên K70/K71",
+      "student_id": "202613033"
     },
     {
       "email": "doan.nhat.minh@seee.hust.edu.vn",
@@ -178,25 +262,1173 @@
       "email": "dang.huong.lien@hust.local",
       "name": "Đặng Hương Liên",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0327785814",
+      "position": "CTV",
+      "department": "Khoa Ngoại Ngữ",
+      "team": "Cộng tác viên K70/K71",
+      "student_id": "202613966"
     },
     {
       "email": "dang.ngoc.anh@hust.local",
       "name": "Đặng Ngọc Ánh",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0933588687",
+      "position": "CTV",
+      "department": "Khoa Ngoại Ngữ",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "70"
     },
     {
       "email": "dang.thi.tra.my@hust.local",
       "name": "Đặng Thị Trà My",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0968980605",
+      "position": "Ủy viên",
+      "department": "Vật liệu",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "69"
     },
     {
       "email": "do.nhat.quang@hust.local",
       "name": "Đỗ Nhật Quang",
       "isAdmin": false,
-      "role": "room_lead"
+      "role": "room_lead",
+      "phone": "0969693112",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "70"
+    },
+    {
+      "email": "nam.phanduy@hust.edu.vn",
+      "name": "PGS.TS. Phan Duy Nam",
+      "isAdmin": true,
+      "role": "admin",
+      "phone": "",
+      "position": "Trưởng ban",
+      "department": "",
+      "team": "Ban Điều hành",
+      "cohort": "Cán bộ",
+      "student_id": ""
+    },
+    {
+      "email": "van.nguyendinh@hust.edu.vn",
+      "name": "TS. Nguyễn Đình Văn",
+      "isAdmin": true,
+      "role": "admin",
+      "phone": "",
+      "position": "Phó Trưởng ban",
+      "department": "",
+      "team": "Ban Điều hành",
+      "cohort": "Cán bộ",
+      "student_id": ""
+    },
+    {
+      "email": "anh.tdh250154e@sis.hust.edu.vn",
+      "name": "Trần Đức Hoàng Anh",
+      "isAdmin": true,
+      "role": "admin",
+      "phone": "0336366865",
+      "position": "Phó Trưởng ban",
+      "department": "Điện - Điện tử",
+      "team": "Ban Điều hành",
+      "cohort": "66",
+      "student_id": ""
+    },
+    {
+      "email": "anh.km2415833@sis.hust.edu.vn",
+      "name": "Kiều Minh Anh",
+      "isAdmin": true,
+      "role": "admin",
+      "phone": "0366329799",
+      "position": "Phó Trưởng ban",
+      "department": "Khoa Ngoại ngữ",
+      "team": "Ban Điều hành",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "an.nt2416840@sis.hust.edu.vn",
+      "name": "Nguyễn Thanh An",
+      "isAdmin": false,
+      "role": "unit_lead",
+      "phone": "0886699958",
+      "position": "Trưởng mảng",
+      "department": "CNTT&TT",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "duong.dtt237318@sis.hust.edu.vn",
+      "name": "Đặng Thị Thùy Dương",
+      "isAdmin": false,
+      "role": "unit_lead",
+      "phone": "0977001071",
+      "position": "Phó mảng",
+      "department": "Toán Tin",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "68",
+      "student_id": ""
+    },
+    {
+      "email": "hang.nt2513652@sis.hust.edu.vn",
+      "name": "Ngô Thu Hằng",
+      "isAdmin": false,
+      "role": "unit_lead",
+      "phone": "0348801216",
+      "position": "Phó mảng",
+      "department": "Trường Kinh tế",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "khang.hm233855@sis.hust.edu.vn",
+      "name": "Hồng Minh Khang",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0858094214",
+      "position": "Ủy viên",
+      "department": "Điện - Điện tử",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "68",
+      "student_id": ""
+    },
+    {
+      "email": "nhan.lt230396p@sis.hust.edu.vn",
+      "name": "Lê Trọng Nhân",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0382609668",
+      "position": "Ủy viên",
+      "department": "Trung tâm Đào tạo liên tục",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "68",
+      "student_id": ""
+    },
+    {
+      "email": "huyen.nn2410372@sis.hust.edu.vn",
+      "name": "Nguyễn Ngọc Huyền",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0833002596",
+      "position": "Ủy viên",
+      "department": "Trường Hóa & KHSS",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "duc.vd2420371@sis.hust.edu.vn",
+      "name": "Vương Đồng Đức",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0398555088",
+      "position": "Ủy viên",
+      "department": "Khoa Vật lý Kỹ thuật",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "long.nh2412613@sis.hust.edu.vn",
+      "name": "Nguyễn Hải Long",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0364902700",
+      "position": "Ủy viên",
+      "department": "Trường Điện - Điện tử",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "ngoc.nq2410464@sis.hust.edu.vn",
+      "name": "Ngô Quỳnh Ngọc",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0382456206",
+      "position": "Ủy viên",
+      "department": "Hóa & KHSS",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "my.dtt2419869@sis.hust.edu.vn",
+      "name": "Đặng Thị Trà My",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0968980605",
+      "position": "Ủy viên",
+      "department": "Vật liệu",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "phuong.vn2413774@sis.hust.edu.vn",
+      "name": "Vương Nam Phương",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0961352878",
+      "position": "Ủy viên",
+      "department": "Kinh Tế",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "quang.thv2412914@sis.hust.edu.vn",
+      "name": "Thái Huy Vũ Quang",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0839269162",
+      "position": "Ủy viên",
+      "department": "Điện - Điện tử",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "quyen.tt238221@sis.hust.edu.vn",
+      "name": "Trần Thị Quyên",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0386136170",
+      "position": "CTV",
+      "department": "Khoa VLKT",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "68",
+      "student_id": ""
+    },
+    {
+      "email": "hue.ntt2411628@sis.hust.edu.vn",
+      "name": "Nguyễn Thị Tuyết Huế",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0886517112",
+      "position": "CTV",
+      "department": "Hoá và KHSS",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "dieu.btn2411574@sis.hust.edu.vn",
+      "name": "Bùi Thị Ngọc Diệu",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0812947266",
+      "position": "CTV",
+      "department": "Hóa và KHSS",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "thao.tlt2410553@sis.hust.edu.vn",
+      "name": "Trần Lê Thu Thảo",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0364159376",
+      "position": "CTV",
+      "department": "Hóa và KHSS",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "tram.nb2513735@sis.hust.edu.vn",
+      "name": "Nguyễn Bảo Trâm",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0345969808",
+      "position": "CTV",
+      "department": "Kinh Tế",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "dang.cn2512334@sis.hust.edu.vn",
+      "name": "Cao Nhất Đăng",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0327070207",
+      "position": "CTV",
+      "department": "Trường Điện - Điện tử",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "hoang.nh2520018@sis.hust.edu.vn",
+      "name": "Nguyễn Huy Hoàng",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0986462411",
+      "position": "CTV",
+      "department": "Trường Cơ khí",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "hang.nt2518611@sis.hust.edu.vn",
+      "name": "Nguyễn Thu Hằng",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0973407207",
+      "position": "CTV",
+      "department": "Khoa Toán Tin",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "huy.tq2516806@sis.hust.edu.vn",
+      "name": "Tạ Quang Huy",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0822947098",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "nam.nc2517036@sis.hust.edu.vn",
+      "name": "Ngô Công Nam",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0359652442",
+      "position": "CTV",
+      "department": "CNTT&TT",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "linh.th2520337@sis.hust.edu.vn",
+      "name": "Trần Hoàng Linh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0904755537",
+      "position": "CTV",
+      "department": "Trường Cơ Khí",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "anh.dn2515516@sis.hust.edu.vn",
+      "name": "Đặng Ngọc Ánh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0933588687",
+      "position": "CTV",
+      "department": "Khoa Ngoại Ngữ",
+      "team": "Tổ chức & Phát triển Đoàn vụ",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "dung.ltc2410053@sis.hust.edu.vn",
+      "name": "Lê Trần Cẩm Dung",
+      "isAdmin": false,
+      "role": "unit_lead",
+      "phone": "0904716909",
+      "position": "Trưởng mảng",
+      "department": "Hóa & KHSS",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "vu.nl2412337@sis.hust.edu.vn",
+      "name": "Nguyễn Long Vũ",
+      "isAdmin": false,
+      "role": "unit_lead",
+      "phone": "0973027635",
+      "position": "Phó mảng",
+      "department": "Điện - Điện tử",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "truc.dtt231203@sis.hust.edu.vn",
+      "name": "Đậu Thị Thanh Trúc",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0398008852",
+      "position": "Ủy viên",
+      "department": "Hoá và KHSS",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "68",
+      "student_id": ""
+    },
+    {
+      "email": "huong.nt231594@sis.hust.edu.vn",
+      "name": "Nguyễn Thu Hường",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0914737296",
+      "position": "Ủy viên",
+      "department": "Khoa KH&CNGD",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "68",
+      "student_id": ""
+    },
+    {
+      "email": "hoa.dtk2413217@sis.hust.edu.vn",
+      "name": "Dư Thị Khánh Hoà",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0325033506",
+      "position": "Ủy viên",
+      "department": "Trường Kinh Tế",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "hieu.dt2411619@sis.hust.edu.vn",
+      "name": "Đỗ Thành Hiếu",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0338628894",
+      "position": "Ủy viên",
+      "department": "Hoá và KHSS",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "tung.ndt2511752@sis.hust.edu.vn",
+      "name": "Nguyễn Đức Thái Tùng",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0966258918",
+      "position": "Ủy viên",
+      "department": "Hoá và KHSS",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "linh.ltt2410407@sis.hust.edu.vn",
+      "name": "Lê Thị Thuỳ Linh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0986964131",
+      "position": "CTV",
+      "department": "Hoá & KHSS",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "tan.ttn2413431@sis.hust.edu.vn",
+      "name": "Trần Thị Ngọc Tân",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0337018555",
+      "position": "CTV",
+      "department": "Trường Kinh tế",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "linh.ntd2411669@sis.hust.edu.vn",
+      "name": "Nguyễn Thị Diệu Linh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0867560620",
+      "position": "CTV",
+      "department": "Hoá và KHSS",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "anh.vh2415485@sis.hust.edu.vn",
+      "name": "Vũ Hải Anh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0962496118",
+      "position": "CTV",
+      "department": "Khoa Ngoại ngữ",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "minh.dlq2511712@sis.hust.edu.vn",
+      "name": "Đặng Lê Quang Minh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0369013333",
+      "position": "CTV",
+      "department": "Hoá & KHSS",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "manh.ld2517025@sis.hust.edu.vn",
+      "name": "Lâm Đức Mạnh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0918616863",
+      "position": "CTV",
+      "department": "CNTT&TT",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "que.hl2517956@sis.hust.edu.vn",
+      "name": "Hoàng Lâm Quế",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0914589235",
+      "position": "CTV",
+      "department": "Trường Cơ khí",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "toan.nd2518032@sis.hust.edu.vn",
+      "name": "Nguyễn Đình Toàn",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0865755528",
+      "position": "CTV",
+      "department": "Trường Cơ khí",
+      "team": "Giám sát, Kiểm tra & ĐRL",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "bach.pv2414676@sis.hust.edu.vn",
+      "name": "Phạm Việt Bách",
+      "isAdmin": false,
+      "role": "unit_lead",
+      "phone": "0832170406",
+      "position": "Trưởng mảng",
+      "department": "Trường Điện- Điện tử",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "quynh.ch238125@sis.hust.edu.vn",
+      "name": "Cao Hương Quỳnh",
+      "isAdmin": false,
+      "role": "unit_lead",
+      "phone": "0822914188",
+      "position": "Phó mảng",
+      "department": "Khoa Vật lý Kỹ thuật",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "68",
+      "student_id": ""
+    },
+    {
+      "email": "huy.nvg2516805@sis.hust.edu.vn",
+      "name": "Nguyễn Văn Gia Huy",
+      "isAdmin": false,
+      "role": "unit_lead",
+      "phone": "0378905686",
+      "position": "Phó mảng",
+      "department": "Trường CNTT&TT",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "minh.pv233534@sis.hust.edu.vn",
+      "name": "Phạm Văn Minh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0563036120",
+      "position": "Ủy viên",
+      "department": "Điện - Điện tử",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "68",
+      "student_id": ""
+    },
+    {
+      "email": "dang.lq2419678@sis.hust.edu.vn",
+      "name": "Lê Quang Đăng",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0362682074",
+      "position": "Ủy viên",
+      "department": "Vật Liệu",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "duong.pt2518749@sis.hust.edu.vn",
+      "name": "Phan Tuấn Dương",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0932633638",
+      "position": "Ủy viên",
+      "department": "Khoa Toán - Tin",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "anh.pnb2413658@sis.hust.edu.vn",
+      "name": "Phạm Nguyễn Bảo Anh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0567258120",
+      "position": "CTV",
+      "department": "Trường Kinh Tế",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "tri.ntm2400116@sis.hust.edu.vn",
+      "name": "Nguyễn Trần Minh Trí",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0387618206",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "quang.dn2517103@sis.hust.edu.vn",
+      "name": "Đỗ Nhật Quang",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0969693112",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "nghia.pht2517099@sis.hust.edu.vn",
+      "name": "Phan Hoàng Trung Nghĩa",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0842022888",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "duc.ndq2514474@sis.hust.edu.vn",
+      "name": "Ngô Đình Quảng Đức",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0973572504",
+      "position": "CTV",
+      "department": "Trường Điện-Điện tử",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "huyen.dk2513666@sis.hust.edu.vn",
+      "name": "Đào Khánh Huyền",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0961569196",
+      "position": "CTV",
+      "department": "Trường Kinh tế",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "anh.vtm2513770@sis.hust.edu.vn",
+      "name": "Vũ Thị Minh Anh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0395917960",
+      "position": "CTV",
+      "department": "Trường Kinh tế",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "hieu.tm2516096@sis.hust.edu.vn",
+      "name": "Tạ Minh Hiếu",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0949319862",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "phuc.vh2518784@sis.hust.edu.vn",
+      "name": "Vũ Hồng Phúc",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0828328656",
+      "position": "CTV",
+      "department": "Khoa Toán - Tin",
+      "team": "Phát triển Đảng & CĐS",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "viet.tl236012@sis.hust.edu.vn",
+      "name": "Trịnh Lương Việt",
+      "isAdmin": false,
+      "role": "unit_lead",
+      "phone": "0395605302",
+      "position": "Trưởng mảng",
+      "department": "CNTT&TT",
+      "team": "Truyền thông, Sự kiện & PTNB",
+      "cohort": "68",
+      "student_id": ""
+    },
+    {
+      "email": "dung.lq2419500@sis.hust.edu.vn",
+      "name": "Lâm Quốc Dũng",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0828050625",
+      "position": "CTV",
+      "department": "Trường Vật liệu",
+      "team": "Truyền thông, Sự kiện & PTNB",
+      "cohort": "69",
+      "student_id": ""
+    },
+    {
+      "email": "linh.nng2515398@sis.hust.edu.vn",
+      "name": "Nguyễn Như Gia Linh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0911011136",
+      "position": "CTV",
+      "department": "Khoa Ngoại ngữ",
+      "team": "Truyền thông, Sự kiện & PTNB",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "duy.ta2517087@sis.hust.edu.vn",
+      "name": "Trần Anh Duy",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0911080423",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Truyền thông, Sự kiện & PTNB",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "hoa.dq2514492@sis.hust.edu.vn",
+      "name": "Diêm Quỳnh Hoa",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0983849463",
+      "position": "CTV",
+      "department": "Trường Điện - Điện tử",
+      "team": "Truyền thông, Sự kiện & PTNB",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "dung.nv2516543@sis.hust.edu.vn",
+      "name": "Nguyễn Văn Dũng",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0965099969",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Truyền thông, Sự kiện & PTNB",
+      "cohort": "70",
+      "student_id": ""
+    },
+    {
+      "email": "huy.nn2513118@sis.hust.edu.vn",
+      "name": "Nguyễn Nhật Huy",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0379227311",
+      "position": "CTV",
+      "department": "Trường Kinh tế",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202513118"
+    },
+    {
+      "email": "k202619924@sis.hust.edu.vn",
+      "name": "Nguyễn Quỳnh Anh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "",
+      "position": "CTV",
+      "department": "",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202619924"
+    },
+    {
+      "email": "k202616227@sis.hust.edu.vn",
+      "name": "Phạm Đăng Khôi",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "",
+      "position": "CTV",
+      "department": "",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202616227"
+    },
+    {
+      "email": "k202611147@sis.hust.edu.vn",
+      "name": "Bùi Khánh Linh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "",
+      "position": "CTV",
+      "department": "",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202611147"
+    },
+    {
+      "email": "linh.nk2615902@sis.hust.edu.vn",
+      "name": "Nguyễn Khánh Linh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0862014965",
+      "position": "CTV",
+      "department": "Khoa Toán - Tin",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202615902"
+    },
+    {
+      "email": "vuong.nt2614082@sis.hust.edu.vn",
+      "name": "Nguyễn Thế Vương",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0946414914",
+      "position": "CTV",
+      "department": "Trường Điện - Điện Tử",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202614082"
+    },
+    {
+      "email": "bao.ng2619930@sis.hust.edu.vn",
+      "name": "Nguyễn Gia Bảo",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0375311932",
+      "position": "CTV",
+      "department": "Trường Điện - Điện tử",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202619930"
+    },
+    {
+      "email": "cuong.nd2619845@sis.hust.edu.vn",
+      "name": "Nguyễn Đức Cường",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0971768896",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202619845"
+    },
+    {
+      "email": "khoi.pd2618309@sis.hust.edu.vn",
+      "name": "Phạm Đăng Khôi",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0963300577",
+      "position": "CTV",
+      "department": "Trường Điện - Điện tử",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202618309"
+    },
+    {
+      "email": "k202617468@sis.hust.edu.vn",
+      "name": "Lê Gia Khánh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "",
+      "position": "CTV",
+      "department": "",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202617468"
+    },
+    {
+      "email": "linh.ltd2616646@sis.hust.edu.vn",
+      "name": "Lê Thị Diệu Linh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0383739383",
+      "position": "CTV",
+      "department": "Trường Hoá & Khoa học sự sống",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202616646"
+    },
+    {
+      "email": "k202620094@sis.hust.edu.vn",
+      "name": "Phan Thị Quỳnh Giao",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "",
+      "position": "CTV",
+      "department": "",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202620094"
+    },
+    {
+      "email": "tuan08namdinh@gmail.com",
+      "name": "Phạm Minh Tuấn",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0846729588",
+      "position": "CTV",
+      "department": "Truờng cơ khí",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202611754"
+    },
+    {
+      "email": "thaovydo1108@gmail.com",
+      "name": "Đỗ Thảo Vy",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0971284800",
+      "position": "CTV",
+      "department": "Trường Kinh tế",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202611392"
+    },
+    {
+      "email": "bao.vg2620324@sis.hust.edu.vn",
+      "name": "Vương Gia Bảo",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0975295782",
+      "position": "CTV",
+      "department": "Trường Cơ Khí",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202620324"
+    },
+    {
+      "email": "vy.tt2611690@sis.hust.edu.vn",
+      "name": "Trần Trí Vỹ",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0343589571",
+      "position": "CTV",
+      "department": "Trường Điện - Điện Tử",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202611690"
+    },
+    {
+      "email": "k202612438@sis.hust.edu.vn",
+      "name": "Lý Thu Diệp",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "",
+      "position": "CTV",
+      "department": "",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202612438"
+    },
+    {
+      "email": "tu.ta2611748@sis.hust.edu.vn",
+      "name": "Trần Anh Tú",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0385069923",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202611748"
+    },
+    {
+      "email": "anh.dlm2617234@sis.hust.edu.vn",
+      "name": "Đỗ Lê Mỹ Anh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0348499644",
+      "position": "CTV",
+      "department": "Trường Kinh Tế",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202617234"
+    },
+    {
+      "email": "my.nth2618119@sis.hust.edu.vn",
+      "name": "Ngô Thị Hà My",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0982636018",
+      "position": "CTV",
+      "department": "Khoa Ngoại ngữ",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202618119"
+    },
+    {
+      "email": "linh.hnt2614447@sis.hust.edu.vn",
+      "name": "Hoàng Ngọc Tường Linh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0979358285",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202614447"
+    },
+    {
+      "email": "minh.tnb2613228@sis.hust.edu.vn",
+      "name": "Trần Nguyễn Bình Minh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0326356122",
+      "position": "CTV",
+      "department": "Trường Vật liệu",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202613228"
+    },
+    {
+      "email": "nguyenq1311@gmail.com",
+      "name": "Nguyễn Hưng Quang",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0387252458",
+      "position": "CTV",
+      "department": "Trường Cơ Khí",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202617030"
+    },
+    {
+      "email": "k202613033@sis.hust.edu.vn",
+      "name": "Vũ Xuân Mạnh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0936622008",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202613033"
+    },
+    {
+      "email": "k202612253@sis.hust.edu.vn",
+      "name": "Bùi Hoàng Tuấn Minh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "",
+      "position": "CTV",
+      "department": "",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202612253"
+    },
+    {
+      "email": "thanh.nttt2620307@sis.hust.edu.vn",
+      "name": "Nguyễn Thị Thu Thanh",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "",
+      "position": "CTV",
+      "department": "Trường Vật Liệu",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202620307"
+    },
+    {
+      "email": "lien.dh2613966@sis.hust.edu.vn",
+      "name": "Đặng Hương Liên",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0327785814",
+      "position": "CTV",
+      "department": "Khoa Ngoại Ngữ",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202613966"
+    },
+    {
+      "email": "thuy.dt2616612@sis.hust.edu.vn",
+      "name": "Dương Tuấn Thủy",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0961083782",
+      "position": "CTV",
+      "department": "Trường CNTT&TT",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202616612"
+    },
+    {
+      "email": "tuyen.nb2619915@sis.hust.edu.vn",
+      "name": "Nguyễn Bá Tuyến",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0372938167",
+      "position": "CTV",
+      "department": "Trường Điện - Điện tử",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202619915"
+    },
+    {
+      "email": "phuoc.tq2611187@sis.hust.edu.vn",
+      "name": "Trần Quang Phước",
+      "isAdmin": false,
+      "role": "room_lead",
+      "phone": "0365565128",
+      "position": "CTV",
+      "department": "Trường Kinh tế",
+      "team": "Cộng tác viên K70/K71",
+      "cohort": "",
+      "student_id": "202611187"
     }
   ],
   "groups": [
@@ -208,7 +1440,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "nguyen.thu.hang@seee.hust.edu.vn"
+            "hang.nt2518611@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -420,7 +1652,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "nguyen.thu.hang@seee.hust.edu.vn"
+            "hang.nt2518611@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -1270,7 +2502,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "nguyen.hai.long@seee.hust.edu.vn"
+            "long.nh2412613@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -1437,7 +2669,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "pham.van.minh@seee.hust.edu.vn"
+            "minh.pv233534@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -1728,7 +2960,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "pham.van.minh@seee.hust.edu.vn"
+            "minh.pv233534@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -2375,7 +3607,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "pham.van.minh@seee.hust.edu.vn"
+            "minh.pv233534@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -2617,7 +3849,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "nguyen.hai.long@seee.hust.edu.vn"
+            "long.nh2412613@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3435,7 +4667,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "dang.thi.tra.my@hust.local"
+            "my.dtt2419869@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3453,7 +4685,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "p.hoang.trung.nghia@hust.local"
+            "nghia.pht2517099@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3471,8 +4703,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "do.nhat.quang@hust.local",
-            "nguyen.hung.quang@hust.local"
+            "quang.dn2517103@sis.hust.edu.vn",
+            "nguyenq1311@gmail.com"
           ],
           "tasks": [
             [
@@ -3490,7 +4722,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "nguyen.thu.hang@seee.hust.edu.vn"
+            "hang.nt2518611@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3508,7 +4740,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "do.nhat.quang@hust.local"
+            "quang.dn2517103@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3526,8 +4758,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "ngo.dinh.quang.duc@hust.local",
-            "nguyen.hung.quang@hust.local"
+            "duc.ndq2514474@sis.hust.edu.vn",
+            "nguyenq1311@gmail.com"
           ],
           "tasks": [
             [
@@ -3545,8 +4777,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "hoang.ngoc.tuong.linh@hust.local",
-            "pham.nguyen.bao.anh@hust.local"
+            "linh.hnt2614447@sis.hust.edu.vn",
+            "anh.pnb2413658@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3564,8 +4796,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "le.tran.cam.dung@hust.local",
-            "vu.xuan.manh@hust.local"
+            "dung.ltc2410053@sis.hust.edu.vn",
+            "k202613033@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3583,7 +4815,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "le.tran.cam.dung@hust.local"
+            "dung.ltc2410053@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3601,7 +4833,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "diem.quynh.hoa@hust.local"
+            "hoa.dq2514492@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3619,8 +4851,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "bui.hoang.tuan.minh@hust.local",
-            "dang.ngoc.anh@hust.local"
+            "k202612253@sis.hust.edu.vn",
+            "anh.dn2515516@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3638,7 +4870,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "dang.thi.tra.my@hust.local"
+            "my.dtt2419869@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3680,7 +4912,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "p.hoang.trung.nghia@hust.local"
+            "nghia.pht2517099@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3722,8 +4954,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "do.nhat.quang@hust.local",
-            "nguyen.hung.quang@hust.local"
+            "quang.dn2517103@sis.hust.edu.vn",
+            "nguyenq1311@gmail.com"
           ],
           "tasks": [
             [
@@ -3765,7 +4997,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "nguyen.thu.hang@seee.hust.edu.vn"
+            "hang.nt2518611@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3807,7 +5039,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "do.nhat.quang@hust.local"
+            "quang.dn2517103@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3849,8 +5081,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "ngo.dinh.quang.duc@hust.local",
-            "nguyen.hung.quang@hust.local"
+            "duc.ndq2514474@sis.hust.edu.vn",
+            "nguyenq1311@gmail.com"
           ],
           "tasks": [
             [
@@ -3892,8 +5124,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "hoang.ngoc.tuong.linh@hust.local",
-            "pham.nguyen.bao.anh@hust.local"
+            "linh.hnt2614447@sis.hust.edu.vn",
+            "anh.pnb2413658@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3919,8 +5151,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "le.tran.cam.dung@hust.local",
-            "vu.xuan.manh@hust.local"
+            "dung.ltc2410053@sis.hust.edu.vn",
+            "k202613033@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3946,7 +5178,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "le.tran.cam.dung@hust.local"
+            "dung.ltc2410053@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -3988,7 +5220,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "diem.quynh.hoa@hust.local"
+            "hoa.dq2514492@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4030,8 +5262,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "bui.hoang.tuan.minh@hust.local",
-            "dang.ngoc.anh@hust.local"
+            "k202612253@sis.hust.edu.vn",
+            "anh.dn2515516@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4073,7 +5305,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "dang.thi.tra.my@hust.local"
+            "my.dtt2419869@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4115,7 +5347,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "p.hoang.trung.nghia@hust.local"
+            "nghia.pht2517099@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4157,8 +5389,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "do.nhat.quang@hust.local",
-            "nguyen.hung.quang@hust.local"
+            "quang.dn2517103@sis.hust.edu.vn",
+            "nguyenq1311@gmail.com"
           ],
           "tasks": [
             [
@@ -4200,7 +5432,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "nguyen.thu.hang@seee.hust.edu.vn"
+            "hang.nt2518611@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4242,7 +5474,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "do.nhat.quang@hust.local"
+            "quang.dn2517103@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4284,8 +5516,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "ngo.dinh.quang.duc@hust.local",
-            "nguyen.hung.quang@hust.local"
+            "duc.ndq2514474@sis.hust.edu.vn",
+            "nguyenq1311@gmail.com"
           ],
           "tasks": [
             [
@@ -4327,8 +5559,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "hoang.ngoc.tuong.linh@hust.local",
-            "pham.nguyen.bao.anh@hust.local"
+            "linh.hnt2614447@sis.hust.edu.vn",
+            "anh.pnb2413658@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4354,8 +5586,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "le.tran.cam.dung@hust.local",
-            "vu.xuan.manh@hust.local"
+            "dung.ltc2410053@sis.hust.edu.vn",
+            "k202613033@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4381,7 +5613,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "le.tran.cam.dung@hust.local"
+            "dung.ltc2410053@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4423,7 +5655,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "diem.quynh.hoa@hust.local"
+            "hoa.dq2514492@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4465,8 +5697,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "bui.hoang.tuan.minh@hust.local",
-            "dang.ngoc.anh@hust.local"
+            "k202612253@sis.hust.edu.vn",
+            "anh.dn2515516@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4545,7 +5777,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "nguyen.thu.hang@seee.hust.edu.vn"
+            "hang.nt2518611@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4579,7 +5811,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "p.hoang.trung.nghia@hust.local"
+            "nghia.pht2517099@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4743,7 +5975,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "nguyen.thu.hang@seee.hust.edu.vn"
+            "hang.nt2518611@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4809,7 +6041,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "p.hoang.trung.nghia@hust.local"
+            "nghia.pht2517099@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5061,7 +6293,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "nguyen.thu.hang@seee.hust.edu.vn"
+            "hang.nt2518611@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5127,7 +6359,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "p.hoang.trung.nghia@hust.local"
+            "nghia.pht2517099@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5320,7 +6552,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "ngo.dinh.quang.duc@hust.local"
+            "duc.ndq2514474@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5354,7 +6586,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "vu.gia.huy@hust.local"
+            "huy.nvg2516805@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5372,7 +6604,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "dang.huong.lien@hust.local"
+            "lien.dh2613966@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5390,8 +6622,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "ly.thu.diep@hust.local",
-            "pham.dang.khoi@hust.local"
+            "k202612438@sis.hust.edu.vn",
+            "khoi.pd2618309@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5425,7 +6657,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "phan.tuan.duong@hust.local"
+            "duong.pt2518749@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5515,7 +6747,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "ngo.dinh.quang.duc@hust.local"
+            "duc.ndq2514474@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5597,7 +6829,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "vu.gia.huy@hust.local"
+            "huy.nvg2516805@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5623,7 +6855,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "dang.huong.lien@hust.local"
+            "lien.dh2613966@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5649,8 +6881,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "ly.thu.diep@hust.local",
-            "pham.dang.khoi@hust.local"
+            "k202612438@sis.hust.edu.vn",
+            "khoi.pd2618309@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5700,7 +6932,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "phan.tuan.duong@hust.local"
+            "duong.pt2518749@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5814,7 +7046,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "ngo.dinh.quang.duc@hust.local"
+            "duc.ndq2514474@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5896,7 +7128,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "vu.gia.huy@hust.local"
+            "huy.nvg2516805@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5922,7 +7154,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "dang.huong.lien@hust.local"
+            "lien.dh2613966@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5948,8 +7180,8 @@
           "status": "red",
           "note": "",
           "owners": [
-            "ly.thu.diep@hust.local",
-            "pham.dang.khoi@hust.local"
+            "k202612438@sis.hust.edu.vn",
+            "khoi.pd2618309@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5999,7 +7231,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "phan.tuan.duong@hust.local"
+            "duong.pt2518749@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -6096,9 +7328,9 @@
           "status": "red",
           "note": "",
           "owners": [
-            "dang.huong.lien@hust.local",
+            "lien.dh2613966@sis.hust.edu.vn",
             "nguyen.phuong.thao@hust.local",
-            "vu.gia.huy@hust.local"
+            "huy.nvg2516805@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -6132,7 +7364,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "nguyen.quynh.anh@hust.local"
+            "k202619924@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -6288,9 +7520,9 @@
           "status": "red",
           "note": "",
           "owners": [
-            "dang.huong.lien@hust.local",
+            "lien.dh2613966@sis.hust.edu.vn",
             "nguyen.phuong.thao@hust.local",
-            "vu.gia.huy@hust.local"
+            "huy.nvg2516805@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -6356,7 +7588,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "nguyen.quynh.anh@hust.local"
+            "k202619924@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -6608,9 +7840,9 @@
           "status": "red",
           "note": "",
           "owners": [
-            "dang.huong.lien@hust.local",
+            "lien.dh2613966@sis.hust.edu.vn",
             "nguyen.phuong.thao@hust.local",
-            "vu.gia.huy@hust.local"
+            "huy.nvg2516805@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -6676,7 +7908,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "nguyen.quynh.anh@hust.local"
+            "k202619924@sis.hust.edu.vn"
           ],
           "tasks": [
             [

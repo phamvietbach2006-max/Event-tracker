@@ -19,6 +19,8 @@ import {
   Square,
   ChevronRight,
   Eye,
+  UserRound,
+  PhoneCall,
 } from 'lucide-react';
 import {
   UNITS,
@@ -38,7 +40,7 @@ import {
 } from './logic.js';
 import { api } from './api.js';
 
-export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit, onRequireLogin, say }) {
+export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit, onRequireLogin, say, onSelectOfficer }) {
   const handleBlockedAction = (room, actionName = 'chỉnh sửa') => {
     const meta = parseRoomMeta(room.name);
     if (!me) {
@@ -782,10 +784,19 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
                         <div className="owners-chips-wrap">
                           {r.room.owners.map((owner, oIdx) => {
                             const name = typeof owner === 'string' ? owner : owner.name;
+                            const hasPhone = typeof owner === 'object' && Boolean(owner.phone);
                             return (
-                              <span key={oIdx} className="owner-chip" title={name}>
-                                {name}
-                              </span>
+                              <button
+                                key={oIdx}
+                                type="button"
+                                className="owner-chip clickable"
+                                onClick={() => onSelectOfficer?.(owner)}
+                                title={`Xem thông tin và gọi điện cho ${name}`}
+                              >
+                                <UserRound size={12} className="owner-chip-icon" />
+                                <span>{name}</span>
+                                {hasPhone && <PhoneCall size={11} className="chip-phone-icon" />}
+                              </button>
                             );
                           })}
                         </div>
@@ -991,13 +1002,25 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
               {/* Owners if any */}
               {inspectRoom.room.owners && inspectRoom.room.owners.length > 0 && (
                 <div className="inspect-owners-box">
-                  <strong>Cán bộ / Đại diện phụ trách:</strong>
+                  <strong>Cán bộ / Đại diện phụ trách (bấm để xem thông tin & gọi điện):</strong>
                   <div className="owners-chips-wrap">
-                    {inspectRoom.room.owners.map((o, idx) => (
-                      <span key={idx} className="owner-chip">
-                        {typeof o === 'string' ? o : o.name}
-                      </span>
-                    ))}
+                    {inspectRoom.room.owners.map((o, idx) => {
+                      const name = typeof o === 'string' ? o : o.name;
+                      const hasPhone = typeof o === 'object' && Boolean(o.phone);
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          className="owner-chip clickable"
+                          onClick={() => onSelectOfficer?.(o)}
+                          title={`Xem thông tin và gọi điện cho ${name}`}
+                        >
+                          <UserRound size={12} className="owner-chip-icon" />
+                          <span>{name}</span>
+                          {hasPhone && <PhoneCall size={11} className="chip-phone-icon" />}
+                        </button>
+                      );
+                    })}
                   </div>
                 </div>
               )}

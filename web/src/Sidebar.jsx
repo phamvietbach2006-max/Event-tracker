@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LayoutDashboard, ClipboardList, Home, Star, Settings, LogOut, LogIn, X, Map as MapIcon, Building2, FileSpreadsheet, ChevronDown, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, Home, Star, Settings, LogOut, LogIn, X, Map as MapIcon, Building2, FileSpreadsheet, ChevronDown, ChevronRight, BookUser } from 'lucide-react';
 import { UNITS, ROLES, parseGroupMeta } from './logic.js';
 
 /* Nhóm groups theo tòa (ví dụ D9, C7, …) rồi theo đơn vị */
@@ -42,6 +42,7 @@ export default function Sidebar({
   toast,
   managing,
   onOpenLogin,
+  onOpenDirectory,
 }) {
   const sso = !!import.meta.env.VITE_SSO;
   const choose = (nextMode, value) => { onNavigate(nextMode, value); setOpen(false); };
@@ -98,6 +99,9 @@ export default function Sidebar({
         )}
         <button className={`nav-item ${!managing && mode === 'map' ? 'active' : ''}`} onClick={() => choose('map')}>
           <MapIcon size={19} />Sơ đồ khu vực
+        </button>
+        <button className="nav-item" onClick={() => { setOpen(false); onOpenDirectory?.(); }}>
+          <BookUser size={19} />Danh bạ cán bộ Ban TC-KT
         </button>
         {(me?.isAdmin || me?.role === 'admin') && (
           <a className={`nav-item ${managing ? 'active' : ''}`} href="#/manage" onClick={() => setOpen(false)}>
