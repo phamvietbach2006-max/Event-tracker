@@ -4,7 +4,10 @@ import { openDb } from './lib/db.js';
 import { createApp } from './lib/app.js';
 import { isEmpty, applySeed, ensureTokens } from './lib/seed.js';
 
-const baseUrl = (process.env.WEB_URL ?? process.env.BASE_URL ?? 'http://localhost:3000').replace(/\/$/, '');
+const defaultBaseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+  ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+  : (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+const baseUrl = (process.env.BASE_URL ?? defaultBaseUrl).replace(/\/$/, '');
 const tursoUrl = process.env.TURSO_DATABASE_URL ?? process.env.LIBSQL_URL;
 const dbPath = tursoUrl ? tursoUrl : (process.env.VERCEL ? '/tmp/app.db' : (process.env.DB_PATH ?? 'app.db'));
 const host = process.env.HOST ?? (process.env.VERCEL ? '0.0.0.0' : '127.0.0.1');

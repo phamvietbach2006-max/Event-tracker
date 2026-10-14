@@ -10,7 +10,10 @@ function getApp() {
   const tursoUrl = process.env.TURSO_DATABASE_URL ?? process.env.LIBSQL_URL;
   const dbPath = tursoUrl ? tursoUrl : (process.env.VERCEL ? '/tmp/app.db' : (process.env.DB_PATH ?? 'app.db'));
 
-    const baseUrl = (process.env.WEB_URL ?? process.env.BASE_URL ?? '').replace(/\/$/, '');
+    const defaultBaseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : '');
+    const baseUrl = (process.env.BASE_URL ?? defaultBaseUrl).replace(/\/$/, '');
     const config = {
       port: Number(process.env.PORT ?? 3000),
       host: process.env.HOST ?? '127.0.0.1',

@@ -4,15 +4,7 @@
     "app": {
       "root": ".",
       "runtime": "node",
-      "entrypoint": "server.js",
-      "bindings": [
-        {
-          "type": "service",
-          "service": "web",
-          "format": "url",
-          "env": "WEB_URL"
-        }
-      ]
+      "entrypoint": "server.js"
     },
     "web": {
       "root": "web",
