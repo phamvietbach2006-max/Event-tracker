@@ -1805,7 +1805,9 @@ a {
     padding: 0 !important;
   }
   .filter-toolbar .search-box {
-    display: none !important;
+    display: flex !important;
+    width: 100% !important;
+    margin: 2px 0 4px 0 !important;
   }
   .filter-dropdowns-group {
     display: grid !important;
@@ -6131,6 +6133,7 @@ a {
 
 /* Officer Profile Modal Card */
 .officer-card-modal {
+  position: relative;
   width: 92%;
   max-width: 480px;
   background: #FFFFFF;
@@ -6140,6 +6143,29 @@ a {
   padding: 0;
   border: none;
   animation: modalScaleUp 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.officer-card-modal .modal-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 10;
+  color: #FFFFFF;
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.officer-card-modal .modal-close:hover {
+  background: rgba(0, 0, 0, 0.55);
 }
 
 @keyframes modalScaleUp {

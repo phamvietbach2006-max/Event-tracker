@@ -4,15 +4,19 @@ import { api } from './api.js';
 
 function cleanPhone(raw) {
   if (!raw) return '';
-  return String(raw).replace(/\D/g, '');
+  let clean = String(raw).trim().replace(/[^\d+]/g, '');
+  if (clean.startsWith('84') && !clean.startsWith('+84') && clean.length > 9) {
+    clean = '0' + clean.slice(2);
+  }
+  return clean;
 }
 
 function formatPhoneDisplay(raw) {
-  const clean = cleanPhone(raw);
-  if (clean.length === 10) {
-    return `${clean.slice(0, 4)} ${clean.slice(4, 7)} ${clean.slice(7)}`;
+  const digits = cleanPhone(raw).replace(/\D/g, '');
+  if (digits.length === 10) {
+    return `${digits.slice(0, 4)} ${digits.slice(4, 7)} ${digits.slice(7)}`;
   }
-  return clean;
+  return digits || raw;
 }
 
 function getInitials(name) {
@@ -215,7 +219,11 @@ export default function DirectoryModal({ open, contacts = [], onSelectOfficer, o
                       )}
                     </div>
 
-                    <div className="doc-actions" onClick={(e) => e.stopPropagation()}>
+                    <div
+                      className="doc-actions"
+                      onClick={(e) => e.stopPropagation()}
+                      onTouchEnd={(e) => e.stopPropagation()}
+                    >
                       {phone ? (
                         <a
                           href={`tel:${phone}`}

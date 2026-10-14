@@ -4,7 +4,7 @@ import { api, ApiError } from './api.js';
 
 export default function LoginModal({ open, onClose, onSuccess, initialNotice }) {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('Abc@123456767');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [showQuickList, setShowQuickList] = useState(false);
@@ -130,65 +130,67 @@ export default function LoginModal({ open, onClose, onSuccess, initialNotice }) 
           </button>
         </form>
 
-        {/* Quick Demo Switcher */}
-        <div className="quick-login-section">
-          <button
-            type="button"
-            className="quick-toggle-btn"
-            onClick={() => setShowQuickList(!showQuickList)}
-          >
-            <User size={14} />
-            <span>{showQuickList ? 'Ẩn danh sách tài khoản mẫu' : 'Đăng nhập nhanh bằng tài khoản mẫu ▼'}</span>
-          </button>
+        {/* Quick Demo Switcher (chỉ hiển thị ở môi trường phát triển / thử nghiệm) */}
+        {import.meta.env.DEV && (
+          <div className="quick-login-section">
+            <button
+              type="button"
+              className="quick-toggle-btn"
+              onClick={() => setShowQuickList(!showQuickList)}
+            >
+              <User size={14} />
+              <span>{showQuickList ? 'Ẩn danh sách tài khoản mẫu' : 'Đăng nhập nhanh bằng tài khoản mẫu ▼'}</span>
+            </button>
 
-          {showQuickList && (
-            <div className="quick-users-list">
-              <div
-                className="quick-user-item is-admin"
-                onClick={() => handleQuickSelect('anh.tdh250154e@sis.hust.edu.vn')}
-              >
-                <div className="quick-user-role">
-                  <ShieldCheck size={14} />
-                  <strong>Trần Đức Hoàng Anh (Ban Điều hành · Quản trị viên)</strong>
+            {showQuickList && (
+              <div className="quick-users-list">
+                <div
+                  className="quick-user-item is-admin"
+                  onClick={() => handleQuickSelect('anh.tdh250154e@sis.hust.edu.vn')}
+                >
+                  <div className="quick-user-role">
+                    <ShieldCheck size={14} />
+                    <strong>Trần Đức Hoàng Anh (Ban Điều hành · Quản trị viên)</strong>
+                  </div>
+                  <code>anh.tdh250154e@sis.hust.edu.vn</code>
                 </div>
-                <code>anh.tdh250154e@sis.hust.edu.vn</code>
-              </div>
 
-              <div
-                className="quick-user-item is-admin"
-                onClick={() => handleQuickSelect('anh.km2415833@sis.hust.edu.vn')}
-              >
-                <div className="quick-user-role">
-                  <ShieldCheck size={14} />
-                  <strong>Kiều Minh Anh (Ban Điều hành · Quản trị viên)</strong>
+                <div
+                  className="quick-user-item is-admin"
+                  onClick={() => handleQuickSelect('anh.km2415833@sis.hust.edu.vn')}
+                >
+                  <div className="quick-user-role">
+                    <ShieldCheck size={14} />
+                    <strong>Kiều Minh Anh (Ban Điều hành · Quản trị viên)</strong>
+                  </div>
+                  <code>anh.km2415833@sis.hust.edu.vn</code>
                 </div>
-                <code>anh.km2415833@sis.hust.edu.vn</code>
-              </div>
 
-              <div
-                className="quick-user-item is-supervisor"
-                onClick={() => handleQuickSelect('dung.ltc2410053@sis.hust.edu.vn')}
-              >
-                <div className="quick-user-role">
-                  <User size={14} />
-                  <strong>Lê Thị Cẩm Dung (Trưởng mảng Tổ chức & Nhân sự)</strong>
+                <div
+                  className="quick-user-item is-supervisor"
+                  onClick={() => handleQuickSelect('dung.ltc2410053@sis.hust.edu.vn')}
+                >
+                  <div className="quick-user-role">
+                    <User size={14} />
+                    <strong>Lê Thị Cẩm Dung (Trưởng mảng Tổ chức & Nhân sự)</strong>
+                  </div>
+                  <code>dung.ltc2410053@sis.hust.edu.vn</code>
                 </div>
-                <code>dung.ltc2410053@sis.hust.edu.vn</code>
-              </div>
 
-              <div
-                className="quick-user-item is-supervisor"
-                onClick={() => handleQuickSelect('linh.ntd2411669@sis.hust.edu.vn')}
-              >
-                <div className="quick-user-role">
-                  <User size={14} />
-                  <strong>Nguyễn Thị Diệu Linh (Trưởng mảng Giám sát & KT)</strong>
+                <div
+                  className="quick-user-item is-supervisor"
+                  onClick={() => handleQuickSelect('linh.ntd2411669@sis.hust.edu.vn')}
+                >
+                  <div className="quick-user-role">
+                    <User size={14} />
+                    <strong>Nguyễn Thị Diệu Linh (Trưởng mảng Giám sát & KT)</strong>
+                  </div>
+                  <code>linh.ntd2411669@sis.hust.edu.vn</code>
                 </div>
-                <code>linh.ntd2411669@sis.hust.edu.vn</code>
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

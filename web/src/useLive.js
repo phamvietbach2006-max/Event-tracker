@@ -89,9 +89,23 @@ export function useLive() {
       reload();
     }, 15000);
 
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') {
+        reload();
+      }
+    };
+    const onOnline = () => {
+      setOnline(true);
+      reload();
+    };
+    window.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('online', onOnline);
+
     return () => {
       if (es) es.close();
       if (pollInterval) clearInterval(pollInterval);
+      window.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('online', onOnline);
     };
   }, [reload, updateState]);
 

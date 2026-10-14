@@ -350,7 +350,14 @@ export default function App() {
         ) : mode === 'map' ? (
           <main id="main">
             <Suspense fallback={<div className="sk" role="status" aria-label="Đang tải bản đồ"><i className="h" /><i className="c" /></div>}>
-              <MapView groups={unitGroups} me={me} act={act} />
+              <MapView
+                groups={unitGroups}
+                me={me}
+                act={act}
+                onRequireLogin={handleRequireLogin}
+                toast={setToast}
+                onSelectOfficer={handleSelectOfficer}
+              />
             </Suspense>
           </main>
         ) : mode === 'dashboard' ? (
@@ -427,7 +434,7 @@ export default function App() {
               <div className="empty-state unit-empty-state">
                 <b>{selectedUnit} chưa có danh sách phân kíp Đại hội</b>
                 <span>Bạn có thể tải lên file Excel phân kíp (.xlsx) hoặc thêm nhanh từng Tầng &amp; Lớp cho đơn vị này (tự động gắn checklist giấy tờ K71 / K70).</span>
-                {me?.isAdmin && (
+                {isAdmin && (
                   <div className="empty-state-actions">
                     <button className="btn-primary" onClick={() => setImportOpen(true)}>
                       <FileSpreadsheet size={16} /> Nhập từ file Excel / Thêm Lớp cho {selectedUnit}
@@ -459,7 +466,7 @@ export default function App() {
         <button className={!managing && mode === 'dashboard' ? 'active' : ''} onClick={() => navigate('dashboard')}><LayoutDashboard size={20} />Tổng quan</button>
         <button className={!managing && (mode === 'overview' || mode === 'group' || mode === 'status' || mode === 'mine') ? 'active' : ''} onClick={() => navigate('overview')}><ClipboardList size={20} />Bảng theo dõi</button>
         <button className={!managing && mode === 'map' ? 'active' : ''} onClick={() => navigate('map')}><Map size={20} />Sơ đồ</button>
-        {me?.isAdmin ? (
+        {isAdmin ? (
           <a className={managing ? 'active' : ''} href="#/manage"><Settings size={20} />Quản lý</a>
         ) : me ? (
           <button className={!managing && mode === 'mine' ? 'active' : ''} onClick={() => navigate('mine')}>

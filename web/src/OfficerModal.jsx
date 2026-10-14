@@ -1,13 +1,21 @@
 import { useState } from 'react';
 import { PhoneCall, Phone, Mail, Copy, Check, X, Shield, Building, GraduationCap, MessageSquare, ExternalLink, User } from 'lucide-react';
 
-function formatPhoneDisplay(raw) {
+function cleanPhone(raw) {
   if (!raw) return '';
-  const clean = String(raw).replace(/\D/g, '');
-  if (clean.length === 10) {
-    return `${clean.slice(0, 4)} ${clean.slice(4, 7)} ${clean.slice(7)}`;
+  let clean = String(raw).trim().replace(/[^\d+]/g, '');
+  if (clean.startsWith('84') && !clean.startsWith('+84') && clean.length > 9) {
+    clean = '0' + clean.slice(2);
   }
   return clean;
+}
+
+function formatPhoneDisplay(raw) {
+  const digits = cleanPhone(raw).replace(/\D/g, '');
+  if (digits.length === 10) {
+    return `${digits.slice(0, 4)} ${digits.slice(4, 7)} ${digits.slice(7)}`;
+  }
+  return digits || raw;
 }
 
 function getInitials(name) {
@@ -23,8 +31,9 @@ export default function OfficerModal({ officer, onClose }) {
 
   if (!officer) return null;
 
-  const phone = officer.phone ? String(officer.phone).replace(/\D/g, '') : '';
+  const phone = cleanPhone(officer.phone);
   const displayPhone = formatPhoneDisplay(phone);
+  const zaloNumber = phone.startsWith('+84') ? '0' + phone.slice(3) : (phone.startsWith('84') ? '0' + phone.slice(2) : phone);
 
   const handleCopy = async () => {
     if (!phone) return;
@@ -103,7 +112,7 @@ export default function OfficerModal({ officer, onClose }) {
                   <span>{copied ? 'Đã sao chép!' : 'Sao chép số'}</span>
                 </button>
                 <a
-                  href={`https://zalo.me/${phone}`}
+                  href={`https://zalo.me/${zaloNumber}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="officer-action-btn zalo-btn"

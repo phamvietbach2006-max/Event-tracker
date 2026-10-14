@@ -26,7 +26,7 @@ const config = {
         redirectUri: `${baseUrl}/auth/callback`,
       }
     : null,
-  openAccess: process.env.OPEN_ACCESS === '1',
+  openAccess: process.env.NODE_ENV !== 'production' && process.env.OPEN_ACCESS === '1',
 };
 
 const db = openDb(config.dbPath);
@@ -67,7 +67,8 @@ try {
 const app = createApp({ db, config });
 
 app.server.on('error', (err) => {
-  console.warn('Cảnh báo server listen:', err.message);
+  console.error('Lỗi nghiêm trọng khi khởi động HTTP server:', err);
+  process.exit(1);
 });
 
 try {
@@ -75,7 +76,8 @@ try {
     console.log(`Event tracker: http://${config.host}:${config.port} (DB ${config.dbPath})`);
   });
 } catch (err) {
-  console.warn('Không thể khởi động server listen:', err.message);
+  console.error('Không thể khởi động server listen:', err);
+  process.exit(1);
 }
 
 for (const sig of ['SIGINT', 'SIGTERM']) {

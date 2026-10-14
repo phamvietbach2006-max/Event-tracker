@@ -22,9 +22,11 @@ export function registerRooms(router) {
     const room = roomOr404(db, params.id);
     const actor = resolveActor(db, user, config, room.id);
     const status = oneOf(body.status, STATUSES, 'status');
-    db.prepare('UPDATE rooms SET status = ? WHERE id = ?').run(status, room.id);
-    touchRoom(db, actor, room.id);
-    logActivity(db, actor, room.id, 'room.status', `${room.status} -> ${status}`);
+    tx(db, () => {
+      db.prepare('UPDATE rooms SET status = ? WHERE id = ?').run(status, room.id);
+      touchRoom(db, actor, room.id);
+      logActivity(db, actor, room.id, 'room.status', `${room.status} -> ${status}`);
+    });
     sse.broadcast();
     return roomView(roomOr404(db, room.id));
   });
@@ -34,9 +36,11 @@ export function registerRooms(router) {
     const room = roomOr404(db, params.id);
     const actor = resolveActor(db, user, config, room.id);
     const note = text(body.note, 150, 'note', { allowEmpty: true });
-    db.prepare('UPDATE rooms SET note = ? WHERE id = ?').run(note, room.id);
-    touchRoom(db, actor, room.id);
-    logActivity(db, actor, room.id, 'room.note', note);
+    tx(db, () => {
+      db.prepare('UPDATE rooms SET note = ? WHERE id = ?').run(note, room.id);
+      touchRoom(db, actor, room.id);
+      logActivity(db, actor, room.id, 'room.note', note);
+    });
     sse.broadcast();
     return roomView(roomOr404(db, room.id));
   });

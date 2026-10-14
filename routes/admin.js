@@ -4,6 +4,7 @@ import { roomOr404, taskOr404, groupOr404, logActivity, tx, roomView, taskView }
 import { text, int, email } from '../lib/validate.js';
 import { newToken, loginUrl } from '../auth/token.js';
 import { hashPassword } from '../auth/password.js';
+import { destroyUserSessions } from '../lib/session.js';
 
 const nextSort = (db, sql, ...args) => db.prepare(sql).get(...args).n;
 const rowId = (info) => Number(info.lastInsertRowid);
@@ -173,7 +174,9 @@ function userOr404(db, rawEmail) {
 
 export function registerAdmin(router) {
   const add = (method, path, fn) => router.add(method, path, (ctx) => {
-    if (!ctx.config?.openAccess) requireAdmin(ctx.user);
+    const isProduction = process.env.NODE_ENV === 'production';
+    const allowOpen = !isProduction && Boolean(ctx.config?.openAccess);
+    if (!allowOpen) requireAdmin(ctx.user);
     const user = ctx.user ?? { email: 'anh.tdh250154e@sis.hust.edu.vn', name: 'Trần Đức Hoàng Anh', is_admin: 1 };
     return fn({ ...ctx, user });
   });
@@ -382,12 +385,13 @@ export function registerAdmin(router) {
     const isAdmin = role === 'admin' ? 1 : 0;
     const initialPassword = body.password ? String(body.password) : 'Abc@123456767';
     const pwdHash = hashPassword(initialPassword);
-    const phone = body.phone ? String(body.phone).trim() : null;
-    const team = body.team ? String(body.team).trim() : null;
-    const position = body.position ? String(body.position).trim() : null;
-    const department = body.department ? String(body.department).trim() : null;
-    const cohort = body.cohort ? String(body.cohort).trim() : null;
-    const studentId = (body.student_id ?? body.studentId) ? String(body.student_id ?? body.studentId).trim() : null;
+    const phone = body.phone ? text(body.phone, 20, 'phone', { allowEmpty: true }) : null;
+    const team = body.team ? text(body.team, 80, 'team', { allowEmpty: true }) : null;
+    const position = body.position ? text(body.position, 80, 'position', { allowEmpty: true }) : null;
+    const department = body.department ? text(body.department, 100, 'department', { allowEmpty: true }) : null;
+    const cohort = body.cohort ? text(body.cohort, 20, 'cohort', { allowEmpty: true }) : null;
+    const rawSid = body.student_id ?? body.studentId;
+    const studentId = rawSid ? text(rawSid, 20, 'student_id', { allowEmpty: true }) : null;
 
     tx(db, () => {
       db.prepare(`
@@ -429,13 +433,14 @@ export function registerAdmin(router) {
     }
 
     const isAdmin = nextRole === 'admin' ? 1 : 0;
-    const phone = 'phone' in body ? (body.phone ? String(body.phone).trim() : null) : u.phone;
-    const team = 'team' in body ? (body.team ? String(body.team).trim() : null) : u.team;
-    const position = 'position' in body ? (body.position ? String(body.position).trim() : null) : u.position;
-    const department = 'department' in body ? (body.department ? String(body.department).trim() : null) : u.department;
-    const cohort = 'cohort' in body ? (body.cohort ? String(body.cohort).trim() : null) : u.cohort;
-    const studentId = 'student_id' in body || 'studentId' in body
-      ? (body.student_id ?? body.studentId ? String(body.student_id ?? body.studentId).trim() : null)
+    const phone = 'phone' in body ? (body.phone ? text(body.phone, 20, 'phone', { allowEmpty: true }) : null) : u.phone;
+    const team = 'team' in body ? (body.team ? text(body.team, 80, 'team', { allowEmpty: true }) : null) : u.team;
+    const position = 'position' in body ? (body.position ? text(body.position, 80, 'position', { allowEmpty: true }) : null) : u.position;
+    const department = 'department' in body ? (body.department ? text(body.department, 100, 'department', { allowEmpty: true }) : null) : u.department;
+    const cohort = 'cohort' in body ? (body.cohort ? text(body.cohort, 20, 'cohort', { allowEmpty: true }) : null) : u.cohort;
+    const hasSid = 'student_id' in body || 'studentId' in body;
+    const studentId = hasSid
+      ? ((body.student_id ?? body.studentId) ? text(body.student_id ?? body.studentId, 20, 'student_id', { allowEmpty: true }) : null)
       : u.student_id;
 
     tx(db, () => {
@@ -480,7 +485,10 @@ export function registerAdmin(router) {
     const u = userOr404(db, params.email);
     const newPass = 'Abc@123456767';
     const pwdHash = hashPassword(newPass);
-    db.prepare('UPDATE users SET password_hash = ? WHERE LOWER(email) = ?').run(pwdHash, u.email.toLowerCase());
+    tx(db, () => {
+      db.prepare('UPDATE users SET password_hash = ? WHERE LOWER(email) = ?').run(pwdHash, u.email.toLowerCase());
+      destroyUserSessions(db, u.email);
+    });
     return { ok: true, message: `Đã đặt lại mật khẩu của ${u.name} về ${newPass}` };
   });
 

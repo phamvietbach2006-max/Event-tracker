@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import {
   Download,
@@ -65,11 +65,11 @@ export default function OverviewTable({ state, me, act, onNavigate, onSelectUnit
   }, [state]);
 
   // Auto-align unitFilter if unitFilter is not in availableUnits
-  useState(() => {
+  useEffect(() => {
     if (availableUnits.length === 1) {
       setUnitFilter(availableUnits[0]);
     }
-  });
+  }, [availableUnits]);
 
   // Sorting
   const [sortCol, setSortCol] = useState('stt'); // 'stt', 'className', 'roomCode', 'kip', 'status', 'progress'
