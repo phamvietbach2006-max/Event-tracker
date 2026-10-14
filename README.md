@@ -171,20 +171,31 @@ npm run loadtest -- --url http://127.0.0.1:3000 --sse 300 --readers 50 --seconds
 
 Chi tiết cấu hình hạ tầng xem tại [TECH.md](TECH.md) và [deploy/VM-TUNING.md](deploy/VM-TUNING.md).
 
-### 🚀 Cách 1: Triển khai nhanh trên Vercel (Serverless Cloud)
-Dự án đã được tích hợp sẵn cấu hình `vercel.json` và Serverless Function entrypoint tại `api/index.js`:
+### 🚀 Cách 1: Triển khai trên Vercel (Hỗ trợ lưu trữ vĩnh viễn với Turso Cloud Database)
+Dự án đã được tích hợp sẵn cấu hình `vercel.json`, Serverless Function `api/index.js` và driver `libsql` để kết nối trực tiếp với **Turso Cloud Database (SQLite miễn phí vĩnh viễn)**:
+
+#### 1. Tạo Database miễn phí trên Turso:
+1. Đăng ký tài khoản tại [Turso.tech](https://turso.tech/) (chọn Login with GitHub).
+2. Tạo database mới: ví dụ tên là `event-tracker`.
+3. Lấy thông tin kết nối từ giao diện Turso:
+   - **Database URL:** có dạng `libsql://event-tracker-xxx.turso.io`
+   - **Auth Token:** tạo token mới (Create token) và copy chuỗi mã dài.
+
+#### 2. Cấu hình triển khai trên Vercel:
 1. Đẩy code lên GitHub repository: `https://github.com/phamvietbach2006-max/Event-tracker.git`.
-2. Truy cập [Vercel Dashboard](https://vercel.com/new) và nhấn **Add New Project** ➔ **Import Git Repository**.
-3. Chọn repo `Event-tracker`.
-4. Cấu hình triển khai:
+2. Truy cập [Vercel Dashboard](https://vercel.com/new) và nhấn **Import** repo `Event-tracker`.
+3. Trong mục **Environment Variables**, thêm 2 biến:
+   - `TURSO_DATABASE_URL`: URL database của bạn (ví dụ: `libsql://event-tracker-xxx.turso.io`)
+   - `TURSO_AUTH_TOKEN`: Token xác thực bạn đã tạo trên Turso.
+4. Cấu hình build:
    - **Framework Preset:** Vite (hoặc Other).
-   - **Root Directory:** `./` (mặc định).
-   - **Build Command:** `npm run build` (tự động nhận từ `vercel.json`).
-   - **Output Directory:** `web/dist` (tự động nhận từ `vercel.json`).
-   - **Node.js Version:** Chọn `22.x` trong Project Settings.
+   - **Node.js Version:** `22.x`.
 5. Nhấn **Deploy**.
-> **Lưu ý về Serverless SQLite trên Vercel:**  
-> Hệ thống sẽ tự động khởi tạo cơ sở dữ liệu SQLite trong `/tmp/app.db` và nạp toàn bộ 237 chi đoàn, 1220 đầu việc, 10 toà nhà/tầng và 33 tài khoản cán bộ từ `seed.json`. Tài khoản quản trị mặc định: `admin@example.com` / Mật khẩu: `Abc@123456767`.
+
+> **🌟 Cơ chế lưu trữ vĩnh viễn:**  
+> - Khi deploy lần đầu tiên, hệ thống sẽ tự động khởi tạo bảng và nạp toàn bộ dữ liệu mẫu (237 chi đoàn, 1220 đầu việc, 33 cán bộ) trực tiếp lên Turso Cloud.
+> - Toàn bộ thay đổi trạng thái, cập nhật ghi chú, tick checklist, đổi mật khẩu sẽ được **lưu trữ vĩnh viễn trên Turso Cloud** và **không bao giờ bị reset** dù Vercel có tắt bật lại container hay deploy commit mới.
+> - Nếu chưa điền biến môi trường Turso, hệ thống sẽ tự động chạy chế độ SQLite bộ nhớ đệm `/tmp/app.db`.
 
 ---
 

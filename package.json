@@ -11,5 +11,8 @@
     "test": "node --test \"tests/*.test.js\" \"web/src/*.test.js\"",
     "links": "node scripts/links.js",
     "loadtest": "node scripts/loadtest.js"
+  },
+  "dependencies": {
+    "libsql": "^0.5.29"
   }
 }

@@ -7,8 +7,8 @@ let appInstance = null;
 
 function getApp() {
   if (appInstance) return appInstance;
-
-  const dbPath = process.env.VERCEL ? '/tmp/app.db' : (process.env.DB_PATH ?? 'app.db');
+  const tursoUrl = process.env.TURSO_DATABASE_URL ?? process.env.LIBSQL_URL;
+  const dbPath = tursoUrl ? tursoUrl : (process.env.VERCEL ? '/tmp/app.db' : (process.env.DB_PATH ?? 'app.db'));
 
   const config = {
     port: Number(process.env.PORT ?? 3000),
