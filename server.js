@@ -30,6 +30,16 @@ const config = {
 };
 
 const db = openDb(config.dbPath);
+try {
+  db.prepare("DELETE FROM room_owners WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+  db.prepare("DELETE FROM sessions WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+  db.prepare("DELETE FROM user_units WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+  db.prepare("DELETE FROM user_groups WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+  db.prepare("DELETE FROM users WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+} catch (err) {
+  console.error('Lỗi dọn dẹp tài khoản không thuộc sis.hust.edu.vn:', err);
+}
+
 if (isEmpty(db)) {
   try {
     applySeed(db, seedData);
@@ -39,11 +49,7 @@ if (isEmpty(db)) {
   }
 } else {
   try {
-    const hasContacts = db.prepare('SELECT 1 FROM users WHERE phone IS NOT NULL LIMIT 1').get();
-    if (!hasContacts) {
-      syncUsersSeed(db, seedData.users);
-      console.log('Đã đồng bộ danh sách cán bộ từ seed.json');
-    }
+    syncUsersSeed(db, seedData.users);
   } catch (err) {
     console.error('Lỗi khi kiểm tra cán bộ từ seed.json:', err);
   }

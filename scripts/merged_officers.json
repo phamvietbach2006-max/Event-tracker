@@ -1,23 +1,5 @@
 [
   {
-    "name": "PGS.TS. Phan Duy Nam",
-    "position": "Trưởng ban",
-    "cohort": "Cán bộ",
-    "phone": "",
-    "email": "nam.phanduy@hust.edu.vn",
-    "department": "",
-    "team": "Ban Điều hành"
-  },
-  {
-    "name": "TS. Nguyễn Đình Văn",
-    "position": "Phó Trưởng ban",
-    "cohort": "Cán bộ",
-    "phone": "",
-    "email": "van.nguyendinh@hust.edu.vn",
-    "department": "",
-    "team": "Ban Điều hành"
-  },
-  {
     "name": "Trần Đức Hoàng Anh",
     "position": "Phó Trưởng ban",
     "cohort": "66",
@@ -708,28 +690,6 @@
     "team": "Cộng tác viên K70/K71"
   },
   {
-    "name": "Phạm Minh Tuấn",
-    "student_id": "202611754",
-    "phone": "0846729588",
-    "dob": "05/08/2008",
-    "department": "Truờng cơ khí",
-    "class_name": "CK-08",
-    "email": "tuan08namdinh@gmail.com",
-    "position": "CTV",
-    "team": "Cộng tác viên K70/K71"
-  },
-  {
-    "name": "Đỗ Thảo Vy",
-    "student_id": "202611392",
-    "phone": "0971284800",
-    "dob": "11/08/2008",
-    "department": "Trường Kinh tế",
-    "class_name": "EM-E13",
-    "email": "thaovydo1108@gmail.com",
-    "position": "CTV",
-    "team": "Cộng tác viên K70/K71"
-  },
-  {
     "name": "Vương Gia Bảo",
     "student_id": "202620324",
     "phone": "0975295782",
@@ -814,17 +774,6 @@
     "department": "Trường Vật liệu",
     "class_name": "MS1-06",
     "email": "minh.tnb2613228@sis.hust.edu.vn",
-    "position": "CTV",
-    "team": "Cộng tác viên K70/K71"
-  },
-  {
-    "name": "Nguyễn Hưng Quang",
-    "student_id": "202617030",
-    "phone": "0387252458",
-    "dob": "13/11/2008",
-    "department": "Trường Cơ Khí",
-    "class_name": "HE1-04",
-    "email": "nguyenq1311@gmail.com",
     "position": "CTV",
     "team": "Cộng tác viên K70/K71"
   },

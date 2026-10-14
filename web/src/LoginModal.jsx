@@ -88,7 +88,7 @@ export default function LoginModal({ open, onClose, onSuccess, initialNotice }) 
               className="login-input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="VD: admin@example.com hoặc nguyen.long.vu..."
+              placeholder="VD: anh.tdh250154e@sis.hust.edu.vn hoặc anh.tdh250154e..."
               required
             />
           </label>
@@ -145,46 +145,46 @@ export default function LoginModal({ open, onClose, onSuccess, initialNotice }) 
             <div className="quick-users-list">
               <div
                 className="quick-user-item is-admin"
-                onClick={() => handleQuickSelect('admin@example.com')}
+                onClick={() => handleQuickSelect('anh.tdh250154e@sis.hust.edu.vn')}
               >
                 <div className="quick-user-role">
                   <ShieldCheck size={14} />
-                  <strong>Quản trị viên Ban TC-KT (Toàn quyền hệ thống)</strong>
+                  <strong>Trần Đức Hoàng Anh (Ban Điều hành · Quản trị viên)</strong>
                 </div>
-                <code>admin@example.com</code>
+                <code>anh.tdh250154e@sis.hust.edu.vn</code>
+              </div>
+
+              <div
+                className="quick-user-item is-admin"
+                onClick={() => handleQuickSelect('anh.km2415833@sis.hust.edu.vn')}
+              >
+                <div className="quick-user-role">
+                  <ShieldCheck size={14} />
+                  <strong>Kiều Minh Anh (Ban Điều hành · Quản trị viên)</strong>
+                </div>
+                <code>anh.km2415833@sis.hust.edu.vn</code>
               </div>
 
               <div
                 className="quick-user-item is-supervisor"
-                onClick={() => handleQuickSelect('nguyen.thu.hang@seee.hust.edu.vn')}
+                onClick={() => handleQuickSelect('dung.ltc2410053@sis.hust.edu.vn')}
               >
                 <div className="quick-user-role">
                   <User size={14} />
-                  <strong>Nguyễn Thu Hằng (Cán bộ kiểm tra · 8 lớp)</strong>
+                  <strong>Lê Thị Cẩm Dung (Trưởng mảng Tổ chức & Nhân sự)</strong>
                 </div>
-                <code>nguyen.thu.hang@seee.hust.edu.vn</code>
+                <code>dung.ltc2410053@sis.hust.edu.vn</code>
               </div>
 
               <div
                 className="quick-user-item is-supervisor"
-                onClick={() => handleQuickSelect('tran.trong.duc@seee.hust.edu.vn')}
+                onClick={() => handleQuickSelect('linh.ntd2411669@sis.hust.edu.vn')}
               >
                 <div className="quick-user-role">
                   <User size={14} />
-                  <strong>Trần Trọng Đức (Cán bộ kiểm tra · 6 lớp)</strong>
+                  <strong>Nguyễn Thị Diệu Linh (Trưởng mảng Giám sát & KT)</strong>
                 </div>
-                <code>tran.trong.duc@seee.hust.edu.vn</code>
-              </div>
-
-              <div
-                className="quick-user-item is-supervisor"
-                onClick={() => handleQuickSelect('dang.thi.tra.my@hust.local')}
-              >
-                <div className="quick-user-role">
-                  <User size={14} />
-                  <strong>Đặng Thị Trà My (Cán bộ kiểm tra · 3 lớp)</strong>
-                </div>
-                <code>dang.thi.tra.my@hust.local</code>
+                <code>linh.ntd2411669@sis.hust.edu.vn</code>
               </div>
             </div>
           )}

@@ -1,6 +1,6 @@
 import { openDb } from '../lib/db.js';
 import { createApp } from '../lib/app.js';
-import { isEmpty, applySeed, ensureTokens } from '../lib/seed.js';
+import { isEmpty, applySeed, syncUsersSeed, ensureTokens } from '../lib/seed.js';
 import seedData from '../seed.json' with { type: 'json' };
 
 let appInstance = null;
@@ -32,11 +32,27 @@ function getApp() {
     };
 
   const db = openDb(dbPath);
+  try {
+    db.prepare("DELETE FROM room_owners WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+    db.prepare("DELETE FROM sessions WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+    db.prepare("DELETE FROM user_units WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+    db.prepare("DELETE FROM user_groups WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+    db.prepare("DELETE FROM users WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+  } catch (err) {
+    console.error('Lỗi dọn dẹp tài khoản không thuộc sis.hust.edu.vn:', err);
+  }
+
   if (isEmpty(db)) {
     try {
       applySeed(db, seedData);
     } catch (err) {
       console.error('Lỗi khi nạp dữ liệu mẫu ban đầu:', err);
+    }
+  } else {
+    try {
+      syncUsersSeed(db, seedData.users);
+    } catch (err) {
+      console.error('Lỗi đồng bộ cán bộ từ seed.json:', err);
     }
   }
 

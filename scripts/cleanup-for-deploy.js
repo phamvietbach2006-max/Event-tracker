@@ -15,8 +15,13 @@ db.prepare('UPDATE rooms SET status = ?, note = ?, updated_by = NULL, updated_at
 db.prepare('UPDATE tasks SET state = ?, updated_by = NULL, updated_at = ?')
   .run('todo', now);
 
-// Đảm bảo admin có đầy đủ quyền
-db.prepare("UPDATE users SET is_admin = 1, role = 'admin' WHERE LOWER(email) = 'admin@example.com'").run();
+// Xoá tài khoản không có đuôi sis.hust.edu.vn và đảm bảo admin có đầy đủ quyền
+db.prepare("DELETE FROM room_owners WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+db.prepare("DELETE FROM sessions WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+db.prepare("DELETE FROM user_units WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+db.prepare("DELETE FROM user_groups WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+db.prepare("DELETE FROM users WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
+db.prepare("UPDATE users SET is_admin = 1, role = 'admin' WHERE team = 'Ban Điều hành' OR LOWER(email) IN ('anh.tdh250154e@sis.hust.edu.vn', 'anh.km2415833@sis.hust.edu.vn')").run();
 
 console.log('===> 3. Xuất toàn bộ dữ liệu sạch sang seed.json...');
 const users = db.prepare('SELECT email, name, is_admin, role FROM users ORDER BY is_admin DESC, name ASC').all().map((u) => ({

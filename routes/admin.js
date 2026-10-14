@@ -174,7 +174,7 @@ function userOr404(db, rawEmail) {
 export function registerAdmin(router) {
   const add = (method, path, fn) => router.add(method, path, (ctx) => {
     if (!ctx.config?.openAccess) requireAdmin(ctx.user);
-    const user = ctx.user ?? { email: 'admin@example.com', name: 'Quản trị viên', is_admin: 1 };
+    const user = ctx.user ?? { email: 'anh.tdh250154e@sis.hust.edu.vn', name: 'Trần Đức Hoàng Anh', is_admin: 1 };
     return fn({ ...ctx, user });
   });
 
@@ -241,10 +241,10 @@ export function registerAdmin(router) {
         if (found) return found.email;
         const base = n.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd')
           .toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.+|\.+$/g, '') || 'user';
-        let candidate = `${base}@hust.local`;
+        let candidate = `${base}@sis.hust.edu.vn`;
         let suffix = 2;
         while (db.prepare('SELECT 1 FROM users WHERE email = ?').get(candidate)) {
-          candidate = `${base}.${suffix++}@hust.local`;
+          candidate = `${base}.${suffix++}@sis.hust.edu.vn`;
         }
         db.prepare('INSERT INTO users(email, name, is_admin) VALUES (?,?,0)').run(candidate, n);
         allUsers.push({ email: candidate, name: n });
@@ -337,10 +337,10 @@ export function registerAdmin(router) {
           if (found) return found.email;
           const base = n.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd')
             .toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.+|\.+$/g, '') || 'user';
-          let candidate = `${base}@hust.local`;
+          let candidate = `${base}@sis.hust.edu.vn`;
           let suffix = 2;
           while (db.prepare('SELECT 1 FROM users WHERE email = ?').get(candidate)) {
-            candidate = `${base}.${suffix++}@hust.local`;
+            candidate = `${base}.${suffix++}@sis.hust.edu.vn`;
           }
           db.prepare('INSERT INTO users(email, name, is_admin) VALUES (?,?,0)').run(candidate, n);
           allUsers.push({ email: candidate, name: n });

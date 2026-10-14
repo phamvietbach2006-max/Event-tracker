@@ -1,332 +1,6 @@
 {
   "users": [
     {
-      "email": "admin@example.com",
-      "name": "Quản trị viên (Ban TC-KT)",
-      "isAdmin": true,
-      "role": "admin"
-    },
-    {
-      "email": "bui.hoang.tuan.minh@hust.local",
-      "name": "Bùi Hoàng Tuấn Minh",
-      "isAdmin": false,
-      "role": "room_lead",
-      "position": "CTV",
-      "team": "Cộng tác viên K70/K71",
-      "student_id": "202612253"
-    },
-    {
-      "email": "diem.quynh.hoa@hust.local",
-      "name": "Diêm Quỳnh Hoa",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0983849463",
-      "position": "CTV",
-      "department": "Trường Điện - Điện tử",
-      "team": "Truyền thông, Sự kiện & PTNB",
-      "cohort": "70"
-    },
-    {
-      "email": "hoang.ngoc.tuong.linh@hust.local",
-      "name": "Hoàng Ngọc Tường Linh",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0979358285",
-      "position": "CTV",
-      "department": "Trường CNTT&TT",
-      "team": "Cộng tác viên K70/K71",
-      "student_id": "202614447"
-    },
-    {
-      "email": "le.mai.trang@hust.local",
-      "name": "Lê Mai Trang",
-      "isAdmin": false,
-      "role": "room_lead"
-    },
-    {
-      "email": "le.tran.cam.dung@hust.local",
-      "name": "Lê Trần Cẩm Dung",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0904716909",
-      "position": "Trưởng mảng",
-      "department": "Hóa & KHSS",
-      "team": "Giám sát, Kiểm tra & ĐRL",
-      "cohort": "69"
-    },
-    {
-      "email": "ly.thu.diep@hust.local",
-      "name": "Lý Thu Diệp",
-      "isAdmin": false,
-      "role": "room_lead",
-      "position": "CTV",
-      "team": "Cộng tác viên K70/K71",
-      "student_id": "202612438"
-    },
-    {
-      "email": "nguyen.hung.quang@hust.local",
-      "name": "Nguyễn Hưng Quang",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0387252458",
-      "position": "CTV",
-      "department": "Trường Cơ Khí",
-      "team": "Cộng tác viên K70/K71",
-      "student_id": "202617030"
-    },
-    {
-      "email": "nguyen.hai.anh@seee.hust.edu.vn",
-      "name": "Nguyễn Hải Anh",
-      "isAdmin": false,
-      "role": "room_lead"
-    },
-    {
-      "email": "nguyen.hai.long@seee.hust.edu.vn",
-      "name": "Nguyễn Hải Long",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0364902700",
-      "position": "Ủy viên",
-      "department": "Trường Điện - Điện tử",
-      "team": "Tổ chức & Phát triển Đoàn vụ",
-      "cohort": "69"
-    },
-    {
-      "email": "nguyen.long.vu@seee.hust.edu.vn",
-      "name": "Nguyễn Long Vũ",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0973027635",
-      "position": "Phó mảng",
-      "department": "Điện - Điện tử",
-      "team": "Giám sát, Kiểm tra & ĐRL",
-      "cohort": "69"
-    },
-    {
-      "email": "nguyen.minh.quan@seee.hust.edu.vn",
-      "name": "Nguyễn Minh Quân",
-      "isAdmin": false,
-      "role": "room_lead"
-    },
-    {
-      "email": "nguyen.phuong.thao@hust.local",
-      "name": "Nguyễn Phương Thảo",
-      "isAdmin": false,
-      "role": "room_lead"
-    },
-    {
-      "email": "nguyen.quynh.anh@hust.local",
-      "name": "Nguyễn Quỳnh Anh",
-      "isAdmin": false,
-      "role": "room_lead",
-      "position": "CTV",
-      "team": "Cộng tác viên K70/K71",
-      "student_id": "202619924"
-    },
-    {
-      "email": "nguyen.thu.hang@seee.hust.edu.vn",
-      "name": "Nguyễn Thu Hằng",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0973407207",
-      "position": "CTV",
-      "department": "Khoa Toán Tin",
-      "team": "Tổ chức & Phát triển Đoàn vụ",
-      "cohort": "70"
-    },
-    {
-      "email": "nguyen.the.hung@seee.hust.edu.vn",
-      "name": "Nguyễn Thế Hùng",
-      "isAdmin": false,
-      "role": "room_lead"
-    },
-    {
-      "email": "nguyen.thi.thu.ha@seee.hust.edu.vn",
-      "name": "Nguyễn Thị Thu Hà",
-      "isAdmin": false,
-      "role": "room_lead"
-    },
-    {
-      "email": "nguyen.tran.khang.vu@seee.hust.edu.vn",
-      "name": "Nguyễn Trần Khang Vũ",
-      "isAdmin": false,
-      "role": "room_lead"
-    },
-    {
-      "email": "ngo.dinh.quang.duc@hust.local",
-      "name": "Ngô Đình Quảng Đức",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0973572504",
-      "position": "CTV",
-      "department": "Trường Điện-Điện tử",
-      "team": "Phát triển Đảng & CĐS",
-      "cohort": "70"
-    },
-    {
-      "email": "p.hoang.trung.nghia@hust.local",
-      "name": "P.Hoàng Trung Nghĩa",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0842022888",
-      "position": "CTV",
-      "department": "Trường CNTT&TT",
-      "team": "Phát triển Đảng & CĐS",
-      "cohort": "70"
-    },
-    {
-      "email": "phan.tuan.duong@hust.local",
-      "name": "Phan Tuấn Dương",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0932633638",
-      "position": "Ủy viên",
-      "department": "Khoa Toán - Tin",
-      "team": "Phát triển Đảng & CĐS",
-      "cohort": "70"
-    },
-    {
-      "email": "pham.nguyen.bao.anh@hust.local",
-      "name": "Phạm Nguyễn Bảo Anh",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0567258120",
-      "position": "CTV",
-      "department": "Trường Kinh Tế",
-      "team": "Phát triển Đảng & CĐS",
-      "cohort": "69"
-    },
-    {
-      "email": "pham.van.minh@seee.hust.edu.vn",
-      "name": "Phạm Văn Minh",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0563036120",
-      "position": "Ủy viên",
-      "department": "Điện - Điện tử",
-      "team": "Phát triển Đảng & CĐS",
-      "cohort": "68"
-    },
-    {
-      "email": "pham.dang.khoi@hust.local",
-      "name": "Phạm Đăng Khôi",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0963300577",
-      "position": "CTV",
-      "department": "Trường Điện - Điện tử",
-      "team": "Cộng tác viên K70/K71",
-      "student_id": "202618309"
-    },
-    {
-      "email": "truong.tuan.kiet@seee.hust.edu.vn",
-      "name": "Trương Tuấn Kiệt",
-      "isAdmin": false,
-      "role": "room_lead"
-    },
-    {
-      "email": "tran.trong.duc@seee.hust.edu.vn",
-      "name": "Trần Trọng Đức",
-      "isAdmin": false,
-      "role": "room_lead"
-    },
-    {
-      "email": "vu.gia.huy@hust.local",
-      "name": "Vũ Gia Huy",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0378905686",
-      "position": "Phó mảng",
-      "department": "Trường CNTT&TT",
-      "team": "Phát triển Đảng & CĐS",
-      "cohort": "70"
-    },
-    {
-      "email": "vu.xuan.manh@hust.local",
-      "name": "Vũ Xuân Mạnh",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0936622008",
-      "position": "CTV",
-      "department": "Trường CNTT&TT",
-      "team": "Cộng tác viên K70/K71",
-      "student_id": "202613033"
-    },
-    {
-      "email": "doan.nhat.minh@seee.hust.edu.vn",
-      "name": "Đoàn Nhật Minh",
-      "isAdmin": false,
-      "role": "room_lead"
-    },
-    {
-      "email": "dang.huong.lien@hust.local",
-      "name": "Đặng Hương Liên",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0327785814",
-      "position": "CTV",
-      "department": "Khoa Ngoại Ngữ",
-      "team": "Cộng tác viên K70/K71",
-      "student_id": "202613966"
-    },
-    {
-      "email": "dang.ngoc.anh@hust.local",
-      "name": "Đặng Ngọc Ánh",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0933588687",
-      "position": "CTV",
-      "department": "Khoa Ngoại Ngữ",
-      "team": "Tổ chức & Phát triển Đoàn vụ",
-      "cohort": "70"
-    },
-    {
-      "email": "dang.thi.tra.my@hust.local",
-      "name": "Đặng Thị Trà My",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0968980605",
-      "position": "Ủy viên",
-      "department": "Vật liệu",
-      "team": "Tổ chức & Phát triển Đoàn vụ",
-      "cohort": "69"
-    },
-    {
-      "email": "do.nhat.quang@hust.local",
-      "name": "Đỗ Nhật Quang",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0969693112",
-      "position": "CTV",
-      "department": "Trường CNTT&TT",
-      "team": "Phát triển Đảng & CĐS",
-      "cohort": "70"
-    },
-    {
-      "email": "nam.phanduy@hust.edu.vn",
-      "name": "PGS.TS. Phan Duy Nam",
-      "isAdmin": true,
-      "role": "admin",
-      "phone": "",
-      "position": "Trưởng ban",
-      "department": "",
-      "team": "Ban Điều hành",
-      "cohort": "Cán bộ",
-      "student_id": ""
-    },
-    {
-      "email": "van.nguyendinh@hust.edu.vn",
-      "name": "TS. Nguyễn Đình Văn",
-      "isAdmin": true,
-      "role": "admin",
-      "phone": "",
-      "position": "Phó Trưởng ban",
-      "department": "",
-      "team": "Ban Điều hành",
-      "cohort": "Cán bộ",
-      "student_id": ""
-    },
-    {
       "email": "anh.tdh250154e@sis.hust.edu.vn",
       "name": "Trần Đức Hoàng Anh",
       "isAdmin": true,
@@ -1215,30 +889,6 @@
       "student_id": "202620094"
     },
     {
-      "email": "tuan08namdinh@gmail.com",
-      "name": "Phạm Minh Tuấn",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0846729588",
-      "position": "CTV",
-      "department": "Truờng cơ khí",
-      "team": "Cộng tác viên K70/K71",
-      "cohort": "",
-      "student_id": "202611754"
-    },
-    {
-      "email": "thaovydo1108@gmail.com",
-      "name": "Đỗ Thảo Vy",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0971284800",
-      "position": "CTV",
-      "department": "Trường Kinh tế",
-      "team": "Cộng tác viên K70/K71",
-      "cohort": "",
-      "student_id": "202611392"
-    },
-    {
       "email": "bao.vg2620324@sis.hust.edu.vn",
       "name": "Vương Gia Bảo",
       "isAdmin": false,
@@ -1333,18 +983,6 @@
       "team": "Cộng tác viên K70/K71",
       "cohort": "",
       "student_id": "202613228"
-    },
-    {
-      "email": "nguyenq1311@gmail.com",
-      "name": "Nguyễn Hưng Quang",
-      "isAdmin": false,
-      "role": "room_lead",
-      "phone": "0387252458",
-      "position": "CTV",
-      "department": "Trường Cơ Khí",
-      "team": "Cộng tác viên K70/K71",
-      "cohort": "",
-      "student_id": "202617030"
     },
     {
       "email": "k202613033@sis.hust.edu.vn",
@@ -1481,9 +1119,7 @@
           "name": "[Kíp 1 (8h00) · D9-102] CTTT TTS & KT đa phương tiện 01-K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "nguyen.tran.khang.vu@seee.hust.edu.vn"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Phương hướng",
@@ -1733,9 +1369,7 @@
           "name": "[Kíp 2 (10h00) · D9-103] CTTT KT ĐTVT 03-K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "doan.nhat.minh@seee.hust.edu.vn"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Phương hướng",
@@ -1967,10 +1601,7 @@
           "name": "[Kíp 3 (13h30) · D9-106] KT Điện tử-Viễn thông 01-K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "nguyen.the.hung@seee.hust.edu.vn",
-            "tran.trong.duc@seee.hust.edu.vn"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Phương hướng",
@@ -2127,10 +1758,7 @@
           "name": "[Kíp 1 (8h00) · D9-203] KT Điện tử-Viễn thông 05-K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "doan.nhat.minh@seee.hust.edu.vn",
-            "nguyen.minh.quan@seee.hust.edu.vn"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Phương hướng",
@@ -2474,10 +2102,7 @@
           "name": "[Kíp 3 (13h30) · D9-204] KT Điện tử-Viễn thông 03-K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "nguyen.minh.quan@seee.hust.edu.vn",
-            "nguyen.thi.thu.ha@seee.hust.edu.vn"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Phương hướng",
@@ -2567,10 +2192,7 @@
           "name": "[Kíp 4 (15h30) · D9-202] KT Điện tử-Viễn thông 08-K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "nguyen.the.hung@seee.hust.edu.vn",
-            "tran.trong.duc@seee.hust.edu.vn"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Phương hướng",
@@ -2618,9 +2240,7 @@
           "name": "[Kíp 4 (15h30) · D9-204] KT Điện tử-Viễn thông 04-K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "nguyen.thi.thu.ha@seee.hust.edu.vn"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Phương hướng",
@@ -2843,9 +2463,7 @@
           "name": "[Kíp 1 (8h00) · D9-306] KT Điều khiển-Tự động hóa 04-K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "nguyen.thi.thu.ha@seee.hust.edu.vn"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Phương hướng",
@@ -2933,9 +2551,7 @@
           "name": "[Kíp 2 (10h00) · D9-306] KT Điều khiển-Tự động hóa 02-K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "nguyen.thi.thu.ha@seee.hust.edu.vn"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Phương hướng",
@@ -4047,9 +3663,7 @@
           "name": "[Kíp 1 (8h00) · D9-504] CTTT HT điện và NL tái tạo 02-K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "tran.trong.duc@seee.hust.edu.vn"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Phương hướng",
@@ -4265,9 +3879,7 @@
           "name": "[Kíp 3 (13h30) · D9-501] CTTT KT Điều khiển-TĐH 03-K70",
           "status": "red",
           "note": "",
-          "owners": [
-            "nguyen.hai.anh@seee.hust.edu.vn"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Biên bản ĐHCĐ",
@@ -4307,9 +3919,7 @@
           "name": "[Kíp 3 (13h30) · D9-502] CTTT HT điện và NL tái tạo 01-K70",
           "status": "red",
           "note": "",
-          "owners": [
-            "nguyen.tran.khang.vu@seee.hust.edu.vn"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Biên bản ĐHCĐ",
@@ -4703,8 +4313,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "quang.dn2517103@sis.hust.edu.vn",
-            "nguyenq1311@gmail.com"
+            "quang.dn2517103@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4758,8 +4367,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "duc.ndq2514474@sis.hust.edu.vn",
-            "nguyenq1311@gmail.com"
+            "duc.ndq2514474@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -4954,8 +4562,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "quang.dn2517103@sis.hust.edu.vn",
-            "nguyenq1311@gmail.com"
+            "quang.dn2517103@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5081,8 +4688,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "duc.ndq2514474@sis.hust.edu.vn",
-            "nguyenq1311@gmail.com"
+            "duc.ndq2514474@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5389,8 +4995,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "quang.dn2517103@sis.hust.edu.vn",
-            "nguyenq1311@gmail.com"
+            "quang.dn2517103@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5516,8 +5121,7 @@
           "status": "red",
           "note": "",
           "owners": [
-            "duc.ndq2514474@sis.hust.edu.vn",
-            "nguyenq1311@gmail.com"
+            "duc.ndq2514474@sis.hust.edu.vn"
           ],
           "tasks": [
             [
@@ -5844,9 +5448,7 @@
           "name": "[Kíp 4 (15h25 – 16h30) · D7 - 203] Khoa học máy tính 06 - K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "le.mai.trang@hust.local"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Nhiệm vụ 1",
@@ -6122,9 +5724,7 @@
           "name": "[Kíp 4 (15h25 – 16h30) · D7 - 203] Khoa học máy tính 06 - K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "le.mai.trang@hust.local"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Phương hướng",
@@ -6440,9 +6040,7 @@
           "name": "[Kíp 4 (15h25 – 16h30) · D7 - 203] Khoa học máy tính 06 - K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "le.mai.trang@hust.local"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Phương hướng",
@@ -7309,9 +6907,7 @@
           "name": "[Kíp 1 (8h40 – 9h55) · D7 - 401] CTTT Data Science & AI 01 - K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "tran.trong.duc@seee.hust.edu.vn"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Nhiệm vụ 1",
@@ -7329,7 +6925,6 @@
           "note": "",
           "owners": [
             "lien.dh2613966@sis.hust.edu.vn",
-            "nguyen.phuong.thao@hust.local",
             "huy.nvg2516805@sis.hust.edu.vn"
           ],
           "tasks": [
@@ -7493,9 +7088,7 @@
           "name": "[Kíp 1 (8h40 – 9h55) · D7 - 401] CTTT Data Science & AI 01 - K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "tran.trong.duc@seee.hust.edu.vn"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Phương hướng",
@@ -7521,7 +7114,6 @@
           "note": "",
           "owners": [
             "lien.dh2613966@sis.hust.edu.vn",
-            "nguyen.phuong.thao@hust.local",
             "huy.nvg2516805@sis.hust.edu.vn"
           ],
           "tasks": [
@@ -7813,9 +7405,7 @@
           "name": "[Kíp 1 (8h40 – 9h55) · D7 - 401] CTTT Data Science & AI 01 - K71",
           "status": "red",
           "note": "",
-          "owners": [
-            "tran.trong.duc@seee.hust.edu.vn"
-          ],
+          "owners": [],
           "tasks": [
             [
               "1. Phương hướng",
@@ -7841,7 +7431,6 @@
           "note": "",
           "owners": [
             "lien.dh2613966@sis.hust.edu.vn",
-            "nguyen.phuong.thao@hust.local",
             "huy.nvg2516805@sis.hust.edu.vn"
           ],
           "tasks": [
