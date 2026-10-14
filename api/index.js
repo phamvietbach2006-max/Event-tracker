@@ -3,7 +3,12 @@ import { createApp } from '../lib/app.js';
 import { isEmpty, applySeed, syncUsersSeed, ensureTokens } from '../lib/seed.js';
 import { readFileSync } from 'node:fs';
 
-const seedData = JSON.parse(readFileSync(new URL('../seed.json', import.meta.url), 'utf8'));
+let seedData;
+try {
+  seedData = JSON.parse(readFileSync(new URL('./seed.json', import.meta.url), 'utf8'));
+} catch {
+  seedData = JSON.parse(readFileSync(new URL('../seed.json', import.meta.url), 'utf8'));
+}
 
 let appInstance = null;
 
