@@ -95,13 +95,6 @@ function init() {
   }
 }
 
-// Khởi tạo ngay lập tức (eager init)
-try {
-  init();
-} catch (e) {
-  console.error('[EAGER INIT ERROR]', e.message);
-}
-
 const dispatch = (req, res) => {
   try {
     const activeApp = init();
@@ -144,6 +137,13 @@ try {
   }
 } catch (err) {
   console.warn('Cảnh báo server listen (sẽ tiếp tục qua handler):', err.message);
+}
+
+// Khởi tạo database sau khi server đã mở cổng
+try {
+  init();
+} catch (e) {
+  console.error('[EAGER INIT ERROR]', e.message);
 }
 
 for (const sig of ['SIGINT', 'SIGTERM']) {
