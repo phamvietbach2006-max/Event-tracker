@@ -32,7 +32,8 @@ export const api = {
   // quản trị
   addGroup: (name) => req('POST', '/api/groups', { name }),
   patchGroup: (id, p) => req('PATCH', `/api/groups/${id}`, p),
-  delGroup: (id) => req('DELETE', `/api/groups/${id}`),
+  delGroup: (id, force = false) => req('DELETE', `/api/groups/${id}${force ? '?force=1' : ''}`),
+  importUnit: (payload) => req('POST', '/api/units/import', payload),
   addRoom: (groupId, name) => req('POST', `/api/groups/${groupId}/rooms`, { name }),
   patchRoom: (id, p) => req('PATCH', `/api/rooms/${id}`, p),
   delRoom: (id) => req('DELETE', `/api/rooms/${id}`),

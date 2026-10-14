@@ -7,15 +7,14 @@ import { ST } from './logic.js';
 
 // Bản đồ vector của HUSTMAP (hustmap.com): style + sprite + font + tile (z16-18) đều tự host ở /hustmap (web/public/hustmap).
 // lng/lat lấy từ API tìm kiếm HUSTMAP; "gate" và "food" là vị trí gần đúng [VERIFY NEEDED].
-const HOME = { center: [105.8431793, 21.006275], zoom: 17 };
+const HOME = { center: [105.8442, 21.0038], zoom: 17.5 };
 const BOUNDS = [[105.835, 20.995], [105.853, 21.012]];
 const PLACES = [
-  { key: 'c2', label: 'Nhà C2', hint: 'Hội trường · sảnh · phòng họp', lng: 105.842311, lat: 21.006396, match: /C2|VIP|điều hành/i },
-  { key: 'library', label: 'Thư viện Tạ Quang Bửu', hint: 'Sảnh · phòng đọc · triển lãm', lng: 105.844111, lat: 21.004451, match: /thư viện|đọc|triển lãm/i },
-  { key: 'gate', label: 'Cổng chính', hint: 'An ninh và lối vào', lng: 105.845388, lat: 21.005007, match: /cổng chính/i },
-  { key: 'parking', label: 'Giữ xe', hint: 'Bãi xe khu C9', lng: 105.842266, lat: 21.005432, match: /giữ xe/i },
-  { key: 'food', label: 'Khu ăn nhẹ', hint: 'Quảng trường C1', lng: 105.8431, lat: 21.0066, match: /ăn nhẹ/i },
-  { key: 'medical', label: 'Phòng y tế', hint: 'Khu D3', lng: 105.845005, lat: 21.004768, match: /y tế/i },
+  { key: 'd9-f1', label: 'Tầng 1 - Tòa D9', hint: 'Phòng D9-101 → D9-106', lng: 105.84405, lat: 21.00375, match: /D9-10/i },
+  { key: 'd9-f2', label: 'Tầng 2 - Tòa D9', hint: 'Phòng D9-202 → D9-206 (Nghỉ: D9-201)', lng: 105.84418, lat: 21.00378, match: /D9-20/i },
+  { key: 'd9-f3', label: 'Tầng 3 - Tòa D9', hint: 'Phòng D9-302 → D9-306 (Điều hành: D9-301)', lng: 105.84431, lat: 21.00381, match: /D9-30/i },
+  { key: 'd9-f4', label: 'Tầng 4 - Tòa D9', hint: 'Phòng D9-401 → D9-406', lng: 105.84444, lat: 21.00384, match: /D9-40/i },
+  { key: 'd9-f5', label: 'Tầng 5 - Tòa D9', hint: 'Phòng D9-501 → D9-506', lng: 105.84457, lat: 21.00387, match: /D9-50/i },
 ];
 
 const PIN_SVG = '<svg viewBox="0 0 24 24" width="17" height="17" fill="currentColor" stroke="#fff" stroke-width="1.5" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3" fill="#fff" stroke="none"/></svg>';

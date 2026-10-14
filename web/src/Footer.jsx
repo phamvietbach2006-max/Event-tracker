@@ -9,23 +9,40 @@ export default function Footer({ tot, online, stats }) {
       <div className="footer-inner">
         <div className="footer-grid">
           <div className="footer-col footer-brand-col">
-            <div className="footer-dyc-header">
-              <span className="footer-dyc-logo-box">
-                <img
-                  className="footer-dyc-logo"
-                  src="/logo-dyc.png"
-                  alt="Logo CLB Thanh niên số Đoàn Đại học Bách khoa Hà Nội (DYC)"
-                  loading="lazy"
-                />
-              </span>
-              <div className="footer-dyc-titles">
-                <span className="footer-kicker">ĐƠN VỊ PHÁT TRIỂN &amp; VẬN HÀNH KỸ THUẬT</span>
-                <strong className="footer-org-name">CLB Thanh niên số (DYC)</strong>
-                <span className="footer-org-sub">Đoàn Thanh niên Đại học Bách khoa Hà Nội</span>
+            <div className="footer-orgs-wrap">
+              <div className="footer-dyc-header">
+                <span className="footer-dyc-logo-box">
+                  <img
+                    className="footer-dyc-logo"
+                    src="/logo.png"
+                    alt="Logo Ban Tổ chức - Kiểm tra Đoàn ĐHBK Hà Nội"
+                    loading="lazy"
+                  />
+                </span>
+                <div className="footer-dyc-titles">
+                  <span className="footer-kicker">CƠ QUAN CHỦ TRÌ</span>
+                  <strong className="footer-org-name">Ban Tổ chức - Kiểm tra</strong>
+                  <span className="footer-org-sub">Đoàn Đại học Bách khoa Hà Nội</span>
+                </div>
+              </div>
+              <div className="footer-dyc-header">
+                <span className="footer-dyc-logo-box">
+                  <img
+                    className="footer-dyc-logo"
+                    src="/logo-dyc.png"
+                    alt="Logo CLB Thanh niên số Đoàn Đại học Bách khoa Hà Nội (DYC)"
+                    loading="lazy"
+                  />
+                </span>
+                <div className="footer-dyc-titles">
+                  <span className="footer-kicker">ĐƠN VỊ PHÁT TRIỂN KỸ THUẬT</span>
+                  <strong className="footer-org-name">CLB Thanh niên số (DYC)</strong>
+                  <span className="footer-org-sub">Đoàn Thanh niên Đại học Bách khoa Hà Nội</span>
+                </div>
               </div>
             </div>
             <p className="footer-desc">
-              Hệ thống theo dõi, điều phối checklist và giám sát trạng thái sẵn sàng các điểm cầu, khu vực phục vụ sự kiện theo thời gian thực.
+              Hệ thống theo dõi tiến độ tổ chức Đại hội Chi đoàn và kiểm tra hồ sơ giấy tờ trực tuyến theo thời gian thực — Ban Tổ chức - Kiểm tra Đoàn Đại học Bách khoa Hà Nội.
             </p>
           </div>
 

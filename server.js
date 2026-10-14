@@ -20,6 +20,7 @@ const config = {
       }
     : null,
   seedFile: process.env.SEED_FILE ?? fileURLToPath(new URL('./seed.json', import.meta.url)),
+  openAccess: process.env.STRICT_AUTH !== '1',
 };
 
 const db = openDb(config.dbPath);

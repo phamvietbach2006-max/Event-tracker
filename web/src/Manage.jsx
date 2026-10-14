@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from './api.js';
+import { UNITS, parseGroupMeta, formatGroupName } from './logic.js';
 
 function AddRow({ placeholder, onAdd }) {
   const [v, setV] = useState('');
@@ -45,10 +46,10 @@ function RoomEditor({ room, groups, users, run, reloadUsers }) {
       <summary>{room.name} <small>({ownerNames || 'chưa có người phụ trách'})</small></summary>
       <div className="mrow">
         <input key={room.name} defaultValue={room.name} maxLength={80} onBlur={rename} />
-        <button onClick={() => confirm(`Xoá khu "${room.name}" và toàn bộ checklist?`) && run(() => api.delRoom(room.id), reloadUsers)}>Xoá khu</button>
+        <button onClick={() => confirm(`Xoá chi đoàn "${room.name}" và toàn bộ checklist?`) && run(() => api.delRoom(room.id), reloadUsers)}>Xoá lớp</button>
       </div>
       <div className="mrow mrow-options">
-        <label>Thuộc khối <select value={groups.find((g) => g.rooms.some((r) => r.id === room.id))?.id ?? ''} onChange={(e) => run(() => api.patchRoom(room.id, { groupId: Number(e.target.value) }))}>{groups.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}</select></label>
+        <label>Thuộc tầng <select value={groups.find((g) => g.rooms.some((r) => r.id === room.id))?.id ?? ''} onChange={(e) => run(() => api.patchRoom(room.id, { groupId: Number(e.target.value) }))}>{groups.map((g) => <option key={g.id} value={g.id}>{g.name}</option>)}</select></label>
         <label>Thứ tự <input type="number" min="0" defaultValue={room.sort} key={`${room.id}-${room.sort}`} onBlur={(e) => { const sort = Number(e.target.value); if (Number.isInteger(sort) && sort !== room.sort) run(() => api.patchRoom(room.id, { sort })); }} /></label>
       </div>
       <div className="mlabel">Người phụ trách</div>
@@ -67,7 +68,7 @@ function RoomEditor({ room, groups, users, run, reloadUsers }) {
           {users.map((u) => <option key={u.email} value={u.name} />)}
         </datalist>
       </div>
-      <div className="mlabel">Checklist</div>
+      <div className="mlabel">Checklist giấy tờ</div>
       {room.tasks.map((t) => (
         <div className="mrow" key={`${t.id}-${t.text}`}>
           <input
@@ -77,18 +78,18 @@ function RoomEditor({ room, groups, users, run, reloadUsers }) {
           <button onClick={() => run(() => api.delTask(t.id))}>✕</button>
         </div>
       ))}
-      <AddRow placeholder="Việc mới" onAdd={(text) => run(() => api.addTask(room.id, text))} />
+      <AddRow placeholder="Giấy tờ mới" onAdd={(text) => run(() => api.addTask(room.id, text))} />
     </details>
   );
 }
 
-export default function Manage({ state, say, toast }) {
+export default function Manage({ state, say, toast, onOpenImport }) {
   const [users, setUsers] = useState([]);
   const [link, setLink] = useState(null);
+  const [unitFilter, setUnitFilter] = useState(UNITS[0]);
 
   const loadUsers = useCallback(() => api.users().then(setUsers).catch((e) => say(e.message)), [say]);
   useEffect(() => { loadUsers(); }, [loadUsers]);
-  // danh sách khu phụ trách thay đổi theo state realtime (xoá khu...) nên nạp lại người dùng khi state đổi
   useEffect(() => { loadUsers(); }, [state, loadUsers]);
 
   const run = async (fn, after) => {
@@ -100,24 +101,71 @@ export default function Manage({ state, say, toast }) {
     await run(async () => { const r = await api.userLink(u.email); setLink({ name: u.name, url: r.url }); }, loadUsers);
   };
 
+  const visibleGroups = state.groups.filter((g) => {
+    if (unitFilter === 'ALL') return true;
+    return parseGroupMeta(g.name).unit === unitFilter;
+  });
+
   return (
     <div className="mpage">
-      <h2>Khu vực</h2>
-      {state.groups.map((g) => (
+      <div className="mg manage-unit-toolbar">
+        <div className="manage-unit-row">
+          <div>
+            <h2>Quản lý Đơn vị & Tầng phòng Đại hội</h2>
+            <p className="manage-sub">Chọn một trong 12 Trường / Khoa / Viện để quản lý tầng phòng hoặc Import danh sách từ Excel.</p>
+          </div>
+          {onOpenImport && (
+            <button type="button" className="import-action-btn" onClick={onOpenImport}>
+              + Import Excel / Thêm nhanh lớp
+            </button>
+          )}
+        </div>
+        <div className="mrow mrow-options">
+          <label>
+            Đơn vị hiển thị:
+            <select value={unitFilter} onChange={(e) => setUnitFilter(e.target.value)} style={{ maxWidth: 320 }}>
+              <option value="ALL">Tất cả 12 đơn vị ({state.groups.length} tầng)</option>
+              {UNITS.map((u) => {
+                const c = state.groups.filter((g) => parseGroupMeta(g.name).unit === u).length;
+                return <option key={u} value={u}>{u} ({c} tầng)</option>;
+              })}
+            </select>
+          </label>
+        </div>
+      </div>
+
+      {visibleGroups.map((g) => (
         <section className="mg" key={`${g.id}-${g.name}`}>
           <div className="mrow">
             <input
               defaultValue={g.name} maxLength={80}
               onBlur={(e) => { const v = e.target.value.trim(); if (v && v !== g.name) run(() => api.patchGroup(g.id, { name: v })); }}
             />
-            <button disabled={g.rooms.length > 0} onClick={() => confirm(`Xoá khối "${g.name}"?`) && run(() => api.delGroup(g.id))}>Xoá khối</button>
+            <button
+              onClick={() => {
+                const msg = g.rooms.length > 0
+                  ? `Xoá tầng "${g.name}" cùng toàn bộ ${g.rooms.length} lớp trong tầng này?`
+                  : `Xoá tầng "${g.name}"?`;
+                if (confirm(msg)) run(() => api.delGroup(g.id, g.rooms.length > 0));
+              }}
+            >
+              Xoá tầng
+            </button>
           </div>
-          <label className="sort-field">Thứ tự khối <input type="number" min="0" defaultValue={g.sort} key={`${g.id}-${g.sort}`} onBlur={(e) => { const sort = Number(e.target.value); if (Number.isInteger(sort) && sort !== g.sort) run(() => api.patchGroup(g.id, { sort })); }} /></label>
+          <label className="sort-field">Thứ tự tầng <input type="number" min="0" defaultValue={g.sort} key={`${g.id}-${g.sort}`} onBlur={(e) => { const sort = Number(e.target.value); if (Number.isInteger(sort) && sort !== g.sort) run(() => api.patchGroup(g.id, { sort })); }} /></label>
           {g.rooms.map((r) => <RoomEditor key={r.id} room={r} groups={state.groups} users={users} run={run} reloadUsers={loadUsers} />)}
-          <AddRow placeholder="Tên khu mới" onAdd={(name) => run(() => api.addRoom(g.id, name))} />
+          <AddRow placeholder="Tên chi đoàn mới (VD: [D9-101 | Kíp 1] Điện 01 - K71)" onAdd={(name) => run(() => api.addRoom(g.id, name))} />
         </section>
       ))}
-      <div className="mg"><AddRow placeholder="Tên khối mới" onAdd={(name) => run(() => api.addGroup(name))} /></div>
+      <div className="mg">
+        <AddRow
+          placeholder={unitFilter === 'ALL' ? 'Tên tầng mới (VD: [Trường Cơ khí] Tầng 1 tòa C7)' : `Thêm tầng mới cho ${unitFilter} (VD: Tầng 1 tòa D9)`}
+          onAdd={(name) => {
+            const fullName = unitFilter !== 'ALL' && !name.startsWith('[') ? formatGroupName(unitFilter, name) : name;
+            run(() => api.addGroup(fullName));
+          }}
+        />
+      </div>
 
       <h2>Người dùng</h2>
       <div className="mg">

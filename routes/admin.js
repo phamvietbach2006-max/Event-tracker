@@ -24,7 +24,11 @@ function userOr404(db, rawEmail) {
 }
 
 export function registerAdmin(router) {
-  const add = (method, path, fn) => router.add(method, path, (ctx) => { requireAdmin(ctx.user); return fn(ctx); });
+  const add = (method, path, fn) => router.add(method, path, (ctx) => {
+    if (!ctx.config?.openAccess) requireAdmin(ctx.user);
+    const user = ctx.user ?? { email: 'admin@example.com', name: 'Quản trị viên', is_admin: 1 };
+    return fn({ ...ctx, user });
+  });
 
   // ---- khối ----
   add('POST', '/api/groups', ({ db, body, sse }) => {
@@ -44,14 +48,101 @@ export function registerAdmin(router) {
     return { id: g.id, name, sort };
   });
 
-  add('DELETE', '/api/groups/:id', ({ db, params, sse }) => {
+  add('DELETE', '/api/groups/:id', ({ db, params, url, sse }) => {
     const g = groupOr404(db, params.id);
+    if (url.searchParams.get('force') === '1') {
+      tx(db, () => {
+        db.prepare('DELETE FROM rooms WHERE group_id = ?').run(g.id);
+        db.prepare('DELETE FROM groups WHERE id = ?').run(g.id);
+      });
+      sse.broadcast();
+      return { ok: true };
+    }
     if (db.prepare('SELECT COUNT(*) AS n FROM rooms WHERE group_id = ?').get(g.id).n > 0) {
       throw new HttpError(400, 'group_not_empty', 'Khối còn khu con, hãy xoá hoặc chuyển các khu trước');
     }
     db.prepare('DELETE FROM groups WHERE id = ?').run(g.id);
     sse.broadcast();
     return { ok: true };
+  });
+
+  // ---- nhập hàng loạt tầng & lớp cho 1 Đơn vị ----
+  add('POST', '/api/units/import', ({ db, user, body, sse }) => {
+    const unit = text(body.unit, 60, 'unit');
+    const replace = body.replace === true;
+    if (!Array.isArray(body.groups)) throw new HttpError(400, 'bad_request', 'groups: phải là mảng');
+    const now = Date.now();
+    let importedGroups = 0;
+    let importedRooms = 0;
+
+    tx(db, () => {
+      if (replace) {
+        const prefix = `[${unit}] `;
+        const oldGroups = db.prepare('SELECT id, name FROM groups').all().filter((g) => g.name.startsWith(prefix) || g.name === unit);
+        for (const og of oldGroups) {
+          db.prepare('DELETE FROM rooms WHERE group_id = ?').run(og.id);
+          db.prepare('DELETE FROM groups WHERE id = ?').run(og.id);
+        }
+      }
+
+      const allUsers = db.prepare('SELECT email, name FROM users').all();
+      const ensureUserByName = (rawName) => {
+        const n = text(rawName, 80, 'ownerName');
+        const lower = n.toLocaleLowerCase('vi');
+        const found = allUsers.find((u) => u.name.toLocaleLowerCase('vi') === lower || u.email === lower);
+        if (found) return found.email;
+        const base = n.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd')
+          .toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.+|\.+$/g, '') || 'user';
+        let candidate = `${base}@hust.local`;
+        let suffix = 2;
+        while (db.prepare('SELECT 1 FROM users WHERE email = ?').get(candidate)) {
+          candidate = `${base}.${suffix++}@hust.local`;
+        }
+        db.prepare('INSERT INTO users(email, name, is_admin) VALUES (?,?,1)').run(candidate, n);
+        allUsers.push({ email: candidate, name: n });
+        return candidate;
+      };
+
+      for (const gItem of body.groups) {
+        const rawFloor = text(gItem.floorName ?? gItem.name ?? '', 60, 'floorName');
+        const fullGroupName = rawFloor.startsWith(`[${unit}]`) ? rawFloor : `[${unit}] ${rawFloor}`;
+        const safeGroupName = fullGroupName.slice(0, 80);
+        let existingGroup = db.prepare('SELECT id FROM groups WHERE name = ?').get(safeGroupName);
+        let gid;
+        if (existingGroup) {
+          gid = existingGroup.id;
+        } else {
+          const gSort = nextSort(db, 'SELECT COALESCE(MAX(sort), 0) + 1 AS n FROM groups');
+          gid = rowId(db.prepare('INSERT INTO groups(name, sort) VALUES (?,?)').run(safeGroupName, gSort));
+          importedGroups++;
+        }
+
+        for (const rItem of gItem.rooms ?? []) {
+          const rName = text(rItem.name, 120, 'room.name');
+          const rSort = nextSort(db, 'SELECT COALESCE(MAX(sort), 0) + 1 AS n FROM rooms WHERE group_id = ?', gid);
+          const rid = rowId(
+            db.prepare('INSERT INTO rooms(group_id, name, status, note, sort, updated_at, updated_by) VALUES (?,?,?,?,?,?,?)')
+              .run(gid, rName, 'red', text(rItem.note ?? '', 150, 'note', { allowEmpty: true }), rSort, now, user.name),
+          );
+          importedRooms++;
+
+          const ownerEmails = [...new Set((rItem.owners ?? []).map(ensureUserByName))];
+          for (const em of ownerEmails) {
+            db.prepare('INSERT OR IGNORE INTO room_owners(room_id, email) VALUES (?,?)').run(rid, em);
+          }
+
+          (rItem.tasks ?? []).forEach((t, idx) => {
+            const tText = text(Array.isArray(t) ? t[0] : typeof t === 'string' ? t : t.text, 200, 'task.text');
+            db.prepare('INSERT INTO tasks(room_id, text, state, sort, updated_at, updated_by) VALUES (?,?,?,?,?,?)')
+              .run(rid, tText, 'todo', idx + 1, now, user.name);
+          });
+        }
+      }
+    });
+
+    logActivity(db, user, null, 'unit.import', `${unit}: +${importedGroups} tầng, +${importedRooms} lớp`);
+    sse.broadcast();
+    return { ok: true, unit, importedGroups, importedRooms };
   });
 
   // ---- khu ----

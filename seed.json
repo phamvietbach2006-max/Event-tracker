@@ -1,45 +1,3298 @@
 {
   "users": [
-    { "email": "admin@example.com", "name": "Quản trị viên", "isAdmin": true },
-    { "email": "a@example.com", "name": "Nguyễn Văn A" },
-    { "email": "b@example.com", "name": "Lê Thị B" },
-    { "email": "c@example.com", "name": "Trần Văn C" },
-    { "email": "d@example.com", "name": "Phạm Thị D" },
-    { "email": "e@example.com", "name": "Hoàng Văn E" },
-    { "email": "g@example.com", "name": "Đỗ Văn G" },
-    { "email": "h@example.com", "name": "Vũ Thị H" },
-    { "email": "k@example.com", "name": "Bùi Văn K" }
+    {
+      "email": "admin@example.com",
+      "name": "Quản trị viên (Ban TC-KT)",
+      "isAdmin": true
+    },
+    {
+      "email": "nguyen.long.vu@seee.hust.edu.vn",
+      "name": "Nguyễn Long Vũ",
+      "isAdmin": true
+    },
+    {
+      "email": "truong.tuan.kiet@seee.hust.edu.vn",
+      "name": "Trương Tuấn Kiệt",
+      "isAdmin": true
+    },
+    {
+      "email": "nguyen.thu.hang@seee.hust.edu.vn",
+      "name": "Nguyễn Thu Hằng",
+      "isAdmin": true
+    },
+    {
+      "email": "nguyen.tran.khang.vu@seee.hust.edu.vn",
+      "name": "Nguyễn Trần Khang Vũ",
+      "isAdmin": true
+    },
+    {
+      "email": "doan.nhat.minh@seee.hust.edu.vn",
+      "name": "Đoàn Nhật Minh",
+      "isAdmin": true
+    },
+    {
+      "email": "nguyen.minh.quan@seee.hust.edu.vn",
+      "name": "Nguyễn Minh Quân",
+      "isAdmin": true
+    },
+    {
+      "email": "nguyen.thi.thu.ha@seee.hust.edu.vn",
+      "name": "Nguyễn Thị Thu Hà",
+      "isAdmin": true
+    },
+    {
+      "email": "tran.trong.duc@seee.hust.edu.vn",
+      "name": "Trần Trọng Đức",
+      "isAdmin": true
+    },
+    {
+      "email": "pham.van.minh@seee.hust.edu.vn",
+      "name": "Phạm Văn Minh",
+      "isAdmin": true
+    },
+    {
+      "email": "nguyen.the.hung@seee.hust.edu.vn",
+      "name": "Nguyễn Thế Hùng",
+      "isAdmin": true
+    },
+    {
+      "email": "nguyen.hai.long@seee.hust.edu.vn",
+      "name": "Nguyễn Hải Long",
+      "isAdmin": true
+    },
+    {
+      "email": "nguyen.hai.anh@seee.hust.edu.vn",
+      "name": "Nguyễn Hải Anh",
+      "isAdmin": true
+    }
   ],
   "groups": [
-    { "name": "Khối Thư viện TQB", "rooms": [
-      { "name": "Sảnh thư viện", "status": "yellow", "note": "Đang dựng backdrop", "owners": ["d@example.com"],
-        "tasks": [["Dựng backdrop", "doing"], ["Bàn đón tiếp", "done"], ["Biển chỉ dẫn", "done"]] },
-      { "name": "Phòng đọc tầng 2", "status": "green", "note": "Sẵn sàng", "owners": ["c@example.com"],
-        "tasks": [["Bàn ghế, nước", "done"], ["Máy chiếu, Wi-Fi", "done"]] },
-      { "name": "Khu triển lãm", "note": "Chưa nhận mặt bằng", "owners": ["e@example.com"],
-        "tasks": ["Nhận mặt bằng", "Dựng panel", "Ánh sáng"] }
-    ] },
-    { "name": "Khối C2", "rooms": [
-      { "name": "Hội trường C2", "status": "yellow", "note": "Chờ chạy thử máy chiếu LED", "owners": ["a@example.com", "b@example.com"],
-        "tasks": [["Sắp xếp 600 ghế", "done"], ["Âm thanh, micro", "done"], ["Chạy thử máy chiếu LED", "doing"], ["Ánh sáng sân khấu", "todo"], ["Backdrop, standee", "done"], ["Nhân sự trực có mặt", "todo"]] },
-      { "name": "Sảnh C2", "note": "Thiếu 200 thẻ đại biểu, đang in lại", "owners": ["a@example.com"],
-        "tasks": [["Dựng bàn đón tiếp", "done"], ["In và xếp thẻ đại biểu", "doing"], ["Bảng chỉ dẫn", "done"], ["Quầy gửi đồ", "todo"]] },
-      { "name": "Phòng họp C2-1", "status": "green", "note": "Sẵn sàng", "owners": ["c@example.com"],
-        "tasks": [["Bàn ghế, nước", "done"], ["Máy chiếu, Wi-Fi", "done"]] },
-      { "name": "Phòng VIP", "status": "yellow", "note": "Đang bày hoa", "owners": ["d@example.com"],
-        "tasks": [["Bàn trà, hoa", "done"], ["Khu chụp ảnh", "doing"], ["Danh sách VIP bản in", "done"]] },
-      { "name": "Phòng điều hành", "note": "Chưa bắt đầu", "owners": ["b@example.com"],
-        "tasks": ["Màn hình giám sát", "Bộ đàm"] }
-    ] },
-    { "name": "Khối Sân trường – An ninh", "rooms": [
-      { "name": "Cổng chính", "status": "yellow", "note": "An ninh đã vào vị trí 1/2 ca", "owners": ["g@example.com"],
-        "tasks": [["Rào chắn, lối vào", "done"], ["Bảo vệ ca 1", "done"], ["Bảo vệ ca 2", "doing"]] },
-      { "name": "Khu giữ xe", "note": "Chưa phân khu", "owners": ["g@example.com"],
-        "tasks": ["Phân khu xe máy, ô tô", "Biển chỉ dẫn"] },
-      { "name": "Khu ăn nhẹ", "status": "yellow", "note": "Chờ đồ ăn lúc 10h", "owners": ["h@example.com"],
-        "tasks": [["Bàn buffet", "done"], ["Nhận đồ ăn lúc 10h", "doing"], ["Ly, đĩa, rác", "todo"]] },
-      { "name": "Phòng y tế", "status": "green", "note": "Sẵn sàng", "owners": ["k@example.com"],
-        "tasks": [["Thuốc, dụng cụ sơ cứu", "done"], ["Nhân viên y tế", "done"]] }
-    ] }
+    {
+      "name": "[Trường Điện-Điện tử] Tầng 1 tòa D9",
+      "rooms": [
+        {
+          "name": "[Kíp 1 (8h00) · D9-101] CTTN-KT điện tử-VT-K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.thu.hang@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-102] CTTT TTS & KT đa phương tiện 01-K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.tran.khang.vu@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-103] CTTT HT nhúng & IoT 02-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-104] CTTT TTS & KT đa phương tiện 01-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-105] CTTT KT ĐTVT 01-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-106] KT Điện tử-Viễn thông 05-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-101] CTTT KT ĐTVT 02-K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.thu.hang@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-102] KT Điện tử-Viễn thông 12-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-103] CTTT KT ĐTVT 03-K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "doan.nhat.minh@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-104] CTTT TTS & KT đa phương tiện 02-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-105] CTTT KT ĐTVT 02-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-106] KT Điện tử-Viễn thông 06-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-103] ET-LUH 01-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-104] KT Điện tử-Viễn thông 12-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-105] CTTT HT nhúng & IoT 01-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-106] KT Điện tử-Viễn thông 01-K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "tran.trong.duc@seee.hust.edu.vn",
+            "nguyen.the.hung@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-104] ET-LUH 01-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-105] CTTT KT ĐTVT 01-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-106] KT Điện tử-Viễn thông 02-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "[Trường Điện-Điện tử] Tầng 2 tòa D9",
+      "rooms": [
+        {
+          "name": "[Kíp 1 (8h00) · D9-202] KT Điện tử-Viễn thông 07-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-203] KT Điện tử-Viễn thông 05-K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "doan.nhat.minh@seee.hust.edu.vn",
+            "nguyen.minh.quan@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-204] KT Điện tử-Viễn thông 03-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-205] KT Điện tử-Viễn thông 09-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-206] CTTT HT nhúng & IoT 01-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-202] KT Điện tử-Viễn thông 08-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-203] KT Điện tử-Viễn thông 06-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-204] KT Điện tử-Viễn thông 04-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-205] KT Điện tử-Viễn thông 10-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-206] CTTT HT nhúng & IoT 02-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-202] KT Điện tử-Viễn thông 07-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-203] CTTN-KT ĐTVT 02-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-204] KT Điện tử-Viễn thông 03-K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.thi.thu.ha@seee.hust.edu.vn",
+            "nguyen.minh.quan@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-205] KT Điện tử-Viễn thông 11-K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.hai.long@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-206] KT Y sinh 01-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-202] KT Điện tử-Viễn thông 08-K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "tran.trong.duc@seee.hust.edu.vn",
+            "nguyen.the.hung@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-203] CTTN-KT ĐTVT 01-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-204] KT Điện tử-Viễn thông 04-K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.thi.thu.ha@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-205] CTTT Y sinh 01-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-206] KT Y sinh 01-K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "pham.van.minh@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "[Trường Điện-Điện tử] Tầng 3 tòa D9",
+      "rooms": [
+        {
+          "name": "[Kíp 1 (8h00) · D9-302] KT Điện tử-Viễn thông 01-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-303] KT Điện tử-Viễn thông 10-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-304] KT Điện tử-Viễn thông 11-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-305] KT Điều khiển-Tự động hóa 01-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-306] KT Điều khiển-Tự động hóa 04-K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.thi.thu.ha@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-302] KT Điện tử-Viễn thông 02-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-303] KT Điện tử-Viễn thông 09-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-306] KT Điều khiển-Tự động hóa 02-K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.thi.thu.ha@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-302] KT Y sinh 02-K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "pham.van.minh@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-303] CTTT Y sinh 01-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-304] KT Điều khiển-Tự động hóa 03-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-305] KT Điều khiển-Tự động hóa 06-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-306] KT Điều khiển-Tự động hóa 08-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-302] KT Y sinh 02-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-303] PFIEV Tin học công nghiệp và TĐH 01-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-304] CTTT KT Điều khiển-TĐH 04-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-305] CTTT KT Điều khiển-TĐH 03-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-306] KT Điều khiển-Tự động hóa 07-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "[Trường Điện-Điện tử] Tầng 4 tòa D9",
+      "rooms": [
+        {
+          "name": "[Kíp 1 (8h00) · D9-401] KT Điều khiển-Tự động hóa 08-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-402] KT Điều khiển-Tự động hóa 12-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-403] CTTN-KT điều khiển-TĐH 01-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-404] KT Điều khiển-Tự động hóa 09-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-405] CTTT KT Điều khiển-TĐH 04-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-406] KT Điều khiển-Tự động hóa 03-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-401] KT Điều khiển-Tự động hóa 01-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-402] PFIEV Tin học công nghiệp và TĐH 01-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-403] KT Điều khiển-Tự động hóa 12-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-404] KT Điều khiển-Tự động hóa 09-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-405] KT Điều khiển-Tự động hóa 11-K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "pham.van.minh@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-401] KT Điều khiển-Tự động hóa 06-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-402] KT Điều khiển-Tự động hóa 02-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-403] CTTT KT Điều khiển-TĐH 01-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-404] CTTT KT Điều khiển-TĐH 02-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-405] KT Điều khiển-Tự động hóa 05-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-406] KT Điều khiển-Tự động hóa 10-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-401] KT Điều khiển-Tự động hóa 07-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-402] KT Điều khiển-Tự động hóa 04-K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.hai.long@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-403] CTTT KT Điều khiển-TĐH 02-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-404] KT Điều khiển-Tự động hóa 05-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-405] CTTT KT Điều khiển-TĐH 01-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-406] KT Điều khiển-Tự động hóa 11-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "name": "[Trường Điện-Điện tử] Tầng 5 tòa D9",
+      "rooms": [
+        {
+          "name": "[Kíp 1 (8h00) · D9-503] Kỹ thuật điện 01-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-504] CTTT HT điện và NL tái tạo 02-K71",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "tran.trong.duc@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 1 (8h00) · D9-505] Kỹ thuật điện 05-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-502] CTTT HT điện và NL tái tạo 01-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-503] CTTT HT điện và NL tái tạo 02-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-504] Kỹ thuật điện 03-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-505] Kỹ thuật điện 05-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 2 (10h00) · D9-506] Kỹ thuật điện 04-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-501] CTTT KT Điều khiển-TĐH 03-K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.hai.anh@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-502] CTTT HT điện và NL tái tạo 01-K70",
+          "status": "red",
+          "note": "",
+          "owners": [
+            "nguyen.tran.khang.vu@seee.hust.edu.vn"
+          ],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-503] Kỹ thuật điện 01-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-504] Kỹ thuật điện 02-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 3 (13h30) · D9-505] Kỹ thuật điện 04-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-501] KT Điều khiển-Tự động hóa 10-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-502] CTTN-Điều khiển tự động-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-503] Kỹ thuật điện 06-K71",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Phương hướng",
+              "todo"
+            ],
+            [
+              "2. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "3. Biên bản Đại hội",
+              "todo"
+            ],
+            [
+              "4. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-504] Kỹ thuật điện 03-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-505] Kỹ thuật điện 02-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        },
+        {
+          "name": "[Kíp 4 (15h30) · D9-506] Kỹ thuật điện 06-K70",
+          "status": "red",
+          "note": "",
+          "owners": [],
+          "tasks": [
+            [
+              "1. Biên bản ĐHCĐ",
+              "todo"
+            ],
+            [
+              "2. Biên bản kiểm phiếu bầu BCH CĐ",
+              "todo"
+            ],
+            [
+              "3. Biên bản họp phân công BCH CĐ",
+              "todo"
+            ],
+            [
+              "4. Bản kiểm điểm BCH",
+              "todo"
+            ],
+            [
+              "5. Nghị quyết Đại hội",
+              "todo"
+            ],
+            [
+              "6. Báo cáo tổng kết",
+              "todo"
+            ],
+            [
+              "7. Phương hướng nhiệm kỳ mới",
+              "todo"
+            ],
+            [
+              "8. Danh sách Đoàn viên và Cán bộ lớp",
+              "todo"
+            ]
+          ]
+        }
+      ]
+    }
   ]
 }

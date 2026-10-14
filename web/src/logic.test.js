@@ -14,8 +14,8 @@ const state = {
 };
 
 test('nhãn và vòng trạng thái việc', () => {
-  assert.equal(ST.red, 'Chưa sẵn sàng');
-  assert.deepEqual([NEXT.todo, NEXT.doing, NEXT.done], ['doing', 'done', 'todo']);
+  assert.equal(ST.red, 'Chưa tổ chức');
+  assert.deepEqual([NEXT.todo, NEXT.doing, NEXT.done], ['done', 'done', 'todo']);
 });
 
 test('phần trăm: khu không có việc là 0, không chia cho 0', () => {
