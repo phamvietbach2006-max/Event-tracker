@@ -39,25 +39,38 @@ if (isEmpty(db)) {
   }
 } else {
   try {
-    syncUsersSeed(db, seedData.users);
+    const hasContacts = db.prepare('SELECT 1 FROM users WHERE phone IS NOT NULL LIMIT 1').get();
+    if (!hasContacts) {
+      syncUsersSeed(db, seedData.users);
+      console.log('Đã đồng bộ danh sách cán bộ từ seed.json');
+    }
   } catch (err) {
-    console.error('Lỗi khi đồng bộ cán bộ từ seed.json:', err);
+    console.error('Lỗi khi kiểm tra cán bộ từ seed.json:', err);
   }
 }
-ensureTokens(db);
+
+try {
+  const needsToken = db.prepare('SELECT 1 FROM users WHERE token IS NULL LIMIT 1').get();
+  if (needsToken) {
+    ensureTokens(db);
+  }
+} catch (err) {
+  console.error('Lỗi khi kiểm tra token:', err);
+}
 
 const app = createApp({ db, config });
 
-app.server.on('error', (err) => {
-  console.warn('Cảnh báo server listen:', err.message);
-});
-
-try {
-  app.server.listen(config.port, config.host, () => {
-    console.log(`Event tracker: http://${config.host}:${config.port} (DB ${config.dbPath})`);
+if (!process.env.VERCEL) {
+  app.server.on('error', (err) => {
+    console.warn('Cảnh báo server listen:', err.message);
   });
-} catch (err) {
-  console.warn('Không thể khởi động server listen:', err.message);
+  try {
+    app.server.listen(config.port, config.host, () => {
+      console.log(`Event tracker: http://${config.host}:${config.port} (DB ${config.dbPath})`);
+    });
+  } catch (err) {
+    console.warn('Không thể khởi động server listen:', err.message);
+  }
 }
 
 for (const sig of ['SIGINT', 'SIGTERM']) {

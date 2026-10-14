@@ -39,7 +39,15 @@ function getApp() {
       console.error('Lỗi khi nạp dữ liệu mẫu ban đầu:', err);
     }
   }
-  ensureTokens(db);
+
+  try {
+    const needsToken = db.prepare('SELECT 1 FROM users WHERE token IS NULL LIMIT 1').get();
+    if (needsToken) {
+      ensureTokens(db);
+    }
+  } catch (err) {
+    console.error('Lỗi kiểm tra token:', err);
+  }
 
   appInstance = createApp({ db, config });
   return appInstance;

@@ -7,11 +7,13 @@ export class ApiError extends Error {
 }
 
 async function req(method, path, body) {
+  const signal = typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? AbortSignal.timeout(8000) : undefined;
   const res = await fetch(path, {
     method,
     credentials: 'same-origin',
     headers: body === undefined ? {} : { 'Content-Type': 'application/json' },
     body: body === undefined ? undefined : JSON.stringify(body),
+    signal,
   });
   const t = await res.text();
   let data = null;

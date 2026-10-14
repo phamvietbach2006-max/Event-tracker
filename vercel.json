@@ -23,22 +23,19 @@
     {
       "source": "/api/(.*)",
       "destination": {
-        "service": "app",
-        "path": "/api/$1"
+        "service": "app"
       }
     },
     {
       "source": "/events",
       "destination": {
-        "service": "app",
-        "path": "/events"
+        "service": "app"
       }
     },
     {
       "source": "/auth/(.*)",
       "destination": {
-        "service": "app",
-        "path": "/auth/$1"
+        "service": "app"
       }
     },
     {

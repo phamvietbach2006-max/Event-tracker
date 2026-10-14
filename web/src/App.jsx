@@ -46,7 +46,16 @@ export default function App() {
   const [contacts, setContacts] = useState([]);
   const [selectedOfficer, setSelectedOfficer] = useState(null);
   const [directoryOpen, setDirectoryOpen] = useState(false);
+  const [loadTimeout, setLoadTimeout] = useState(false);
   const hash = useHash();
+
+  useEffect(() => {
+    if (!state || me === undefined) {
+      const t = setTimeout(() => setLoadTimeout(true), 4000);
+      return () => clearTimeout(t);
+    }
+    setLoadTimeout(false);
+  }, [state, me]);
 
   useEffect(() => {
     api.contacts().then(setContacts).catch(() => {});
@@ -79,7 +88,18 @@ export default function App() {
 
   const refreshMe = useCallback(() => {
     setAuthError(false);
-    api.me().then(setMe).catch(() => setMe(null));
+    const timer = setTimeout(() => {
+      setMe((prev) => (prev === undefined ? null : prev));
+    }, 3000);
+    api.me()
+      .then((user) => {
+        clearTimeout(timer);
+        setMe(user);
+      })
+      .catch(() => {
+        clearTimeout(timer);
+        setMe(null);
+      });
   }, []);
   useEffect(refreshMe, [refreshMe]);
   useEffect(() => {
@@ -180,7 +200,28 @@ export default function App() {
       <button onClick={() => { refreshMe(); reload(); }}>Thử lại</button>
     </div>
   );
-  if (!state || me === undefined) return <div className="sk" role="status" aria-label="Đang tải"><i className="h" /><i className="c" /><i className="c" /></div>;
+  if (!state || me === undefined) return (
+    <div className="sk" role="status" aria-label="Đang tải">
+      <i className="h" />
+      <i className="c" />
+      <i className="c" />
+      {loadTimeout && (
+        <div style={{ textAlign: 'center', marginTop: '1.25rem' }}>
+          <p style={{ color: 'var(--text-muted, #64748b)', marginBottom: '0.75rem', fontSize: '0.9rem' }}>
+            Đang tải dữ liệu phòng và cán bộ, vui lòng chờ trong giây lát...
+          </p>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => { refreshMe(); reload(); }}
+            style={{ padding: '0.45rem 1.1rem', fontSize: '0.85rem' }}
+          >
+            Tải lại ngay
+          </button>
+        </div>
+      )}
+    </div>
+  );
 
   const unitGroups = selectedUnit === 'all'
     ? scopedGroups
