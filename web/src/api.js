@@ -6,8 +6,8 @@ export class ApiError extends Error {
   }
 }
 
-async function req(method, path, body) {
-  const signal = typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? AbortSignal.timeout(8000) : undefined;
+async function req(method, path, body, timeoutMs = 15000) {
+  const signal = typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? AbortSignal.timeout(timeoutMs) : undefined;
   const res = await fetch(path, {
     method,
     credentials: 'same-origin',
@@ -25,9 +25,16 @@ async function req(method, path, body) {
 const u = encodeURIComponent;
 
 export const api = {
-  state: () => req('GET', '/api/state'),
-  contacts: () => req('GET', '/api/contacts'),
-  me: () => req('GET', '/api/me'),
+  state: async () => {
+    try {
+      return await req('GET', '/api/state', undefined, 15000);
+    } catch {
+      // Tự động thử lại 1 lần nếu gặp sự cố mạng mobile chập chờn
+      return await req('GET', '/api/state', undefined, 15000);
+    }
+  },
+  contacts: () => req('GET', '/api/contacts', undefined, 15000),
+  me: () => req('GET', '/api/me', undefined, 15000),
   login: (email, password) => req('POST', '/api/auth/login', { email, password }),
   changePassword: (oldPassword, newPassword) => req('POST', '/api/auth/change-password', { oldPassword, newPassword }),
   logout: () => req('POST', '/auth/logout'),

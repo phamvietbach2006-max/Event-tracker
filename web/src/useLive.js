@@ -1,54 +1,73 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from './api.js';
 
+const CACHE_KEY = 'event_tracker_state_cache_v1';
+
 export function useLive() {
-  const [state, setState] = useState(null);
+  const [state, setStateInternal] = useState(() => {
+    try {
+      const saved = localStorage.getItem(CACHE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && Array.isArray(parsed.groups)) return parsed;
+      }
+    } catch {
+      // Bỏ qua nếu localStorage bị tắt hoặc lỗi
+    }
+    return null;
+  });
   const [online, setOnline] = useState(false);
   const [error, setError] = useState(false);
   const [stats, setStats] = useState({ online: 1, visits: 1 });
 
+  const updateState = useCallback((next) => {
+    setStateInternal((current) => {
+      const resolved = typeof next === 'function' ? next(current) : next;
+      if (resolved && Array.isArray(resolved.groups)) {
+        setError(false);
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify(resolved));
+        } catch {
+          // Bỏ qua lỗi hạn mức lưu trữ
+        }
+      }
+      return resolved;
+    });
+  }, []);
+
   const reload = useCallback(() => {
     return api.state()
       .then((next) => {
-        if (next && next.groups) {
-          setState(next);
-          setError(false);
-        }
+        updateState(next);
       })
       .catch((err) => {
         console.warn('Lỗi tải state:', err);
-        setError((prev) => (!state ? true : prev));
+        setStateInternal((curr) => {
+          if (!curr) setError(true);
+          return curr;
+        });
       });
-  }, [state]);
+  }, [updateState]);
 
   useEffect(() => {
     reload();
 
-    let retryTimer = null;
-    let hadError = false;
     let es = null;
+    let pollInterval = null;
 
     try {
       es = new EventSource('/events');
       es.onopen = () => {
         setOnline(true);
         setError(false);
-        if (hadError) {
-          hadError = false;
-          reload();
-        }
       };
       es.onerror = () => {
-        hadError = true;
         setOnline(false);
       };
       es.onmessage = (e) => {
         try {
           const next = JSON.parse(e.data);
-          if (next && next.groups) {
-            setState(next);
-            setError(false);
-          }
+          updateState(next);
         } catch {
           // Bỏ qua gói dữ liệu SSE không phải JSON hợp lệ
         }
@@ -65,19 +84,16 @@ export function useLive() {
       setOnline(false);
     }
 
-    // Polling dự phòng mỗi 12s nếu SSE mất kết nối (rất hữu ích trên serverless)
-    const pollInterval = setInterval(() => {
-      if (!online) {
-        reload();
-      }
-    }, 12000);
+    // Polling dự phòng mỗi 15s để giữ dữ liệu luôn mới nhất
+    pollInterval = setInterval(() => {
+      reload();
+    }, 15000);
 
     return () => {
       if (es) es.close();
-      if (retryTimer) clearTimeout(retryTimer);
-      clearInterval(pollInterval);
+      if (pollInterval) clearInterval(pollInterval);
     };
-  }, [reload, online]);
+  }, [reload, updateState]);
 
-  return { state, setState, online, reload, error, stats };
+  return { state, setState: updateState, online, reload, error, stats };
 }

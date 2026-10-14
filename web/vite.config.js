@@ -7,6 +7,7 @@ export default defineConfig({
   plugins: [react()],
   base: '/',
   server: {
+    host: true,
     proxy: {
       '/api': { target: api, changeOrigin: true },
       '/events': { target: api, changeOrigin: true },
