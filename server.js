@@ -121,22 +121,24 @@ server.on('error', (err) => {
   console.warn('Cảnh báo HTTP server:', err.message);
 });
 
-const rawPort = process.env.PORT;
-const listenPort = rawPort ? (isNaN(rawPort) ? rawPort : Number(rawPort)) : (config.port || 3000);
-const listenHost = process.env.HOST ?? '0.0.0.0';
+if (!process.env.VERCEL) {
+  const rawPort = process.env.PORT;
+  const listenPort = rawPort ? (isNaN(rawPort) ? rawPort : Number(rawPort)) : (config.port || 3000);
+  const listenHost = process.env.HOST ?? '0.0.0.0';
 
-try {
-  if (typeof listenPort === 'string') {
-    server.listen(listenPort, () => {
-      console.log(`Event tracker listening on socket ${listenPort}`);
-    });
-  } else {
-    server.listen(listenPort, listenHost, () => {
-      console.log(`Event tracker listening on ${listenHost}:${listenPort} (DB ${config.dbPath})`);
-    });
+  try {
+    if (typeof listenPort === 'string') {
+      server.listen(listenPort, () => {
+        console.log(`Event tracker listening on socket ${listenPort}`);
+      });
+    } else {
+      server.listen(listenPort, listenHost, () => {
+        console.log(`Event tracker listening on ${listenHost}:${listenPort} (DB ${config.dbPath})`);
+      });
+    }
+  } catch (err) {
+    console.warn('Cảnh báo server listen (sẽ tiếp tục qua handler):', err.message);
   }
-} catch (err) {
-  console.warn('Cảnh báo server listen (sẽ tiếp tục qua handler):', err.message);
 }
 
 // Khởi tạo database sau khi server đã mở cổng
