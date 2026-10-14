@@ -73,13 +73,22 @@ app.server.on('error', (err) => {
   process.exit(1);
 });
 
+const rawPort = process.env.PORT;
+const listenPort = rawPort ? (isNaN(rawPort) ? rawPort : Number(rawPort)) : (config.port || 3000);
+const listenHost = process.env.HOST ?? '0.0.0.0';
+
 try {
-  app.server.listen(config.port, config.host, () => {
-    console.log(`Event tracker: http://${config.host}:${config.port} (DB ${config.dbPath})`);
-  });
+  if (typeof listenPort === 'string') {
+    app.server.listen(listenPort, () => {
+      console.log(`Event tracker listening on socket ${listenPort}`);
+    });
+  } else {
+    app.server.listen(listenPort, listenHost, () => {
+      console.log(`Event tracker listening on ${listenHost}:${listenPort} (DB ${config.dbPath})`);
+    });
+  }
 } catch (err) {
-  console.error('Không thể khởi động server listen:', err);
-  process.exit(1);
+  console.warn('Cảnh báo server listen (sẽ tiếp tục qua handler):', err.message);
 }
 
 for (const sig of ['SIGINT', 'SIGTERM']) {
