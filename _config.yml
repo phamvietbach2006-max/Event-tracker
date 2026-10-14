@@ -1,0 +1,20 @@
+# Jekyll configuration for GitHub Pages
+theme: jekyll-theme-primer
+title: Ban TC-KT Event Tracker
+description: Hệ thống theo dõi chuẩn bị Đại hội Đoàn - Hội Ban TC-KT
+
+exclude:
+  - docs/superpowers
+  - .github
+  - node_modules
+  - vendor
+  - web
+  - tests
+  - routes
+  - auth
+  - lib
+  - api
+  - scripts
+  - server.js
+  - app.db
+  - seed.json

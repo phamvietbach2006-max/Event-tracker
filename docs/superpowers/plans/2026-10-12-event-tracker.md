@@ -2304,7 +2304,7 @@ export default function Header({ me, online, counts, tot, filter, setFilter }) {
         ))}
       </div>
       <div className="total"><span>{tot.rooms} khu · {tot.done}/{tot.total} việc xong</span><span>{tot.pct}%</span></div>
-      <div className="bar"><b style={{ width: `${tot.pct}%` }} /></div>
+      <div className="bar"><b style={{ width: tot.pct + '%' }} /></div>
     </header>
   );
 }
@@ -2367,7 +2367,7 @@ function RoomCard({ room, me, open, onToggle, act }) {
         </div>
       </button>
       <div className="body">
-        <div className="bar" style={{ margin: '0 0 10px' }}><b style={{ width: `${pc}%`, background: 'var(--c)' }} /></div>
+        <div className="bar" style={{ margin: '0 0 10px' }}><b style={{ width: pc + '%', background: 'var(--c)' }} /></div>
         {ed && (
           <div className="seg">
             {ORDER.map((k) => (
@@ -2394,7 +2394,7 @@ export default function GroupCard({ group, rooms, me, open, onToggle, openK, onT
   const c = statusCounts(group.rooms);
   const sum = [['red', 'đỏ'], ['yellow', 'vàng'], ['green', 'xanh']]
     .filter(([k]) => c[k])
-    .map(([k, l]) => <b key={k} style={{ color: `var(--${k})` }}>{c[k]} {l}</b>);
+    .map(([k, l]) => <b key={k} style={{ color: 'var(--' + k + ')' }}>{c[k]} {l}</b>);
   return (
     <section className={`grp ${open ? 'open' : ''}`}>
       <button className="gh" onClick={onToggle}>
