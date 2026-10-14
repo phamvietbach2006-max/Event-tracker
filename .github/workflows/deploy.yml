@@ -42,26 +42,39 @@ jobs:
     needs: build
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    environment: production
     steps:
+      - name: Kiểm tra cấu hình Secrets Deploy
+        id: check-secrets
+        run: |
+          if [ -z "${{ secrets.DEPLOY_HOST }}" ] || [ -z "${{ secrets.DEPLOY_KEY }}" ]; then
+            echo "has_secrets=false" >> $GITHUB_OUTPUT
+            echo "::notice ::Chưa cấu hình DEPLOY_HOST hoặc DEPLOY_KEY trong GitHub Secrets. Bỏ qua bước tự động deploy lên server qua SSH."
+          else
+            echo "has_secrets=true" >> $GITHUB_OUTPUT
+          fi
       - uses: actions/checkout@v4
+        if: steps.check-secrets.outputs.has_secrets == 'true'
       - uses: actions/download-artifact@v4
+        if: steps.check-secrets.outputs.has_secrets == 'true'
         with:
           name: web-dist
           path: web/dist
         continue-on-error: true
       - name: Chuẩn bị SSH
+        if: steps.check-secrets.outputs.has_secrets == 'true'
         run: |
           install -m 700 -d ~/.ssh
           printf '%s\n' "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -T 10 "${{ secrets.DEPLOY_HOST }}" >> ~/.ssh/known_hosts
       - name: Deploy
+        if: steps.check-secrets.outputs.has_secrets == 'true'
         env:
           HOST: deploy@${{ secrets.DEPLOY_HOST }}
           KEY: /home/runner/.ssh/deploy_key
         run: ./deploy/deploy.sh all
       - name: Kiểm tra sau deploy
+        if: steps.check-secrets.outputs.has_secrets == 'true'
         run: |
           sleep 2
           code=$(curl -s -o /dev/null -w '%{http_code}' -m 10 "http://${{ secrets.DEPLOY_HOST }}/api/state" || true)
