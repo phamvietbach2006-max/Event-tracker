@@ -15,7 +15,8 @@ let appInstance = null;
 function getApp() {
   if (appInstance) return appInstance;
   const tursoUrl = process.env.TURSO_DATABASE_URL ?? process.env.LIBSQL_URL;
-  const dbPath = tursoUrl ? tursoUrl : (process.env.VERCEL ? '/tmp/app.db' : (process.env.DB_PATH ?? 'app.db'));
+  const isCloud = process.env.VERCEL || process.env.NOW_REGION || process.env.AWS_REGION || process.env.VERCEL_ENV;
+  const dbPath = tursoUrl ? tursoUrl : (isCloud ? '/tmp/app.db' : (process.env.DB_PATH ?? 'app.db'));
 
     const defaultBaseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
       ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`

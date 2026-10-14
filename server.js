@@ -22,7 +22,8 @@ const defaultBaseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
   : (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
 const baseUrl = (process.env.BASE_URL ?? defaultBaseUrl).replace(/\/$/, '');
 const tursoUrl = process.env.TURSO_DATABASE_URL ?? process.env.LIBSQL_URL;
-const dbPath = tursoUrl ? tursoUrl : (process.env.VERCEL ? '/tmp/app.db' : (process.env.DB_PATH ?? 'app.db'));
+const isCloud = process.env.VERCEL || process.env.NOW_REGION || process.env.AWS_REGION || process.env.VERCEL_ENV;
+const dbPath = tursoUrl ? tursoUrl : (isCloud ? '/tmp/app.db' : (process.env.DB_PATH ?? 'app.db'));
 const host = process.env.HOST ?? '0.0.0.0';
 
 const config = {
@@ -96,6 +97,12 @@ function init() {
 }
 
 const dispatch = (req, res) => {
+  const url = new URL(req.url, 'http://local');
+  if (url.pathname === '/health' || url.pathname === '/api/health') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ status: 'healthy', uptime: process.uptime() }));
+    return;
+  }
   try {
     const activeApp = init();
     return activeApp.handleRequest(req, res);
@@ -121,24 +128,22 @@ server.on('error', (err) => {
   console.warn('Cảnh báo HTTP server:', err.message);
 });
 
-if (!process.env.VERCEL) {
-  const rawPort = process.env.PORT;
-  const listenPort = rawPort ? (isNaN(rawPort) ? rawPort : Number(rawPort)) : (config.port || 3000);
-  const listenHost = process.env.HOST ?? '0.0.0.0';
+const rawPort = process.env.PORT;
+const listenPort = rawPort ? (isNaN(rawPort) ? rawPort : Number(rawPort)) : (config.port || 3000);
+const listenHost = '0.0.0.0';
 
-  try {
-    if (typeof listenPort === 'string') {
-      server.listen(listenPort, () => {
-        console.log(`Event tracker listening on socket ${listenPort}`);
-      });
-    } else {
-      server.listen(listenPort, listenHost, () => {
-        console.log(`Event tracker listening on ${listenHost}:${listenPort} (DB ${config.dbPath})`);
-      });
-    }
-  } catch (err) {
-    console.warn('Cảnh báo server listen (sẽ tiếp tục qua handler):', err.message);
+try {
+  if (typeof listenPort === 'string') {
+    server.listen(listenPort, () => {
+      console.log(`Event tracker listening on socket ${listenPort}`);
+    });
+  } else {
+    server.listen(listenPort, listenHost, () => {
+      console.log(`Event tracker listening on ${listenHost}:${listenPort} (DB ${config.dbPath})`);
+    });
   }
+} catch (err) {
+  console.warn('Cảnh báo server listen (sẽ tiếp tục qua handler):', err.message);
 }
 
 // Khởi tạo database sau khi server đã mở cổng
