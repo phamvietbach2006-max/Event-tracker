@@ -1,6 +1,6 @@
 import { openDb } from './lib/db.js';
 import { createApp } from './lib/app.js';
-import { isEmpty, applySeed, ensureTokens } from './lib/seed.js';
+import { isEmpty, applySeed, syncUsersSeed, ensureTokens } from './lib/seed.js';
 import seedData from './seed.json' with { type: 'json' };
 
 const defaultBaseUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
@@ -36,6 +36,12 @@ if (isEmpty(db)) {
     console.log('Đã nạp dữ liệu từ seed.json');
   } catch (err) {
     console.error('Lỗi khi nạp seed.json:', err);
+  }
+} else {
+  try {
+    syncUsersSeed(db, seedData.users);
+  } catch (err) {
+    console.error('Lỗi khi đồng bộ cán bộ từ seed.json:', err);
   }
 }
 ensureTokens(db);
