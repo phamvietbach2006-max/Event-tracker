@@ -60,15 +60,23 @@ export function useLive() {
 
     let es = null;
     let pollInterval = null;
+    let sseFailures = 0;
 
     try {
       es = new EventSource('/events');
       es.onopen = () => {
+        sseFailures = 0;
         setOnline(true);
         setError(false);
       };
       es.onerror = () => {
+        sseFailures += 1;
         setOnline(false);
+        // Nếu môi trường serverless/cloud ngắt SSE liên tiếp, đóng EventSource để tránh lỗi 500 và chuyển sang Polling
+        if (sseFailures >= 2 && es) {
+          try { es.close(); } catch {}
+          es = null;
+        }
       };
       es.onmessage = (e) => {
         try {
@@ -90,10 +98,10 @@ export function useLive() {
       setOnline(false);
     }
 
-    // Polling dự phòng mỗi 15s để giữ dữ liệu luôn mới nhất
+    // Polling dự phòng định kỳ để giữ dữ liệu luôn mới nhất
     pollInterval = setInterval(() => {
       reload();
-    }, 15000);
+    }, 6000);
 
     const onVisible = () => {
       if (document.visibilityState === 'visible') {

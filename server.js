@@ -117,6 +117,7 @@ const dispatch = (req, res) => {
   } catch (err) {
     res.writeHead(500, {
       'Content-Type': 'application/json; charset=utf-8',
+      'Access-Control-Allow-Origin': '*',
       'Cache-Control': 'no-store',
     });
     res.end(JSON.stringify({
@@ -138,7 +139,6 @@ server.on('error', (err) => {
 
 const rawPort = process.env.PORT;
 const listenPort = rawPort ? (isNaN(rawPort) ? rawPort : Number(rawPort)) : (config.port || 3000);
-const listenHost = '0.0.0.0';
 
 try {
   if (typeof listenPort === 'string') {
@@ -146,8 +146,8 @@ try {
       console.log(`[BOOT] Event tracker service listening on socket ${listenPort}`);
     });
   } else {
-    server.listen(listenPort, listenHost, () => {
-      console.log(`[BOOT] Event tracker service listening on ${listenHost}:${listenPort} (DB ${config.dbPath})`);
+    server.listen(listenPort, () => {
+      console.log(`[BOOT] Event tracker service listening on port ${listenPort} (DB ${config.dbPath})`);
     });
   }
 } catch (err) {

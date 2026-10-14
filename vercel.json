@@ -8,36 +8,40 @@
     },
     "web": {
       "root": "web",
-      "framework": "vite"
+      "framework": "vite",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "app",
+          "format": "url",
+          "env": "APP_URL"
+        }
+      ]
     }
   },
   "rewrites": [
     {
       "source": "/api/(.*)",
       "destination": {
-        "service": "app",
-        "path": "/api/$1"
+        "service": "app"
       }
     },
     {
       "source": "/events",
       "destination": {
-        "service": "app",
-        "path": "/events"
+        "service": "app"
       }
     },
     {
       "source": "/auth/(.*)",
       "destination": {
-        "service": "app",
-        "path": "/auth/$1"
+        "service": "app"
       }
     },
     {
       "source": "/(.*)",
       "destination": {
-        "service": "web",
-        "path": "/$1"
+        "service": "web"
       }
     }
   ]
