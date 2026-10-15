@@ -522,4 +522,86 @@ export function registerAdmin(router) {
     logActivity(db, user, null, 'user.token', u.email);
     return { url: loginUrl(config, token) };
   });
+
+  add('GET', '/api/admin/logs', ({ db, url, query }) => {
+    const qParams = url ? url.searchParams : new URLSearchParams(query || {});
+    const limit = Math.min(300, Math.max(1, parseInt(qParams.get('limit') ?? 100, 10) || 100));
+    const offset = Math.max(0, parseInt(qParams.get('offset') ?? 0, 10) || 0);
+    const actionFilter = qParams.get('action') ? qParams.get('action').trim() : null;
+    const q = qParams.get('q') ? qParams.get('q').trim().toLowerCase() : null;
+
+    let sql = `
+      SELECT 
+        a.id, a.ts, a.email, a.room_id, a.action, a.detail,
+        u.name AS user_name, u.role AS user_role,
+        r.name AS room_name,
+        g.name AS group_name
+      FROM activity a
+      LEFT JOIN users u ON LOWER(u.email) = LOWER(a.email)
+      LEFT JOIN rooms r ON r.id = a.room_id
+      LEFT JOIN groups g ON g.id = r.group_id
+    `;
+    const conditions = [];
+    const params = [];
+
+    if (actionFilter) {
+      conditions.push('a.action = ?');
+      params.push(actionFilter);
+    }
+    if (q) {
+      conditions.push("(LOWER(COALESCE(a.email, '')) LIKE ? OR LOWER(COALESCE(u.name, '')) LIKE ? OR LOWER(COALESCE(a.detail, '')) LIKE ? OR LOWER(COALESCE(r.name, '')) LIKE ? OR LOWER(COALESCE(g.name, '')) LIKE ?)");
+      const wild = `%${q}%`;
+      params.push(wild, wild, wild, wild, wild);
+    }
+
+
+    if (conditions.length > 0) {
+      sql += ' WHERE ' + conditions.join(' AND ');
+    }
+
+    sql += ' ORDER BY a.id DESC LIMIT ? OFFSET ?';
+    params.push(limit, offset);
+
+    const rows = db.prepare(sql).all(...params);
+
+    const logs = rows.map((row) => {
+      let unit = '';
+      let floorName = row.group_name || '';
+      if (row.group_name) {
+        const m = /^\[([^\]]+)\]\s*(.*)$/.exec(row.group_name);
+        if (m) {
+          unit = m[1].trim();
+          floorName = m[2].trim() || row.group_name;
+        }
+      }
+
+      let location = 'Toàn hệ thống';
+      if (row.room_name) {
+        location = `Lớp ${row.room_name}${unit ? ' · ' + unit : ''}${floorName ? ' (' + floorName + ')' : ''}`;
+      } else if (row.group_name) {
+        location = `${unit ? unit + ' · ' : ''}${floorName}`;
+      }
+
+      return {
+        id: row.id,
+        ts: row.ts,
+        email: row.email,
+        userName: row.user_name || (row.email ? row.email.split('@')[0] : 'Hệ thống'),
+        userRole: row.user_role || (row.email ? 'Cán bộ' : 'Hệ thống'),
+        roomId: row.room_id,
+        roomName: row.room_name,
+        groupName: row.group_name,
+        unit,
+        floorName,
+        location,
+        action: row.action,
+        detail: row.detail,
+      };
+    });
+
+    const totalCount = db.prepare('SELECT COUNT(*) as c FROM activity').get().c;
+
+    return { logs, total: totalCount };
+  });
 }
+

@@ -211,3 +211,63 @@ test('điểm danh và sĩ số: cập nhật, chặn khi chưa đủ 2/3 hoặc
   } finally { await t.close(); }
 });
 
+test('trạng thái cancelled: bắt buộc ghi rõ lý do hủy ở note', async () => {
+  const t = await startApp();
+  try {
+    // 1. Chuyển sang cancelled nhưng không có note -> 400 cancel_reason_required
+    const rNoNote = await t.call('PATCH', '/api/rooms/1/status', { as: 'owner@t.test', body: { status: 'cancelled' } });
+    assert.equal(rNoNote.status, 400);
+    assert.equal(rNoNote.body.error, 'cancel_reason_required');
+
+    // 2. Chuyển sang cancelled kèm note lý do -> 200 thành công
+    const rWithNote = await t.call('PATCH', '/api/rooms/1/status', { as: 'owner@t.test', body: { status: 'cancelled', note: 'Hoãn đại hội do lớp đi thực tập đột xuất' } });
+    assert.equal(rWithNote.status, 200);
+    assert.equal(rWithNote.body.status, 'cancelled');
+    assert.equal(rWithNote.body.note, 'Hoãn đại hội do lớp đi thực tập đột xuất');
+  } finally { await t.close(); }
+});
+
+test('khóa lớp (lock/unlock): lưu & khóa xong cán bộ không tự sửa được, cần cấp trên mở khóa', async () => {
+  const t = await startApp();
+
+  try {
+    // 1. Cán bộ kiểm tra khóa lớp
+    const rLock = await t.call('POST', '/api/rooms/1/lock', { as: 'owner@t.test' });
+    assert.equal(rLock.status, 200);
+    assert.equal(rLock.body.isLocked, true);
+
+    // 2. Khi đã khóa: trạng thái Đại hội VẪN cho phép cán bộ cập nhật (200), nhưng checklist, sĩ số, ghi chú bị chặn 403 room_locked
+    const rEditStatus = await t.call('PATCH', '/api/rooms/1/status', { as: 'owner@t.test', body: { status: 'green' } });
+    assert.equal(rEditStatus.status, 200);
+    assert.equal(rEditStatus.body.status, 'green');
+
+    const rEditAttendance = await t.call('PATCH', '/api/rooms/1/attendance', { as: 'owner@t.test', body: { attendees: 30, totalMembers: 35 } });
+    assert.equal(rEditAttendance.status, 403);
+    assert.equal(rEditAttendance.body.error, 'room_locked');
+
+    const rEditNote = await t.call('PATCH', '/api/rooms/1/note', { as: 'owner@t.test', body: { note: 'sửa note' } });
+    assert.equal(rEditNote.status, 403);
+    assert.equal(rEditNote.body.error, 'room_locked');
+
+    const rEditTask = await t.call('PATCH', '/api/tasks/1', { as: 'owner@t.test', body: { state: 'done' } });
+    assert.equal(rEditTask.status, 403);
+    assert.equal(rEditTask.body.error, 'room_locked');
+
+    // 3. Cán bộ kiểm tra cố tình mở khóa -> bị chặn 403 supervisor_required
+    const rUnlockLead = await t.call('POST', '/api/rooms/1/unlock', { as: 'owner@t.test' });
+    assert.equal(rUnlockLead.status, 403);
+    assert.equal(rUnlockLead.body.error, 'supervisor_required');
+
+    // 4. Cấp trên (admin) mở khóa -> 200 ok
+    const rUnlockAdmin = await t.call('POST', '/api/rooms/1/unlock', { as: 'admin@t.test' });
+    assert.equal(rUnlockAdmin.status, 200);
+    assert.equal(rUnlockAdmin.body.isLocked, false);
+
+    // 5. Sau khi cấp trên mở khóa, cán bộ kiểm tra có thể sửa lại bình thường
+    const rEditAgain = await t.call('PATCH', '/api/rooms/1/note', { as: 'owner@t.test', body: { note: 'Cán bộ cập nhật lại sau mở khóa' } });
+    assert.equal(rEditAgain.status, 200);
+    assert.equal(rEditAgain.body.note, 'Cán bộ cập nhật lại sau mở khóa');
+  } finally { await t.close(); }
+});
+
+

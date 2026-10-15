@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, Clock3, FileCheck2, MessageSquareText, Plus, Trash2, UserRound, PhoneCall, Users, CheckCircle2, AlertCircle, Settings2, Check } from 'lucide-react';
+import { ChevronDown, Clock3, FileCheck2, MessageSquareText, Plus, Trash2, UserRound, PhoneCall, Users, CheckCircle2, AlertCircle, AlertOctagon, Settings2, Check, Lock, Unlock, Save } from 'lucide-react';
 import { api } from './api.js';
-import { ORDER, ST, TS, NEXT, NOTE_MAX, canEdit, doneCount, percent, statusCounts, patchRoom, patchTask, removeTask, timeLabel, parseRoomMeta, parseGroupMeta, isAttendanceValid, isChecklistComplete, canStartCongress, isUserAdmin } from './logic.js';
+import { ORDER, ST, TS, NEXT, NOTE_MAX, canEdit, isSupervisor, canEditStatus, canEditDetails, doneCount, percent, statusCounts, patchRoom, patchTask, removeTask, timeLabel, parseRoomMeta, parseGroupMeta, isAttendanceValid, isChecklistComplete, canStartCongress, isUserAdmin } from './logic.js';
+import ConfirmModal from './ConfirmModal.jsx';
+
 
 function AttendanceBox({ room, onSave, disabled, onBlocked }) {
   const [attendees, setAttendees] = useState(room.attendees || '');
@@ -165,10 +167,37 @@ function AddTask({ onAdd }) {
   return <div className="quick-add-task"><input className="quick-add-input" value={value} maxLength={200} placeholder="Thêm mục giấy tờ mới…" aria-label="Nội dung giấy tờ mới" onChange={(e) => setValue(e.target.value)} onKeyDown={(e) => { if (e.key === 'Enter') submit(); }} /><button className="quick-add-btn" onClick={submit}><Plus size={17} /> Thêm</button></div>;
 }
 
-export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, toast, onSelectOfficer }) {
+export function RoomCard({ room, group, me, act, initialOpen = false, onRequireLogin, toast, onSelectOfficer }) {
   const [open, setOpen] = useState(initialOpen);
   const [customizingTasks, setCustomizingTasks] = useState(false);
-  const editor = canEdit(me, room);
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [modalConfig, setModalConfig] = useState({
+    open: false,
+    title: '',
+    subtitle: '',
+    message: '',
+    bulletPoints: [],
+    icon: 'info',
+    confirmText: 'Xác nhận',
+    cancelText: 'Hủy bỏ',
+    variant: 'primary',
+    isPrompt: false,
+    promptLabel: '',
+    promptPlaceholder: '',
+    promptInitialValue: '',
+    promptMaxLength: NOTE_MAX,
+    onConfirm: null,
+  });
+
+  const closeModal = () => setModalConfig((prev) => ({ ...prev, open: false }));
+
+  const supervisor = isSupervisor(me, room, group);
+  const isLocked = Boolean(room.isLocked);
+  const editor = canEdit(me, room, group);
+  // Cán bộ phụ trách lớp vẫn có thể cập nhật trạng thái Đại hội ngay cả khi phòng đã khóa
+  const canUserEditStatus = canEditStatus(me, room, group);
+  // Checklist giấy tờ, sĩ số và tùy chỉnh mục chỉ sửa được khi chưa khóa hoặc cấp trên mở khóa
+  const canUserEditDetails = canEditDetails(me, room, group);
   const done = doneCount(room);
   const progress = percent(room);
   const meta = parseRoomMeta(room.name);
@@ -182,6 +211,8 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
     e?.stopPropagation?.();
     if (!me) {
       onRequireLogin?.(`Vui lòng đăng nhập tài khoản cán bộ để ${actionName} chi đoàn ${meta.className}`);
+    } else if (isLocked && !supervisor) {
+      toast?.(`Lớp ${meta.className} đã được khóa hồ sơ & sĩ số (bởi ${room.lockedBy || 'cán bộ'}). Trạng thái Đại hội vẫn có thể cập nhật, nhưng muốn sửa giấy tờ hay sĩ số cần Cấp trên mở khóa.`);
     } else {
       toast?.(`Bạn chỉ có quyền cập nhật các chi đoàn được phân công phụ trách (${meta.className})`);
     }
@@ -189,7 +220,42 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
 
   const changeStatus = (status) => {
     const prevStatus = room.status;
-    if (status !== 'red' && !canStart && !isUserAdmin(me)) {
+    const prevNote = room.note;
+
+    if (status === 'cancelled') {
+      const currentNote = (room.note || '').trim();
+      setModalConfig({
+        open: true,
+        title: 'Xác nhận Hủy / Hoãn Đại hội',
+        subtitle: `Chi đoàn: ${meta.className}`,
+        message: 'Bắt buộc phải ghi rõ lý do hủy hoặc hoãn Đại hội. Lý do này sẽ được ghi vào phần Ghi chú kiểm tra (Note) và hiển thị trực tiếp cho Ban Thường vụ giám sát.',
+        bulletPoints: [
+          'Ghi rõ nguyên nhân (ví dụ: Sĩ số không đạt 2/3, BCH vắng mặt, hoãn sang kíp sau...).',
+          'Trạng thái của lớp sẽ chuyển sang "Hủy đại hội" trên toàn hệ thống.',
+        ],
+        icon: 'cancel',
+        variant: 'danger',
+        confirmText: 'Xác nhận Hủy Đại hội',
+        cancelText: 'Quay lại',
+        isPrompt: true,
+        promptLabel: 'Lý do hủy Đại hội (bắt buộc)',
+        promptPlaceholder: 'Nhập rõ nguyên nhân hủy hoặc hoãn Đại hội của chi đoàn...',
+        promptInitialValue: currentNote,
+        promptMaxLength: NOTE_MAX,
+        onConfirm: (reason) => {
+          closeModal();
+          act(
+            (state) => patchRoom(state, room.id, { status: 'cancelled', note: reason }),
+            () => api.setStatus(room.id, 'cancelled', false, reason),
+            (state) => patchRoom(state, room.id, { status: prevStatus, note: prevNote }),
+          );
+          toast?.(`Đã chuyển trạng thái lớp ${meta.className} sang: Hủy đại hội`);
+        },
+      });
+      return;
+    }
+
+    if (status !== 'red' && status !== 'cancelled' && !canStart && !isUserAdmin(me)) {
       if (!isAttOk && !isDocOk) {
         toast?.(`Chưa đủ điều kiện tổ chức Đại hội: Sĩ số chưa đạt 2/3 (${room.attendees || 0}/${room.totalMembers || 0}) và checklist giấy tờ chưa đủ 100% (${done}/${room.tasks.length}).`);
       } else if (!isAttOk) {
@@ -205,6 +271,75 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
       () => api.setStatus(room.id, status),
       (state) => patchRoom(state, room.id, { status: prevStatus }),
     );
+  };
+
+  const handleSaveRoom = () => {
+    if (!canUserEditStatus && !canUserEditDetails) {
+      handleBlockedAction(null, 'lưu kết quả của');
+      return;
+    }
+    setSaveSuccess(true);
+    toast?.(`✓ Đã lưu thông tin kiểm tra lớp ${meta.className} thành công.`);
+    setTimeout(() => setSaveSuccess(false), 2500);
+  };
+
+  const handleLockRoom = () => {
+    if (!canUserEditDetails && !supervisor) return;
+    setModalConfig({
+      open: true,
+      title: 'Khóa hồ sơ & Sĩ số lớp',
+      subtitle: `Chi đoàn: ${meta.className}`,
+      message: `Bạn đang thực hiện Khóa hồ sơ giấy tờ & sĩ số cho lớp ${meta.className}:`,
+      bulletPoints: [
+        'Checklist giấy tờ và sĩ số sẽ được NIÊM PHONG (cán bộ kiểm tra sẽ không thể tự ý sửa đổi).',
+        'Trạng thái Đại hội (Đang tiến hành, Đã tiến hành xong, Hủy đại hội) VẪN CÓ THỂ tiếp tục cập nhật theo diễn biến thực tế.',
+        'Nếu cần chỉnh sửa lại giấy tờ hoặc sĩ số, cần Cấp trên (Admin, Phụ trách Đơn vị, Phụ trách Tầng) mở khóa.',
+      ],
+      icon: 'lock',
+      variant: 'warning',
+      confirmText: 'Khóa hồ sơ & Sĩ số',
+      cancelText: 'Hủy bỏ',
+      isPrompt: false,
+      onConfirm: () => {
+        closeModal();
+        const actorName = me?.name || me?.email || 'Cán bộ';
+        act(
+          (state) => patchRoom(state, room.id, { isLocked: true, lockedAt: Date.now(), lockedBy: actorName }),
+          () => api.lockRoom(room.id),
+          (state) => patchRoom(state, room.id, { isLocked: false, lockedAt: null, lockedBy: null }),
+        );
+        toast?.(`Đã khóa hồ sơ và sĩ số lớp ${meta.className} thành công.`);
+      },
+    });
+  };
+
+  const handleUnlockRoom = () => {
+    if (!supervisor) {
+      toast?.('Chỉ có Cấp trên (Admin, Phụ trách Đơn vị, Phụ trách Tầng) mới có quyền mở khóa lớp này.');
+      return;
+    }
+    setModalConfig({
+      open: true,
+      title: 'Mở khóa hồ sơ & Sĩ số',
+      subtitle: `Chi đoàn: ${meta.className}`,
+      message: `Mở khóa lớp ${meta.className}? Thao tác này sẽ cho phép cán bộ kiểm tra tiếp tục chỉnh sửa lại danh mục giấy tờ và sĩ số đoàn viên.`,
+      icon: 'unlock',
+      variant: 'warning',
+      confirmText: 'Mở khóa cho phép sửa',
+      cancelText: 'Giữ nguyên khóa',
+      isPrompt: false,
+      onConfirm: () => {
+        closeModal();
+        const prevLockedAt = room.lockedAt;
+        const prevLockedBy = room.lockedBy;
+        act(
+          (state) => patchRoom(state, room.id, { isLocked: false, lockedAt: null, lockedBy: null }),
+          () => api.unlockRoom(room.id),
+          (state) => patchRoom(state, room.id, { isLocked: true, lockedAt: prevLockedAt, lockedBy: prevLockedBy }),
+        );
+        toast?.(`Đã mở khóa lớp ${meta.className}. Cán bộ kiểm tra có thể chỉnh sửa lại.`);
+      },
+    });
   };
 
   const saveAttendance = (attendees, totalMembers) => {
@@ -237,12 +372,24 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
   };
 
   const deleteTask = (task) => {
-    if (confirm(`Xóa mục "${task.text}"?`)) {
-      act(
-        (state) => removeTask(state, task.id),
-        () => api.delTask(task.id),
-      );
-    }
+    setModalConfig({
+      open: true,
+      title: 'Xóa mục giấy tờ',
+      subtitle: `Chi đoàn: ${meta.className}`,
+      message: `Bạn có chắc chắn muốn xóa mục "${task.text}" khỏi danh sách checklist kiểm tra của lớp này?`,
+      icon: 'trash',
+      variant: 'danger',
+      confirmText: 'Xóa mục này',
+      cancelText: 'Hủy bỏ',
+      isPrompt: false,
+      onConfirm: () => {
+        closeModal();
+        act(
+          (state) => removeTask(state, task.id),
+          () => api.delTask(task.id),
+        );
+      },
+    });
   };
 
   const addNewTask = (text) => act(
@@ -259,7 +406,7 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
     );
   };
 
-  return <article className={`task-card room-card status-${room.status} ${open ? 'expanded' : ''} ${!editor ? 'is-read-only' : ''}`}>
+  return <article className={`task-card room-card status-${room.status} ${open ? 'expanded' : ''} ${!canUserEditStatus && !canUserEditDetails ? 'is-read-only' : ''}`}>
     <div className="room-card-head" role="button" tabIndex={0} onClick={() => setOpen(!open)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(!open); } }} aria-expanded={open}>
       <div className="room-meta-badges">
         {meta.roomCode && <span className="room-code-badge">{meta.roomCode}</span>}
@@ -280,7 +427,12 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
             {room.attendees || 0}/{room.totalMembers} ĐV {isAttOk ? '✓' : '⚠️'}
           </span>
         )}
-        {!editor && (
+        {isLocked && (
+          <span className="room-locked-badge" title={`Đã khóa bởi ${room.lockedBy || 'cán bộ'}`}>
+            <Lock size={12} /> Đã khóa hồ sơ
+          </span>
+        )}
+        {!canUserEditStatus && !canUserEditDetails && (
           <span className="read-only-badge" title={!me ? "Nhấn để đăng nhập cán bộ" : "Chỉ xem"}>
             Chỉ xem
           </span>
@@ -325,43 +477,49 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
         <AttendanceBox
           room={room}
           onSave={saveAttendance}
-          disabled={!editor}
+          disabled={!canUserEditDetails}
           onBlocked={() => handleBlockedAction(null, 'cập nhật điểm danh và sĩ số của')}
         />
 
         {/* 2. THANH DROPDOWN TRẠNG THÁI ĐẠI HỘI DUY NHẤT */}
         <div className="room-detail-title">
           <span>Trạng thái Đại hội</span>
-          <span>{editor ? '3 mức trạng thái' : 'Chế độ chỉ xem'}</span>
+          <span>{canUserEditStatus ? 'Chọn trạng thái' : 'Chế độ chỉ xem'}</span>
         </div>
 
         {/* Thông báo điều kiện tổ chức trực quan */}
-        <div className={`congress-condition-banner ${canStart ? 'eligible' : 'locked'}`}>
-          {canStart ? (
-            <span><CheckCircle2 size={15} /> Đã đủ điều kiện tiến hành Đại hội (≥ 2/3 sĩ số & 100% giấy tờ)</span>
-          ) : (
-            <span>
-              <AlertCircle size={15} /> Chưa đủ điều kiện tổ chức:{' '}
-              {!isAttOk && `Cần ≥ 2/3 đoàn viên có mặt (${room.attendees || 0}/${room.totalMembers || 0})`}
-              {!isAttOk && !isDocOk && ' · '}
-              {!isDocOk && `Checklist chưa đạt 100% (${done}/${room.tasks.length} mục)`}
-            </span>
-          )}
-        </div>
+        {room.status === 'cancelled' ? (
+          <div className="congress-condition-banner cancelled">
+            <span><AlertOctagon size={15} /> Đại hội đã bị hủy/hoãn · Lý do: {room.note || '(Chưa ghi rõ lý do)'}</span>
+          </div>
+        ) : (
+          <div className={`congress-condition-banner ${canStart ? 'eligible' : 'locked'}`}>
+            {canStart ? (
+              <span><CheckCircle2 size={15} /> Đã đủ điều kiện tiến hành Đại hội (≥ 2/3 sĩ số & 100% giấy tờ)</span>
+            ) : (
+              <span>
+                <AlertCircle size={15} /> Chưa đủ điều kiện tổ chức:{' '}
+                {!isAttOk && `Cần ≥ 2/3 đoàn viên có mặt (${room.attendees || 0}/${room.totalMembers || 0})`}
+                {!isAttOk && !isDocOk && ' · '}
+                {!isDocOk && `Checklist chưa đạt 100% (${done}/${room.tasks.length} mục)`}
+              </span>
+            )}
+          </div>
+        )}
 
         <div
           className="room-status-select-wrap"
           onClickCapture={(e) => {
-            if (!editor) {
+            if (!canUserEditStatus) {
               e.stopPropagation();
               handleBlockedAction(e, 'thay đổi trạng thái Đại hội của');
             }
           }}
         >
           <select
-            className={`room-status-select full-width ${room.status} ${!editor ? 'read-only' : ''}`}
+            className={`room-status-select full-width ${room.status} ${!canUserEditStatus ? 'read-only' : ''}`}
             value={room.status}
-            disabled={!editor}
+            disabled={!canUserEditStatus}
             onChange={(e) => changeStatus(e.target.value)}
             aria-label={`Chọn trạng thái Đại hội cho ${meta.className}`}
           >
@@ -372,13 +530,15 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
             <option value="green" disabled={!canStart && !isUserAdmin(me)}>
               {ST.green} {!canStart && !isUserAdmin(me) ? '(Chưa đủ điều kiện)' : ''}
             </option>
+            <option value="cancelled">{ST.cancelled}</option>
           </select>
         </div>
+
 
         {/* 3. CHECKLIST GIẤY TỜ TINH GỌN */}
         <div className="room-detail-title checklist-header-row">
           <span>Checklist giấy tờ ({meta.congressType}) · {done}/{room.tasks.length} đã đủ</span>
-          {editor && (
+          {canUserEditDetails && (
             <button
               type="button"
               className={`btn-toggle-task-customize ${customizingTasks ? 'active' : ''}`}
@@ -403,9 +563,9 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
         {room.tasks.length === 0 && <p className="room-empty">Lớp này chưa có danh mục giấy tờ nào.</p>}
 
         <div
-          className={`card-checklist ${!editor ? 'checklist-readonly' : ''} ${customizingTasks ? 'mode-customize' : 'mode-inspect'}`}
+          className={`card-checklist ${!canUserEditDetails ? 'checklist-readonly' : ''} ${customizingTasks ? 'mode-customize' : 'mode-inspect'}`}
           onClickCapture={(e) => {
-            if (!editor) {
+            if (!canUserEditDetails) {
               e.stopPropagation();
               handleBlockedAction(e, 'đánh dấu hồ sơ giấy tờ của');
             }
@@ -418,7 +578,7 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
                 <div className={`checklist-item customize-item ${task.state}`} key={task.id}>
                   <button
                     className={`task-state-btn ${task.state}`}
-                    disabled={!editor}
+                    disabled={!canUserEditDetails}
                     onClick={() => changeTask(task)}
                     aria-label={`${task.text}: ${TS[task.state]}`}
                   >
@@ -458,15 +618,15 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
             // Clean Inspection Mode (Chế độ Tác nghiệp / Kiểm tra Tinh Gọn)
             return (
               <div
-                className={`clean-check-row ${isDone ? 'is-done' : 'is-todo'} ${editor ? 'clickable' : ''}`}
+                className={`clean-check-row ${isDone ? 'is-done' : 'is-todo'} ${canUserEditDetails ? 'clickable' : ''}`}
                 key={task.id}
                 role="button"
-                tabIndex={editor ? 0 : undefined}
+                tabIndex={canUserEditDetails ? 0 : undefined}
                 onClick={() => {
-                  if (editor) changeTask(task);
+                  if (canUserEditDetails) changeTask(task);
                 }}
                 onKeyDown={(e) => {
-                  if (editor && (e.key === 'Enter' || e.key === ' ')) {
+                  if (canUserEditDetails && (e.key === 'Enter' || e.key === ' ')) {
                     e.preventDefault();
                     changeTask(task);
                   }
@@ -484,19 +644,72 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
             );
           })}
         </div>
-        {editor && customizingTasks && <AddTask onAdd={addNewTask} />}
+        {canUserEditDetails && customizingTasks && <AddTask onAdd={addNewTask} />}
 
         <NoteBox
           room={room}
           onSave={saveNote}
-          disabled={!editor}
+          disabled={!canUserEditDetails}
           onBlocked={() => handleBlockedAction(null, 'viết ghi chú kiểm tra cho')}
         />
+
+        {/* 4. KHÓA & LƯU KẾT QUẢ KIỂM TRA LỚP */}
+        {isLocked ? (
+          <div className="room-locked-banner">
+            <div className="room-locked-info">
+              <Lock size={16} className="lock-icon" />
+              <div className="room-locked-text">
+                <strong className="lock-title">Hồ sơ giấy tờ & Sĩ số đã Khóa</strong>
+                <span className="lock-meta">
+                  Bởi <b>{room.lockedBy || 'Cán bộ'}</b>{room.lockedAt ? ` lúc ${timeLabel(room.lockedAt)}` : ''} · Trạng thái Đại hội vẫn có thể cập nhật · Muốn sửa checklist/sĩ số cần Cấp trên mở khóa
+                </span>
+              </div>
+            </div>
+            {supervisor && (
+              <button
+                type="button"
+                className="btn-unlock-action"
+                onClick={handleUnlockRoom}
+                title="Cấp trên mở khóa để cán bộ kiểm tra có thể sửa lại thông tin"
+              >
+                <Unlock size={14} /> Mở khóa cho phép sửa
+              </button>
+            )}
+          </div>
+        ) : (canUserEditStatus || canUserEditDetails) && (
+          <div className="room-actions-dual-box">
+            <div className="room-actions-btns">
+              <button
+                type="button"
+                className={`btn-save-record ${saveSuccess ? 'btn-saved' : ''}`}
+                onClick={handleSaveRoom}
+                title="Kiểm tra xong lớp nào phải ấn lưu lớp đó"
+              >
+                {saveSuccess ? <Check size={15} /> : <Save size={15} />}
+                <span>{saveSuccess ? 'Đã lưu lớp' : 'Lưu thông tin lớp'}</span>
+              </button>
+              <button
+                type="button"
+                className="btn-lock-complete"
+                onClick={handleLockRoom}
+                title="Khóa hồ sơ và sĩ số lớp này (vẫn cho phép cập nhật trạng thái Đại hội)"
+              >
+                <Lock size={15} /> Khóa hồ sơ &amp; Sĩ số
+              </button>
+            </div>
+            <span className="room-lock-hint">
+              * Xong lớp nào phải ấn lưu lớp đó. Khóa sẽ niêm phong checklist &amp; sĩ số (trạng thái vẫn cập nhật được), muốn sửa cần cấp trên cho phép.
+            </span>
+          </div>
+        )}
 
         <div className="card-bottom-row"><Clock3 size={14} /><span>Cập nhật {timeLabel(room.updatedAt)}{room.updatedBy ? ` · ${room.updatedBy}` : ''}</span></div>
       </div>
     </div>
+    <ConfirmModal {...modalConfig} onClose={closeModal} />
   </article>;
+
+
 }
 
 export default function GroupCard({ group, rooms, me, act, detail = false, showUnit = false, forceOpen, onRequireLogin, toast, onSelectOfficer }) {
@@ -554,6 +767,12 @@ export default function GroupCard({ group, rooms, me, act, detail = false, showU
             <i className="fstat-dot" />
             <b>{counts.green}</b> đã xong
           </span>
+          {counts.cancelled > 0 && (
+            <span className="fstat-badge cancelled active">
+              <i className="fstat-dot" />
+              <b>{counts.cancelled}</b> đã hủy
+            </span>
+          )}
         </div>
 
         <div className="floor-expand-hint">
@@ -568,6 +787,7 @@ export default function GroupCard({ group, rooms, me, act, detail = false, showU
           <RoomCard
             key={room.id}
             room={room}
+            group={group}
             me={me}
             act={act}
             onRequireLogin={onRequireLogin}
@@ -575,6 +795,7 @@ export default function GroupCard({ group, rooms, me, act, detail = false, showU
             onSelectOfficer={onSelectOfficer}
           />
         ))}
+
         {rooms.length === 0 && <p className="column-empty">Không có lớp phù hợp bộ lọc.</p>}
       </div>
     )}

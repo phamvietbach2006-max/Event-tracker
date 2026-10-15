@@ -41,10 +41,17 @@ export const api = {
   login: (email, password) => req('POST', '/api/auth/login', { email, password }),
   changePassword: (oldPassword, newPassword) => req('POST', '/api/auth/change-password', { oldPassword, newPassword }),
   logout: () => req('POST', '/auth/logout'),
-  setStatus: (id, status, force = false) => req('PATCH', `/api/rooms/${id}/status`, { status, force }),
+  setStatus: (id, status, force = false, note = undefined) => req('PATCH', `/api/rooms/${id}/status`, { status, force, ...(note !== undefined ? { note } : {}) }),
   setAttendance: (id, attendees, totalMembers) => req('PATCH', `/api/rooms/${id}/attendance`, { attendees, totalMembers }),
   setNote: (id, note) => req('PATCH', `/api/rooms/${id}/note`, { note }),
-  setTask: (id, state) => req('PATCH', `/api/tasks/${id}`, { state }),
+  setTask: (id, state) => req('PATCH', `/api/tasks/${id}`, state === undefined ? {} : { state }),
+  lockRoom: (id) => req('POST', `/api/rooms/${id}/lock`),
+  unlockRoom: (id) => req('POST', `/api/rooms/${id}/unlock`),
+  logs: (params = {}) => {
+    const cleanParams = Object.fromEntries(Object.entries(params).filter(([, v]) => v != null && v !== ''));
+    const qs = new URLSearchParams(cleanParams).toString();
+    return req('GET', `/api/admin/logs${qs ? '?' + qs : ''}`);
+  },
   // quản trị
   addGroup: (name) => req('POST', '/api/groups', { name }),
   patchGroup: (id, p) => req('PATCH', `/api/groups/${id}`, p),
@@ -64,4 +71,10 @@ export const api = {
   delUser: (email) => req('DELETE', `/api/users/${u(email)}`),
   resetUserPassword: (email) => req('POST', `/api/users/${u(email)}/reset-password`),
   userLink: (email) => req('POST', `/api/users/${u(email)}/token`),
+  // thông báo hệ thống
+  notifications: () => req('GET', '/api/notifications'),
+  notificationTargets: () => req('GET', '/api/notifications/targets'),
+  sendNotification: (data) => req('POST', '/api/notifications', data),
+  readNotification: (id) => req('POST', `/api/notifications/${id}/read`),
+  readAllNotifications: () => req('POST', '/api/notifications/read-all'),
 };

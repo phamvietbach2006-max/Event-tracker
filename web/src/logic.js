@@ -1,8 +1,9 @@
-export const ST = { red: 'Chưa tổ chức', yellow: 'Đang tiến hành', green: 'Đã tiến hành xong' };
+export const ST = { red: 'Chưa tổ chức', yellow: 'Đang tiến hành', green: 'Đã tiến hành xong', cancelled: 'Hủy đại hội' };
 export const TS = { todo: '☐ Chưa đủ', doing: '◐ Đang kiểm', done: '☑ Đã đủ' };
-export const ORDER = ['red', 'yellow', 'green'];
+export const ORDER = ['red', 'yellow', 'green', 'cancelled'];
 export const NOTE_MAX = 150;
 export const NEXT = { todo: 'done', doing: 'done', done: 'todo' };
+
 
 export const UNITS = [
   'Trường Điện-Điện tử',
@@ -106,8 +107,10 @@ export function canStartCongress(room) {
 }
 
 export function statusCounts(rooms) {
-  const c = { red: 0, yellow: 0, green: 0 };
-  for (const r of rooms) c[r.status]++;
+  const c = { red: 0, yellow: 0, green: 0, cancelled: 0 };
+  for (const r of rooms) {
+    if (c[r.status] !== undefined) c[r.status]++;
+  }
   return c;
 }
 
@@ -121,8 +124,51 @@ export function totals(rooms) {
 export const isUserAdmin = (user) =>
   Boolean(user && (user.isAdmin || user.role === 'admin' || user.email?.toLowerCase() === 'bach.pv2414676@sis.hust.edu.vn'));
 
-export const canEdit = (me, room) =>
-  !!me && (isUserAdmin(me) || Boolean(me.ownedRoomIds?.includes(room?.id)));
+export function isSupervisor(me, room, group) {
+  if (!me) return false;
+  if (isUserAdmin(me)) return true;
+  const role = me.role || 'room_lead';
+  if (role === 'unit_lead') {
+    const assignedUnits = new Set(me.assignedUnits || []);
+    const unit = group ? parseGroupMeta(group.name).unit : (room?.groupName ? parseGroupMeta(room.groupName).unit : '');
+    return assignedUnits.has(unit);
+  }
+  if (role === 'floor_lead') {
+    const assignedGroupIds = new Set((me.assignedGroupIds || []).map(Number));
+    const gid = room?.groupId ?? group?.id;
+    return gid != null && assignedGroupIds.has(Number(gid));
+  }
+  return false;
+}
+
+export function hasRoomPermission(me, room, group) {
+  if (!me || !room) return false;
+  return isSupervisor(me, room, group) || Boolean(me.ownedRoomIds?.includes(room?.id));
+}
+
+export function canEdit(me, room, group) {
+  if (!me || !room) return false;
+  const supervisor = isSupervisor(me, room, group);
+  if (supervisor) return true;
+  if (room.isLocked) return false;
+  return Boolean(me.ownedRoomIds?.includes(room.id));
+}
+
+// Cán bộ phụ trách lớp vẫn có thể cập nhật trạng thái Đại hội ngay cả khi đã khóa hồ sơ & sĩ số
+export function canEditStatus(me, room, group) {
+  if (!me || !room) return false;
+  return isSupervisor(me, room, group) || Boolean(me.ownedRoomIds?.includes(room.id));
+}
+
+// Chỉnh sửa checklist giấy tờ và sĩ số bị khóa khi room.isLocked (cần cấp trên mở khóa)
+export function canEditDetails(me, room, group) {
+  if (!me || !room) return false;
+  if (isSupervisor(me, room, group)) return true;
+  if (room.isLocked) return false;
+  return Boolean(me.ownedRoomIds?.includes(room.id));
+}
+
+
 
 export const ROLES = {
   admin: {

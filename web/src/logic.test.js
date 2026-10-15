@@ -15,6 +15,7 @@ const state = {
 
 test('nhãn và vòng trạng thái việc', () => {
   assert.equal(ST.red, 'Chưa tổ chức');
+  assert.equal(ST.cancelled, 'Hủy đại hội');
   assert.deepEqual([NEXT.todo, NEXT.doing, NEXT.done], ['done', 'done', 'todo']);
 });
 
@@ -27,7 +28,7 @@ test('phần trăm: khu không có việc là 0, không chia cho 0', () => {
 
 test('đếm màu và tổng', () => {
   const rooms = allRooms(state);
-  assert.deepEqual(statusCounts(rooms), { red: 1, yellow: 1, green: 1 });
+  assert.deepEqual(statusCounts(rooms), { red: 1, yellow: 1, green: 1, cancelled: 0 });
   assert.deepEqual(totals(rooms), { rooms: 3, done: 2, total: 4, pct: 50 });
   assert.deepEqual(totals([]), { rooms: 0, done: 0, total: 0, pct: 0 });
 });
@@ -39,6 +40,22 @@ test('canEdit: khách không, chủ khu đúng khu, admin tất cả', () => {
   assert.equal(canEdit({ isAdmin: false, ownedRoomIds: [4] }, { id: 5 }), false);
   assert.equal(canEdit({ isAdmin: true, ownedRoomIds: [] }, { id: 5 }), true);
 });
+
+test('canEdit: phòng đã bị khóa (isLocked) chỉ cấp trên mới được sửa', () => {
+  const lockedRoom = { id: 4, isLocked: true, groupId: 1 };
+  const group = { id: 1, name: '[Trường CNTT & TT] Tầng 4 B1' };
+  // Cán bộ thường phụ trách phòng bị khóa -> không được sửa
+  assert.equal(canEdit({ isAdmin: false, role: 'room_lead', ownedRoomIds: [4] }, lockedRoom, group), false);
+  // Admin -> được sửa phòng khóa
+  assert.equal(canEdit({ isAdmin: true, role: 'admin', ownedRoomIds: [] }, lockedRoom, group), true);
+  // Phụ trách Đơn vị đúng đơn vị -> được sửa
+  assert.equal(canEdit({ isAdmin: false, role: 'unit_lead', assignedUnits: ['Trường CNTT & TT'], ownedRoomIds: [] }, lockedRoom, group), true);
+  // Phụ trách Đơn vị khác -> không được sửa
+  assert.equal(canEdit({ isAdmin: false, role: 'unit_lead', assignedUnits: ['Trường Cơ khí'], ownedRoomIds: [] }, lockedRoom, group), false);
+  // Phụ trách Tầng đúng tầng -> được sửa
+  assert.equal(canEdit({ isAdmin: false, role: 'floor_lead', assignedGroupIds: [1], ownedRoomIds: [] }, lockedRoom, group), true);
+});
+
 
 test('patchRoom/patchTask trả state mới, không sửa state cũ', () => {
   const s1 = patchRoom(state, 5, { status: 'green' });

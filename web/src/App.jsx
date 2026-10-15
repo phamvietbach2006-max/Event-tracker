@@ -2,7 +2,7 @@ import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from 'react
 import { Home, Star, Settings, Map, FileSpreadsheet, PlusCircle, LayoutDashboard, ClipboardList, ChevronsDown, ChevronsUp, ArrowUp, ShieldAlert, LogIn, BookUser } from 'lucide-react';
 import { api } from './api.js';
 import { useLive } from './useLive.js';
-import { allRooms, canEdit, statusCounts, totals, ST, UNITS, parseRoomMeta, parseGroupMeta, getScopedGroups, isUserAdmin } from './logic.js';
+import { allRooms, canEdit, hasRoomPermission, statusCounts, totals, ST, UNITS, parseRoomMeta, parseGroupMeta, getScopedGroups, isUserAdmin } from './logic.js';
 import Sidebar from './Sidebar.jsx';
 import Header from './Header.jsx';
 import GroupCard from './Group.jsx';
@@ -10,9 +10,13 @@ import Manage from './Manage.jsx';
 import Footer from './Footer.jsx';
 import UnitImportModal from './UnitImportModal.jsx';
 import OverviewTable from './OverviewTable.jsx';
+import LogsView from './LogsView.jsx';
 import LoginModal from './LoginModal.jsx';
 import OfficerModal from './OfficerModal.jsx';
 import DirectoryModal from './DirectoryModal.jsx';
+import NotificationsModal from './NotificationsModal.jsx';
+import IncomingAlertModal from './IncomingAlertModal.jsx';
+
 const MapView = lazy(() => import('./MapView.jsx')); // maplibre-gl nặng, chỉ tải khi mở Sơ đồ
 
 function useHash() {
@@ -26,7 +30,23 @@ function useHash() {
 }
 
 export default function App() {
-  const { state, setState, online, reload, error: stateError, stats } = useLive();
+  const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [unreadNotifCount, setUnreadNotifCount] = useState(0);
+  const [incomingAlert, setIncomingAlert] = useState(null);
+
+  const handleLiveNotification = useCallback((notif) => {
+    if (!notif) return;
+    setUnreadNotifCount((prev) => prev + 1);
+    if (notif.level === 'urgent' || notif.level === 'warning') {
+      setIncomingAlert(notif);
+    } else {
+      setToast(`🔔 ${notif.title}: ${notif.content.slice(0, 75)}...`);
+    }
+  }, []);
+
+  const { state, setState, online, reload, error: stateError, stats } = useLive({
+    onNotification: handleLiveNotification,
+  });
   const [me, setMe] = useState(undefined);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [loginNotice, setLoginNotice] = useState('');
@@ -61,9 +81,23 @@ export default function App() {
     api.contacts().then(setContacts).catch(() => {});
   }, []);
 
+  const refreshNotificationsCount = useCallback(() => {
+    api.notifications()
+      .then((data) => {
+        const list = data?.notifications || [];
+        const unread = list.filter((n) => !n.is_read).length;
+        setUnreadNotifCount(unread);
+      })
+      .catch(() => {});
+  }, []);
+
   useEffect(() => {
     refreshContacts();
   }, [refreshContacts]);
+
+  useEffect(() => {
+    refreshNotificationsCount();
+  }, [refreshNotificationsCount]);
 
   const handleOpenDirectory = useCallback(() => {
     setDirectoryOpen(true);
@@ -240,8 +274,9 @@ export default function App() {
   const query = search.trim().toLocaleLowerCase('vi');
   const matches = (room, group) => {
     if (mode === 'group' && group.id !== groupId) return false;
-    if (mode === 'mine' && !canEdit(me, room)) return false;
+    if (mode === 'mine' && !hasRoomPermission(me, room)) return false;
     if (mode === 'status' && room.status !== filter) return false;
+
     const meta = parseRoomMeta(room.name);
     if (kipFilter !== 'all' && meta.kip !== kipFilter) return false;
     if (cohortFilter !== 'all' && meta.cohort !== cohortFilter) return false;
@@ -280,6 +315,8 @@ export default function App() {
         managing={managing}
         onOpenLogin={() => handleRequireLogin()}
         onOpenDirectory={handleOpenDirectory}
+        unreadNotifCount={unreadNotifCount}
+        onOpenNotifications={() => setNotificationsOpen(true)}
       />
       <div className="app-main">
         <Header
@@ -307,6 +344,8 @@ export default function App() {
           onOpenLogin={() => handleRequireLogin()}
           onLogout={logout}
           onOpenDirectory={handleOpenDirectory}
+          unreadNotifCount={unreadNotifCount}
+          onOpenNotifications={() => setNotificationsOpen(true)}
         />
         {!online && <div className="offline-banner" role="status">Đang kết nối lại để nhận cập nhật mới…</div>}
         {managing ? (
@@ -372,8 +411,13 @@ export default function App() {
               onSelectOfficer={handleSelectOfficer}
             />
           </main>
+        ) : mode === 'logs' ? (
+          <main id="main" className="overview-page">
+            <LogsView />
+          </main>
         ) : (
           <main id="main" className={`event-board ${mode === 'overview' ? '' : 'detail-board'}`}>
+
             {mode !== 'overview' && (
               <div className="detail-heading">
                 <div>
@@ -518,6 +562,28 @@ export default function App() {
       <OfficerModal
         officer={selectedOfficer}
         onClose={() => setSelectedOfficer(null)}
+      />
+      <NotificationsModal
+        open={notificationsOpen}
+        onClose={() => {
+          setNotificationsOpen(false);
+          refreshNotificationsCount();
+        }}
+        me={me}
+        onNotificationRead={() => {
+          setUnreadNotifCount((prev) => Math.max(0, prev - 1));
+        }}
+      />
+      <IncomingAlertModal
+        notification={incomingAlert}
+        onClose={() => setIncomingAlert(null)}
+        onAcknowledge={(notif) => {
+          setIncomingAlert(null);
+          if (notif?.id) {
+            api.readNotification(notif.id).catch(() => {});
+            setUnreadNotifCount((prev) => Math.max(0, prev - 1));
+          }
+        }}
       />
       <div className={`toast ${toast ? 'show' : ''}`} role="alert">{toast}</div>
     </div>

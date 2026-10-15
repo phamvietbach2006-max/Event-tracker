@@ -1,4 +1,4 @@
-import { Menu, Search, Wifi, WifiOff, X, Users, Eye, Building2, LogIn, LogOut, UserRound, BookUser } from 'lucide-react';
+import { Menu, Search, Wifi, WifiOff, X, Users, Eye, Building2, LogIn, LogOut, UserRound, BookUser, Bell } from 'lucide-react';
 import { ORDER, ST, KIPS, COHORTS, UNITS, ROLES } from './logic.js';
 
 export default function Header({
@@ -26,6 +26,8 @@ export default function Header({
   onOpenLogin,
   onLogout,
   onOpenDirectory,
+  unreadNotifCount = 0,
+  onOpenNotifications,
 }) {
   const onlineCount = Math.max(online ? 1 : 0, Number(stats?.online) || 0);
   const visitCount = Math.max(1, Number(stats?.visits) || 0);
@@ -57,6 +59,20 @@ export default function Header({
         >
           <BookUser size={15} />
           <span className="btn-text">Danh bạ</span>
+        </button>
+
+        <button
+          type="button"
+          className="header-notif-btn"
+          onClick={onOpenNotifications}
+          title={unreadNotifCount > 0 ? `Có ${unreadNotifCount} thông báo từ hệ thống` : "Xem thông báo hệ thống"}
+          aria-label="Thông báo hệ thống"
+        >
+          <Bell size={15} />
+          <span className="btn-text">Thông báo</span>
+          {unreadNotifCount > 0 && (
+            <span className="header-notif-badge">{unreadNotifCount > 99 ? '99+' : unreadNotifCount}</span>
+          )}
         </button>
 
         <div className="header-stats-pill" aria-label={`${onlineCount} người đang online, ${visitCount} lượt truy cập`}>
@@ -108,7 +124,7 @@ export default function Header({
       </div>
     </div>
 
-    {!managing && mode !== 'map' && mode !== 'dashboard' && (
+    {!managing && mode !== 'map' && mode !== 'dashboard' && mode !== 'logs' && (
       <div className="filter-bar-stack">
         <div className="filter-toolbar" role="toolbar" aria-label="Thanh công cụ lọc">
           {/* 1. Chọn Đơn vị */}

@@ -21,6 +21,7 @@ import {
 } from 'lucide-react';
 import { api } from './api.js';
 import { UNITS, ROLES, parseGroupMeta, parseRoomMeta } from './logic.js';
+import ConfirmModal from './ConfirmModal.jsx';
 
 export default function Manage({ state, me, say, toast }) {
   const [users, setUsers] = useState([]);
@@ -30,6 +31,7 @@ export default function Manage({ state, me, say, toast }) {
   const [activeModal, setActiveModal] = useState(null); // null | { type: 'add' | 'edit', user?: object }
   const [generatedLink, setGeneratedLink] = useState(null); // { name, url }
   const [linkCopied, setLinkCopied] = useState(false);
+  const [confirmModal, setConfirmModal] = useState({ open: false });
 
   // Load all users
   const loadUsers = useCallback(async () => {
@@ -93,30 +95,60 @@ export default function Manage({ state, me, say, toast }) {
   }, [users, search, roleFilter]);
 
   // Quick action: Reset password
-  const handleResetPassword = async (u) => {
-    if (!confirm(`Bạn có chắc muốn đặt lại mật khẩu cho cán bộ "${u.name}" (${u.email}) về mặc định "Abc@123456767"?`)) return;
-    try {
-      const res = await api.resetUserPassword(u.email);
-      say(res.message || `Đã đặt lại mật khẩu cho ${u.name} về Abc@123456767`);
-    } catch (e) {
-      say(`Lỗi đặt lại mật khẩu: ${e.message}`);
-    }
+  const handleResetPassword = (u) => {
+    setConfirmModal({
+      open: true,
+      title: 'Đặt lại mật khẩu cán bộ',
+      subtitle: `${u.name} (${u.email})`,
+      message: `Bạn có chắc muốn đặt lại mật khẩu cho cán bộ "${u.name}" về mật khẩu mặc định "Abc@123456767"?`,
+      bulletPoints: ['Cán bộ có thể dùng mật khẩu này để đăng nhập ngay lập tức.'],
+      icon: 'warning',
+      variant: 'warning',
+      confirmText: 'Đặt lại mật khẩu',
+      onConfirm: async () => {
+        setConfirmModal((m) => ({ ...m, open: false }));
+        try {
+          const res = await api.resetUserPassword(u.email);
+          say(res.message || `Đã đặt lại mật khẩu cho ${u.name} về Abc@123456767`);
+        } catch (e) {
+          say(`Lỗi đặt lại mật khẩu: ${e.message}`);
+        }
+      },
+    });
   };
 
   // Quick action: Make quick login link
-  const handleMakeLink = async (u) => {
-    if (u.hasToken && !confirm(`Tạo link mới sẽ vô hiệu hóa link trước đó của cán bộ "${u.name}". Tiếp tục?`)) return;
-    try {
-      const res = await api.userLink(u.email);
-      setGeneratedLink({ name: u.name, url: res.url });
-      setLinkCopied(false);
-    } catch (e) {
-      say(`Lỗi tạo link: ${e.message}`);
+  const handleMakeLink = (u) => {
+    const doMake = async () => {
+      try {
+        const res = await api.userLink(u.email);
+        setGeneratedLink({ name: u.name, url: res.url });
+        setLinkCopied(false);
+      } catch (e) {
+        say(`Lỗi tạo link: ${e.message}`);
+      }
+    };
+    if (u.hasToken) {
+      setConfirmModal({
+        open: true,
+        title: 'Tạo link đăng nhập mới',
+        subtitle: `${u.name} (${u.email})`,
+        message: `Tạo link mới sẽ vô hiệu hóa link trước đó của cán bộ "${u.name}". Cán bộ sẽ không thể dùng link cũ được nữa. Bạn có muốn tiếp tục?`,
+        icon: 'warning',
+        variant: 'primary',
+        confirmText: 'Tạo link mới',
+        onConfirm: () => {
+          setConfirmModal((m) => ({ ...m, open: false }));
+          doMake();
+        },
+      });
+    } else {
+      doMake();
     }
   };
 
   // Quick action: Delete user
-  const handleDeleteUser = async (u) => {
+  const handleDeleteUser = (u) => {
     if (u.email.toLowerCase() === me?.email?.toLowerCase()) {
       say('Không thể tự xóa tài khoản của chính mình.');
       return;
@@ -125,14 +157,29 @@ export default function Manage({ state, me, say, toast }) {
       say('Tài khoản này là Quản trị viên vĩnh viễn của hệ thống, không thể xóa.');
       return;
     }
-    if (!confirm(`Bạn có chắc chắn muốn xóa tài khoản cán bộ "${u.name}" (${u.email}) khỏi hệ thống? Thao tác này sẽ hủy mọi quyền phụ trách.`)) return;
-    try {
-      await api.delUser(u.email);
-      say(`Đã xóa cán bộ ${u.name}`);
-      loadUsers();
-    } catch (e) {
-      say(`Lỗi xóa cán bộ: ${e.message}`);
-    }
+    setConfirmModal({
+      open: true,
+      title: 'Xác nhận xóa tài khoản cán bộ',
+      subtitle: `${u.name} (${u.email})`,
+      message: `Bạn có chắc chắn muốn xóa tài khoản cán bộ "${u.name}" khỏi hệ thống?`,
+      bulletPoints: [
+        'Mọi quyền phụ trách đơn vị, tầng hoặc chi đoàn của cán bộ này sẽ bị hủy bỏ.',
+        'Hành động này không thể hoàn tác.',
+      ],
+      icon: 'trash',
+      variant: 'danger',
+      confirmText: 'Xóa tài khoản',
+      onConfirm: async () => {
+        setConfirmModal((m) => ({ ...m, open: false }));
+        try {
+          await api.delUser(u.email);
+          say(`Đã xóa cán bộ ${u.name}`);
+          loadUsers();
+        } catch (e) {
+          say(`Lỗi xóa cán bộ: ${e.message}`);
+        }
+      },
+    });
   };
 
   return (
@@ -455,6 +502,12 @@ export default function Manage({ state, me, say, toast }) {
 
       {/* Toast */}
       <div className={`toast ${toast ? 'show' : ''}`}>{toast}</div>
+
+      {/* Custom Confirm Modal */}
+      <ConfirmModal
+        {...confirmModal}
+        onClose={() => setConfirmModal((m) => ({ ...m, open: false }))}
+      />
     </div>
   );
 }

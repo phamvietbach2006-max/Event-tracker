@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { LayoutDashboard, ClipboardList, Home, Star, Settings, LogOut, LogIn, X, Map as MapIcon, Building2, FileSpreadsheet, ChevronDown, ChevronRight, BookUser } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, Home, Star, Settings, LogOut, LogIn, X, Map as MapIcon, Building2, FileSpreadsheet, ChevronDown, ChevronRight, BookUser, History, Bell } from 'lucide-react';
 import { UNITS, ROLES, parseGroupMeta, isUserAdmin } from './logic.js';
+
 
 /* Nhóm groups theo tòa (ví dụ D9, C7, …) rồi theo đơn vị */
 function groupByBuilding(groups) {
@@ -43,6 +44,8 @@ export default function Sidebar({
   managing,
   onOpenLogin,
   onOpenDirectory,
+  unreadNotifCount = 0,
+  onOpenNotifications,
 }) {
   const sso = !!import.meta.env.VITE_SSO;
   const choose = (nextMode, value) => { onNavigate(nextMode, value); setOpen(false); };
@@ -104,11 +107,28 @@ export default function Sidebar({
           <BookUser size={19} />
           <span>Danh bạ Ban TC-KT</span>
         </button>
+        <button
+          className="nav-item nav-item-notifications"
+          onClick={() => { setOpen(false); onOpenNotifications?.(); }}
+          title="Thông báo hệ thống"
+        >
+          <Bell size={19} />
+          <span>Thông báo hệ thống</span>
+          {unreadNotifCount > 0 && (
+            <span className="nav-badge notif-badge">{unreadNotifCount > 99 ? '99+' : unreadNotifCount}</span>
+          )}
+        </button>
         {isUserAdmin(me) && (
           <a className={`nav-item ${managing ? 'active' : ''}`} href="#/manage" onClick={() => setOpen(false)}>
             <Settings size={19} />Quản lý hệ thống
           </a>
         )}
+        {isUserAdmin(me) && (
+          <button className={`nav-item ${!managing && mode === 'logs' ? 'active' : ''}`} onClick={() => choose('logs')}>
+            <History size={19} />Nhật ký hoạt động (Logs)
+          </button>
+        )}
+
 
         {/* ── ĐƠN VỊ TỔ CHỨC (accordion) ── */}
         <button

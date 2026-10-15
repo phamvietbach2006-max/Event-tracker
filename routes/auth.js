@@ -9,6 +9,7 @@ const ownedRoomIds = (db, email) =>
   db.prepare('SELECT room_id FROM room_owners WHERE email = ? ORDER BY room_id').all(email).map((r) => r.room_id);
 
 import { userView } from './admin.js';
+import { logActivity } from '../lib/repo.js';
 
 export function registerAuth(router) {
   router.add('GET', '/api/me', ({ db, user }) => (user ? userView(db, user) : null));
@@ -33,11 +34,15 @@ export function registerAuth(router) {
 
     const sid = createSession(db, u.email);
     setSessionCookie(req, res, sid);
+    try {
+      logActivity(db, u, null, 'auth.login', 'Đăng nhập thành công');
+    } catch {}
     return {
       ok: true,
       user: userView(db, u),
     };
   });
+
 
   router.add('POST', '/api/auth/change-password', async ({ req, res, user, db, body }) => {
     passwordChangeLimiter(req);
@@ -56,6 +61,9 @@ export function registerAuth(router) {
 
     const hashed = hashPassword(newPassword);
     db.prepare('UPDATE users SET password_hash = ? WHERE email = ?').run(hashed, u.email);
+    try {
+      logActivity(db, u, null, 'auth.change_password', 'Đã đổi mật khẩu');
+    } catch {}
     // Thu hồi các phiên đăng nhập khác của người dùng trên thiết bị khác
     const currentSid = sidFrom(req);
     if (currentSid) {
@@ -72,14 +80,22 @@ export function registerAuth(router) {
     const u = userByToken(db, url.searchParams.get('t'));
     if (u) {
       setSessionCookie(req, res, createSession(db, u.email));
+      try {
+        logActivity(db, u, null, 'auth.login', 'Đăng nhập thành công qua Token link');
+      } catch {}
       res.writeHead(302, { Location: '/', 'Cache-Control': 'no-store' }).end();
     } else {
       res.writeHead(302, { Location: '/?login=failed', 'Cache-Control': 'no-store' }).end();
     }
   });
 
-  const logoutHandler = ({ req, res, db }) => {
+  const logoutHandler = ({ req, res, db, user }) => {
     const sid = sidFrom(req);
+    if (user) {
+      try {
+        logActivity(db, user, null, 'auth.logout', 'Đăng xuất khỏi hệ thống');
+      } catch {}
+    }
     if (sid) destroySession(db, sid);
     clearSessionCookie(res);
     res.writeHead(204).end();
@@ -87,6 +103,7 @@ export function registerAuth(router) {
 
   router.add('POST', '/auth/logout', logoutHandler);
   router.add('POST', '/api/auth/logout', logoutHandler);
+
 
   const sso = (fn) => (ctx) => {
     if (!ctx.config.sso) throw new HttpError(501, 'sso_not_configured', 'SSO chưa được cấu hình');

@@ -253,3 +253,41 @@ test('phân quyền theo vai trò: unit_lead, floor_lead, reset-password', async
     assert.equal(patchFail.status, 403);
   } finally { await t.close(); }
 });
+
+test('nhật ký hoạt động (GET /api/admin/logs): ghi lại đầy đủ ai làm, lúc mấy giờ, ở vị trí nào', async () => {
+  const t = await startApp();
+  try {
+
+    // Khách không được xem logs (401), cán bộ thường không được xem (403)
+    assert.equal((await t.call('GET', '/api/admin/logs')).status, 401);
+    assert.equal((await t.call('GET', '/api/admin/logs', { as: 'owner@t.test' })).status, 403);
+
+    // Cán bộ thực hiện thao tác trên phòng 1
+    await t.call('PATCH', '/api/rooms/1/note', { as: 'owner@t.test', body: { note: 'Kiểm tra giấy tờ đợt 1' } });
+    await t.call('POST', '/api/rooms/1/lock', { as: 'owner@t.test' });
+
+    // Admin xem nhật ký
+    const rLogs = await t.call('GET', '/api/admin/logs', { as: 'admin@t.test' });
+    assert.equal(rLogs.status, 200);
+    assert.ok(Array.isArray(rLogs.body.logs));
+    assert.ok(rLogs.body.logs.length >= 2);
+
+    const lockLog = rLogs.body.logs.find((l) => l.action === 'room.lock');
+    assert.ok(lockLog);
+    assert.equal(lockLog.email, 'owner@t.test');
+    assert.ok(lockLog.ts > 0);
+    assert.ok(lockLog.location.includes('Lớp'));
+
+    // Tìm kiếm nhật ký theo q
+    const rSearch = await t.call('GET', '/api/admin/logs?q=owner', { as: 'admin@t.test' });
+    assert.equal(rSearch.status, 200);
+    assert.ok(rSearch.body.logs.every((l) => l.email?.includes('owner') || l.userName?.toLowerCase().includes('owner')));
+
+    // Lọc theo action
+    const rAction = await t.call('GET', '/api/admin/logs?action=room.lock', { as: 'admin@t.test' });
+    assert.equal(rAction.status, 200);
+    assert.ok(rAction.body.logs.every((l) => l.action === 'room.lock'));
+  } finally { await t.close(); }
+});
+
+

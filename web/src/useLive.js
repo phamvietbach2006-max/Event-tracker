@@ -3,7 +3,13 @@ import { api } from './api.js';
 
 const CACHE_KEY = 'event_tracker_state_cache_v1';
 
-export function useLive() {
+export function useLive(options = {}) {
+  const { onNotification } = options;
+  const onNotificationRef = useRef(onNotification);
+  useEffect(() => {
+    onNotificationRef.current = onNotification;
+  }, [onNotification]);
+
   const [state, setStateInternal] = useState(() => {
     try {
       const saved = localStorage.getItem(CACHE_KEY);
@@ -98,6 +104,14 @@ export function useLive() {
           if (next && typeof next.online === 'number') setStats(next);
         } catch {
           // Bỏ qua gói thống kê lỗi
+        }
+      });
+      es.addEventListener('notification', (e) => {
+        try {
+          const notif = JSON.parse(e.data);
+          onNotificationRef.current?.(notif);
+        } catch {
+          // Bỏ qua gói thông báo lỗi
         }
       });
     } catch {

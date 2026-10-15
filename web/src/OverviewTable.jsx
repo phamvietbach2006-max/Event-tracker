@@ -21,7 +21,10 @@ import {
   Eye,
   UserRound,
   PhoneCall,
+  AlertOctagon,
+  Lock,
 } from 'lucide-react';
+
 import {
   UNITS,
   KIPS,
@@ -174,12 +177,14 @@ export default function OverviewTable({ state, me, onNavigate, onSelectUnit, onS
     let green = 0;
     let yellow = 0;
     let red = 0;
+    let cancelled = 0;
     let totalDocs = 0;
     let doneDocs = 0;
 
     for (const r of filteredRows) {
       if (r.room.status === 'green') green++;
       else if (r.room.status === 'yellow') yellow++;
+      else if (r.room.status === 'cancelled') cancelled++;
       else red++;
 
       doneDocs += r.done;
@@ -187,8 +192,9 @@ export default function OverviewTable({ state, me, onNavigate, onSelectUnit, onS
     }
 
     const docPct = totalDocs ? Math.round((doneDocs / totalDocs) * 100) : 0;
-    return { total, green, yellow, red, doneDocs, totalDocs, docPct };
+    return { total, green, yellow, red, cancelled, doneDocs, totalDocs, docPct };
   }, [filteredRows]);
+
 
   // Pagination slice
   const paginatedRows = useMemo(() => {
@@ -359,6 +365,19 @@ export default function OverviewTable({ state, me, onNavigate, onSelectUnit, onS
           </div>
         </div>
 
+        {metrics.cancelled > 0 && (
+          <div className="kpi-card cancelled-card">
+            <div className="kpi-icon"><AlertOctagon size={20} /></div>
+            <div className="kpi-info">
+              <span className="kpi-label">Hủy đại hội</span>
+              <strong className="kpi-val">
+                {metrics.cancelled}{' '}
+                <small>({metrics.total ? Math.round((metrics.cancelled / metrics.total) * 100) : 0}%)</small>
+              </strong>
+            </div>
+          </div>
+        )}
+
         <div className="kpi-card doc-card">
           <div className="kpi-icon"><CheckSquare size={20} /></div>
           <div className="kpi-info">
@@ -443,8 +462,10 @@ export default function OverviewTable({ state, me, onNavigate, onSelectUnit, onS
               <option value="red">🔴 Chưa tổ chức</option>
               <option value="yellow">🟡 Đang tiến hành</option>
               <option value="green">🟢 Đã tiến hành xong</option>
+              <option value="cancelled">⚪ Hủy đại hội</option>
             </select>
           </label>
+
 
           {/* Hồ sơ */}
           <label className="ov-select-wrap" title="Lọc theo tiến độ giấy tờ">
@@ -690,13 +711,21 @@ export default function OverviewTable({ state, me, onNavigate, onSelectUnit, onS
 
                     {/* Trạng thái Đại hội - CHỈ XEM */}
                     <td className="td-status">
-                      <span
-                        className={`status-pill-static status-${statusColor}`}
-                        title={statusColor === 'green' ? 'Đã xong' : statusColor === 'yellow' ? 'Đang tiến hành' : 'Chưa tổ chức'}
-                      >
-                        {statusColor === 'green' ? '🟢 Đã xong' : statusColor === 'yellow' ? '🟡 Đang tiến hành' : '🔴 Chưa tổ chức'}
-                      </span>
+                      <div className="table-status-cell-wrap">
+                        <span
+                          className={`status-pill-static status-${statusColor}`}
+                          title={statusColor === 'green' ? 'Đã xong' : statusColor === 'yellow' ? 'Đang tiến hành' : statusColor === 'cancelled' ? 'Hủy đại hội' : 'Chưa tổ chức'}
+                        >
+                          {statusColor === 'green' ? '🟢 Đã xong' : statusColor === 'yellow' ? '🟡 Đang tiến hành' : statusColor === 'cancelled' ? '⚪ Hủy ĐH' : '🔴 Chưa tổ chức'}
+                        </span>
+                        {r.room.isLocked && (
+                          <span className="table-lock-tag" title={`Đã khóa bởi ${r.room.lockedBy || 'cán bộ'}`}>
+                            <Lock size={11} /> Đã khóa
+                          </span>
+                        )}
+                      </div>
                     </td>
+
 
                     {/* Tiến độ hồ sơ */}
                     <td className="td-progress">
