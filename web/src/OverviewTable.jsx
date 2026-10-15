@@ -35,6 +35,7 @@ import {
   percent,
   timeLabel,
   isAttendanceValid,
+  canEdit,
 } from './logic.js';
 
 export default function OverviewTable({ state, me, onNavigate, onSelectUnit, onSelectOfficer }) {
