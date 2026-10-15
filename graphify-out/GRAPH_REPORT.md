@@ -1,17 +1,17 @@
 # Graph Report - Event-tracker  (2026-10-15)
 
 ## Corpus Check
-- 81 files · ~170,805 words
+- 81 files · ~171,030 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 395 file(s) not represented in the graph (top: .pbf 388, (none) 2, .pptx 1)
 
 ## Summary
-- 499 nodes · 1206 edges · 25 communities (21 shown, 4 thin omitted)
+- 500 nodes · 1208 edges · 24 communities (20 shown, 4 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 62 edges (avg confidence: 0.83)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `6dab561a`
+- Built from commit: `eba6e1c4`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -30,8 +30,7 @@
 - CdpClient
 - REST API Design & Conventions
 - Project Scope & Execution Timeline
-- System Architecture & Codemaps
-- LogsView.jsx
+- Event Tracker backend  frontend Implementation Plan
 - Test Scenarios & Quality Assurance
 - Project Overview & Product Highlights
 - Technical Specification & Tech Stack
@@ -69,19 +68,19 @@
 ## Import Cycles
 - None detected.
 
-## Communities (25 total, 4 thin omitted)
+## Communities (24 total, 4 thin omitted)
 
 ### Community 0 - "React UI Components & Client API"
-Cohesion: 0.07
-Nodes (80): lucide-react, maplibre-gl, react, react-dom, api, ApiError, req(), App() (+72 more)
+Cohesion: 0.06
+Nodes (86): lucide-react, maplibre-gl, react, react-dom, api, ApiError, req(), App() (+78 more)
 
 ### Community 1 - "HTTP Application Server & Middleware"
 Cohesion: 0.08
-Nodes (31): getContacts(), getDatabaseSync(), getLibsqlDatabase(), getState(), groupBy(), openDb(), require, tx() (+23 more)
+Nodes (32): getContacts(), getDatabaseSync(), getLibsqlDatabase(), getState(), groupBy(), openDb(), require, tx() (+24 more)
 
 ### Community 2 - "Token & Session Authentication"
-Cohesion: 0.08
-Nodes (65): DEFAULT_PASSWORD, hashPassword(), verifyPassword(), hashToken(), loginUrl(), newToken(), userByToken(), createApp() (+57 more)
+Cohesion: 0.09
+Nodes (62): DEFAULT_PASSWORD, hashPassword(), verifyPassword(), hashToken(), loginUrl(), newToken(), userByToken(), createApp() (+54 more)
 
 ### Community 3 - "sso.js"
 Cohesion: 0.33
@@ -93,7 +92,7 @@ Nodes (19): vite, @vitejs/plugin-react, xlsx, dependencies, lucide-react, maplib
 
 ### Community 5 - "Core Architecture & Business Rules"
 Cohesion: 0.09
-Nodes (30): Microsoft Entra ID SSO, 100% Paperwork Checklist Rule, Permanent Admin Protection, React & Vite Frontend, Server-Sent Events (SSE), SQLite & Libsql Database, Cấu hình VM đã chỉnh sau test tải 2026-10-12, Cách hoạt động (+22 more)
+Nodes (30): Microsoft Entra ID SSO, 100% Paperwork Checklist Rule, Permanent Admin Protection, React & Vite Frontend, Server-Sent Events (SSE), SQLite & Libsql Database, Cấu hình VM đã chỉnh sau test tải 2026-10-12, 1 Sơ đồ Kiến trúc Tổng thể System Architecture (+22 more)
 
 ### Community 6 - "Load Testing & Performance Benchmarks"
 Cohesion: 0.10
@@ -112,8 +111,8 @@ Cohesion: 0.15
 Nodes (12): entrypoint, root, runtime, regions, rewrites, $schema, services, app (+4 more)
 
 ### Community 10 - "Rate Limiting & SSE Realtime Stream"
-Cohesion: 0.52
-Nodes (6): createSse(), add(), broadcast(), broadcastNotification(), broadcastStats(), write()
+Cohesion: 0.35
+Nodes (8): createRateLimiter(), getClientIp(), createSse(), add(), broadcast(), broadcastNotification(), broadcastStats(), write()
 
 ### Community 11 - "CdpClient"
 Cohesion: 0.22
@@ -127,13 +126,9 @@ Nodes (8): 1 Quy ước chung, 2 Giá trị cố định, 3 Đọc dữ liệu a
 Cohesion: 0.25
 Nodes (8): 1 Phạm vi đã chốt với anh, 2 Thiết kế tóm tắt, 3 Các mảng việc và người nhận, 4 Mốc thời gian, 5 Danh sách kiểm tra trước khi demo, 6 Rủi ro, 7 Chưa quyết cần chốt, Kế hoạch triển khai Web theo dõi chuẩn bị sự kiện skhusteduvn
 
-### Community 14 - "System Architecture & Codemaps"
+### Community 14 - "Event Tracker backend  frontend Implementation Plan"
 Cohesion: 0.25
-Nodes (8): 1 Sơ đồ Kiến trúc Tổng thể System Architecture, 21 Bảng phân tích các module Backend, 2 Bản đồ Module Backend, 31 Bảng phân tích các module Frontend websrc, 32 Tài nguyên Bản đồ Ngoại tuyến webpublichustmap, 3 Bản đồ Module Frontend, 4 Sơ đồ Luồng Dữ liệu Data Flow, Bản đồ Kiến trúc Hệ thống Architecture Codemap
-
-### Community 15 - "LogsView.jsx"
-Cohesion: 0.60
-Nodes (5): ActionBadge(), formatVnTime(), LogsView(), RoleBadge(), timeAgo()
+Nodes (8): Event Tracker backend  frontend Implementation Plan, Global Constraints, Phase 1 Backend nhánh featbackend PR 1, Review Focus, Task 1 Khung dự án  database, Task 2 Lõi HTTP kiểm tra dữ liệu phiên quyền, Task 3 Ứng dụng route công khai SSE seed helper test, Task 4 Đăng nhập apime link riêng đăng xuất khe SSO
 
 ### Community 16 - "Test Scenarios & Quality Assurance"
 Cohesion: 0.25
@@ -156,7 +151,7 @@ Cohesion: 0.80
 Nodes (4): cleanPhone(), formatPhoneDisplay(), getInitials(), OfficerModal()
 
 ## Knowledge Gaps
-- **24 isolated node(s):** `DEBIAN_FRONTEND`, `4 Ghi dữ liệu`, `7 Chưa quyết cần chốt`, `4 Sơ đồ Luồng Dữ liệu Data Flow`, `Task 4 Đăng nhập apime link riêng đăng xuất khe SSO` (+19 more)
+- **24 isolated node(s):** `DEBIAN_FRONTEND`, `4 Ghi dữ liệu`, `7 Chưa quyết cần chốt`, `4 Sơ đồ Luồng Dữ liệu Data Flow`, `UC6  Bảo mật và phân quyền gọi API` (+19 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 115 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -168,12 +163,12 @@ _Questions this graph is uniquely positioned to answer:_
 - **What connects `DEBIAN_FRONTEND`, `4 Ghi dữ liệu`, `7 Chưa quyết cần chốt` to the rest of the system?**
   _24 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `React UI Components & Client API` be split into smaller, more focused modules?**
-  _Cohesion score 0.06658901184236071 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06116207951070336 - nodes in this community are weakly interconnected._
 - **Why does `getLibsqlDatabase()` connect `HTTP Application Server & Middleware` to `Backend Package Configuration`?**
   _High betweenness centrality (0.041) - this node is a cross-community bridge._
 - **Should `HTTP Application Server & Middleware` be split into smaller, more focused modules?**
-  _Cohesion score 0.07769423558897243 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07622504537205081 - nodes in this community are weakly interconnected._
 - **Why does `libsql` connect `Backend Package Configuration` to `HTTP Application Server & Middleware`?**
   _High betweenness centrality (0.039) - this node is a cross-community bridge._
 - **Should `Token & Session Authentication` be split into smaller, more focused modules?**
-  _Cohesion score 0.08207934336525308 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08765432098765433 - nodes in this community are weakly interconnected._

@@ -72,51 +72,86 @@ export function useLive(options = {}) {
 
     let es = null;
     let pollInterval = null;
-    let sseFailures = 0;
+    let reconnectTimeout = null;
+    let offlineGraceTimer = null;
+    let destroyed = false;
 
-    try {
-      es = new EventSource('/events');
-      es.onopen = () => {
-        sseFailures = 0;
-        setOnline(true);
-        setError(false);
-      };
-      es.onerror = () => {
-        sseFailures += 1;
+    function connectSSE() {
+      if (destroyed) return;
+      if (es) {
+        try { es.close(); } catch {}
+        es = null;
+      }
+
+      try {
+        es = new EventSource('/events');
+
+        es.onopen = () => {
+          if (offlineGraceTimer) {
+            clearTimeout(offlineGraceTimer);
+            offlineGraceTimer = null;
+          }
+          setOnline(true);
+          setError(false);
+        };
+
+        es.onerror = () => {
+          // Khi kết nối SSE kết thúc (chu kỳ xoay tua 55s hoặc mạng chập chờn):
+          // Nếu browser đang tự reconnect (readyState === 0 / CONNECTING), cho grace period 4s trước khi hiển thị mất kết nối
+          if (es && es.readyState === 0) {
+            if (!offlineGraceTimer) {
+              offlineGraceTimer = setTimeout(() => {
+                setOnline(false);
+              }, 4000);
+            }
+          } else {
+            // Nếu stream bị đóng hoàn toàn (readyState === 2 / CLOSED), đóng và lên lịch tạo EventSource mới sau 2.5s
+            setOnline(false);
+            if (es) {
+              try { es.close(); } catch {}
+              es = null;
+            }
+            if (!reconnectTimeout && !destroyed) {
+              reconnectTimeout = setTimeout(() => {
+                reconnectTimeout = null;
+                connectSSE();
+              }, 2500);
+            }
+          }
+        };
+
+        es.onmessage = (e) => {
+          try {
+            const next = JSON.parse(e.data);
+            updateState(next);
+          } catch {
+            // Bỏ qua gói dữ liệu SSE không phải JSON hợp lệ
+          }
+        };
+
+        es.addEventListener('stats', (e) => {
+          try {
+            const next = JSON.parse(e.data);
+            if (next && typeof next.online === 'number') setStats(next);
+          } catch {
+            // Bỏ qua gói thống kê lỗi
+          }
+        });
+
+        es.addEventListener('notification', (e) => {
+          try {
+            const notif = JSON.parse(e.data);
+            onNotificationRef.current?.(notif);
+          } catch {
+            // Bỏ qua gói thông báo lỗi
+          }
+        });
+      } catch {
         setOnline(false);
-        // Nếu môi trường serverless/cloud ngắt SSE liên tiếp, đóng EventSource để tránh lỗi 500 và chuyển sang Polling
-        if (sseFailures >= 2 && es) {
-          try { es.close(); } catch {}
-          es = null;
-        }
-      };
-      es.onmessage = (e) => {
-        try {
-          const next = JSON.parse(e.data);
-          updateState(next);
-        } catch {
-          // Bỏ qua gói dữ liệu SSE không phải JSON hợp lệ
-        }
-      };
-      es.addEventListener('stats', (e) => {
-        try {
-          const next = JSON.parse(e.data);
-          if (next && typeof next.online === 'number') setStats(next);
-        } catch {
-          // Bỏ qua gói thống kê lỗi
-        }
-      });
-      es.addEventListener('notification', (e) => {
-        try {
-          const notif = JSON.parse(e.data);
-          onNotificationRef.current?.(notif);
-        } catch {
-          // Bỏ qua gói thông báo lỗi
-        }
-      });
-    } catch {
-      setOnline(false);
+      }
     }
+
+    connectSSE();
 
     // Polling dự phòng định kỳ để giữ dữ liệu luôn mới nhất khi mạng chập chờn
     pollInterval = setInterval(() => {
@@ -126,18 +161,26 @@ export function useLive(options = {}) {
     const onVisible = () => {
       if (document.visibilityState === 'visible') {
         reload();
+        // Nếu SSE đang mất kết nối khi quay lại tab, thử kết nối lại ngay
+        if (!es || es.readyState === 2) {
+          connectSSE();
+        }
       }
     };
     const onOnline = () => {
       setOnline(true);
       reload();
+      connectSSE();
     };
     window.addEventListener('visibilitychange', onVisible);
     window.addEventListener('online', onOnline);
 
     return () => {
+      destroyed = true;
       if (es) es.close();
       if (pollInterval) clearInterval(pollInterval);
+      if (reconnectTimeout) clearTimeout(reconnectTimeout);
+      if (offlineGraceTimer) clearTimeout(offlineGraceTimer);
       window.removeEventListener('visibilitychange', onVisible);
       window.removeEventListener('online', onOnline);
     };

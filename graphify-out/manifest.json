@@ -96,9 +96,9 @@
     "semantic_hash": "35190055168d5024acabc3536b936153"
   },
   "lib/sse.js": {
-    "mtime": 1792059759.126976,
-    "seen": 1792071144.7395353,
-    "ast_hash": "6aa6e9664613169e451a529f9a501f00",
+    "mtime": 1792073611.2021906,
+    "seen": 1792073706.515424,
+    "ast_hash": "0c4896546e6bbd48427ae9d3f296b223",
     "semantic_hash": ""
   },
   "lib/validate.js": {
@@ -342,9 +342,9 @@
     "semantic_hash": "15bf71ae58ef13a66d242b3379a9d335"
   },
   "web/src/useLive.js": {
-    "mtime": 1792052694.7027402,
-    "seen": 1792055894.93944,
-    "ast_hash": "d52df52ae33dc7357c3bba27c8ecafe4",
+    "mtime": 1792073648.2485948,
+    "seen": 1792073706.5154793,
+    "ast_hash": "ec40dcc979b3384e740477cc5838abc4",
     "semantic_hash": ""
   },
   "web/vite.config.js": {
