@@ -118,8 +118,11 @@ export function totals(rooms) {
   return { rooms: rooms.length, done, total, pct: total ? Math.round((done / total) * 100) : 0 };
 }
 
+export const isUserAdmin = (user) =>
+  Boolean(user && (user.isAdmin || user.role === 'admin' || user.email?.toLowerCase() === 'bach.pv2414676@sis.hust.edu.vn'));
+
 export const canEdit = (me, room) =>
-  !!me && (Boolean(me.isAdmin) || me.role === 'admin' || Boolean(me.ownedRoomIds?.includes(room?.id)));
+  !!me && (isUserAdmin(me) || Boolean(me.ownedRoomIds?.includes(room?.id)));
 
 export const ROLES = {
   admin: {

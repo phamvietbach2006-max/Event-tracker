@@ -156,6 +156,26 @@ test('admin không tự xoá hoặc tự hạ quyền mình', async () => {
   } finally { await t.close(); }
 });
 
+test('tài khoản admin vĩnh viễn: không thể xoá, không thể hạ quyền, luôn có quyền admin', async () => {
+  const t = await startApp();
+  try {
+    const P = 'bach.pv2414676@sis.hust.edu.vn';
+    t.db.prepare("INSERT OR IGNORE INTO users(email, name, is_admin, role) VALUES (?, 'Phạm Việt Bách', 1, 'admin')").run(P);
+
+    const dem = await t.call('PATCH', `/api/users/${encodeURIComponent(P)}`, { as: A, body: { role: 'room_lead' } });
+    assert.deepEqual([dem.status, dem.body.error], [400, 'cannot_demote_permanent_admin']);
+
+    const del = await t.call('DELETE', `/api/users/${encodeURIComponent(P)}`, { as: A });
+    assert.deepEqual([del.status, del.body.error], [400, 'cannot_delete_permanent_admin']);
+
+    const cookie = t.cookieFor(P);
+    const me = await t.call('GET', '/api/me', { cookie });
+    assert.equal(me.status, 200);
+    assert.equal(me.body.role, 'admin');
+    assert.equal(me.body.isAdmin, true);
+  } finally { await t.close(); }
+});
+
 test('link đăng nhập riêng: tạo mới vô hiệu link cũ, link mới dùng được, không lộ qua state', async () => {
   const t = await startApp();
   try {

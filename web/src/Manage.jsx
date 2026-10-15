@@ -121,6 +121,10 @@ export default function Manage({ state, me, say, toast }) {
       say('Không thể tự xóa tài khoản của chính mình.');
       return;
     }
+    if (u.email.toLowerCase() === 'bach.pv2414676@sis.hust.edu.vn') {
+      say('Tài khoản này là Quản trị viên vĩnh viễn của hệ thống, không thể xóa.');
+      return;
+    }
     if (!confirm(`Bạn có chắc chắn muốn xóa tài khoản cán bộ "${u.name}" (${u.email}) khỏi hệ thống? Thao tác này sẽ hủy mọi quyền phụ trách.`)) return;
     try {
       await api.delUser(u.email);
@@ -307,6 +311,9 @@ export default function Manage({ state, me, say, toast }) {
                           <div className="user-name-line">
                             <strong className="user-fullname">{u.name}</strong>
                             {isSelf && <span className="self-pill">Bạn</span>}
+                            {u.email?.toLowerCase() === 'bach.pv2414676@sis.hust.edu.vn' && (
+                              <span className="perm-admin-pill" style={{ background: '#ecfdf5', color: '#047857', border: '1px solid #a7f3d0', fontSize: '11px', padding: '2px 6px', borderRadius: '4px', fontWeight: 600 }}>Cố định</span>
+                            )}
                           </div>
                           <span className="user-email-line">{u.email}</span>
                           {(u.phone || u.team || u.position) && (
@@ -371,8 +378,8 @@ export default function Manage({ state, me, say, toast }) {
                           type="button"
                           className="btn-action btn-del"
                           onClick={() => handleDeleteUser(u)}
-                          disabled={isSelf}
-                          title={isSelf ? 'Không thể tự xóa chính mình' : 'Xóa tài khoản cán bộ này'}
+                          disabled={isSelf || u.email?.toLowerCase() === 'bach.pv2414676@sis.hust.edu.vn'}
+                          title={u.email?.toLowerCase() === 'bach.pv2414676@sis.hust.edu.vn' ? 'Tài khoản Quản trị viên vĩnh viễn (không thể xóa)' : (isSelf ? 'Không thể tự xóa chính mình' : 'Xóa tài khoản cán bộ này')}
                         >
                           <Trash2 size={14} />
                         </button>
@@ -627,6 +634,12 @@ function UserPermissionModal({ type, user, groups, onClose, onSuccess }) {
       return;
     }
 
+    const isPermanent = cleanEmail.toLowerCase() === 'bach.pv2414676@sis.hust.edu.vn';
+    if (isPermanent && role !== 'admin') {
+      setFormError('Tài khoản này là Quản trị viên vĩnh viễn, không thể chuyển sang vai trò khác.');
+      return;
+    }
+
     setSubmitting(true);
     try {
       const payload = {
@@ -775,19 +788,28 @@ function UserPermissionModal({ type, user, groups, onClose, onSuccess }) {
             {/* Chọn vai trò */}
             <div className="form-section">
               <h4 className="section-title">2. Chọn vai trò & quyền hạn</h4>
+              {user?.email?.toLowerCase() === 'bach.pv2414676@sis.hust.edu.vn' && (
+                <div style={{ background: '#ecfdf5', color: '#065f46', border: '1px solid #a7f3d0', padding: '10px 14px', borderRadius: '8px', marginBottom: '14px', fontSize: '13px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Shield size={16} />
+                  <span>Tài khoản này là <b>Quản trị viên vĩnh viễn</b> trên toàn hệ thống (cố định quyền Admin).</span>
+                </div>
+              )}
               <div className="role-options-grid">
                 {Object.values(ROLES).map((r) => {
                   const isChecked = role === r.id;
+                  const isPermDisabled = user?.email?.toLowerCase() === 'bach.pv2414676@sis.hust.edu.vn' && r.id !== 'admin';
                   return (
                     <label
                       key={r.id}
-                      className={`role-option-card role-card-${r.id} ${isChecked ? 'selected' : ''}`}
+                      className={`role-option-card role-card-${r.id} ${isChecked ? 'selected' : ''} ${isPermDisabled ? 'disabled' : ''}`}
+                      style={isPermDisabled ? { opacity: 0.5, cursor: 'not-allowed' } : undefined}
                     >
                       <input
                         type="radio"
                         name="user_role"
                         value={r.id}
                         checked={isChecked}
+                        disabled={isPermDisabled}
                         onChange={() => setRole(r.id)}
                       />
                       <div className="role-card-content">

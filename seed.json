@@ -495,8 +495,8 @@
     {
       "email": "bach.pv2414676@sis.hust.edu.vn",
       "name": "Phạm Việt Bách",
-      "isAdmin": false,
-      "role": "unit_lead",
+      "isAdmin": true,
+      "role": "admin",
       "phone": "0832170406",
       "position": "Trưởng mảng",
       "department": "Trường Điện- Điện tử",

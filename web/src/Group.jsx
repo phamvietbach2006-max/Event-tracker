@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Clock3, FileCheck2, MessageSquareText, Plus, Trash2, UserRound, PhoneCall, Users, CheckCircle2, AlertCircle } from 'lucide-react';
 import { api } from './api.js';
-import { ORDER, ST, TS, NEXT, NOTE_MAX, canEdit, doneCount, percent, statusCounts, patchRoom, patchTask, removeTask, timeLabel, parseRoomMeta, parseGroupMeta, isAttendanceValid, isChecklistComplete, canStartCongress } from './logic.js';
+import { ORDER, ST, TS, NEXT, NOTE_MAX, canEdit, doneCount, percent, statusCounts, patchRoom, patchTask, removeTask, timeLabel, parseRoomMeta, parseGroupMeta, isAttendanceValid, isChecklistComplete, canStartCongress, isUserAdmin } from './logic.js';
 
 function AttendanceBox({ room, onSave, disabled, onBlocked }) {
   const [attendees, setAttendees] = useState(room.attendees || '');
@@ -163,7 +163,7 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
   };
 
   const changeStatus = (status) => {
-    if (status !== 'red' && !canStart && !me?.isAdmin && me?.role !== 'admin') {
+    if (status !== 'red' && !canStart && !isUserAdmin(me)) {
       if (!isAttOk) {
         toast?.(`Chưa đủ điều kiện tổ chức Đại hội: Số đoàn viên có mặt (${room.attendees || 0}/${room.totalMembers || 0}) chưa đạt tối thiểu 2/3 sĩ số lớp.`);
       } else if (!isDocOk) {
@@ -297,11 +297,11 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
             aria-label={`Chọn trạng thái Đại hội cho ${meta.className}`}
           >
             <option value="red">{ST.red}</option>
-            <option value="yellow" disabled={!canStart && !me?.isAdmin && me?.role !== 'admin' && room.status === 'red'}>
-              {ST.yellow} {!canStart && !me?.isAdmin && me?.role !== 'admin' && room.status === 'red' ? '(Chưa đủ điều kiện)' : ''}
+            <option value="yellow" disabled={!canStart && !isUserAdmin(me) && room.status === 'red'}>
+              {ST.yellow} {!canStart && !isUserAdmin(me) && room.status === 'red' ? '(Chưa đủ điều kiện)' : ''}
             </option>
-            <option value="green" disabled={!canStart && !me?.isAdmin && me?.role !== 'admin' && room.status === 'red'}>
-              {ST.green} {!canStart && !me?.isAdmin && me?.role !== 'admin' && room.status === 'red' ? '(Chưa đủ điều kiện)' : ''}
+            <option value="green" disabled={!canStart && !isUserAdmin(me) && room.status === 'red'}>
+              {ST.green} {!canStart && !isUserAdmin(me) && room.status === 'red' ? '(Chưa đủ điều kiện)' : ''}
             </option>
           </select>
         </div>

@@ -86,6 +86,12 @@ function init() {
       console.warn('Lỗi khi kiểm tra token:', err.message);
     }
 
+    try {
+      db.prepare("UPDATE users SET is_admin = 1, role = 'admin' WHERE LOWER(email) = 'bach.pv2414676@sis.hust.edu.vn'").run();
+    } catch (err) {
+      console.warn('Lỗi đồng bộ admin vĩnh viễn:', err.message);
+    }
+
     app = createApp({ db, config });
     console.log('[BOOT] App initialized successfully!');
     return app;

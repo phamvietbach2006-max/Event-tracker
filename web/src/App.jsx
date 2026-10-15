@@ -2,7 +2,7 @@ import { Suspense, lazy, useCallback, useEffect, useMemo, useState } from 'react
 import { Home, Star, Settings, Map, FileSpreadsheet, PlusCircle, LayoutDashboard, ClipboardList, ChevronsDown, ChevronsUp, ArrowUp, ShieldAlert, LogIn, BookUser } from 'lucide-react';
 import { api } from './api.js';
 import { useLive } from './useLive.js';
-import { allRooms, canEdit, statusCounts, totals, ST, UNITS, parseRoomMeta, parseGroupMeta, getScopedGroups } from './logic.js';
+import { allRooms, canEdit, statusCounts, totals, ST, UNITS, parseRoomMeta, parseGroupMeta, getScopedGroups, isUserAdmin } from './logic.js';
 import Sidebar from './Sidebar.jsx';
 import Header from './Header.jsx';
 import GroupCard from './Group.jsx';
@@ -171,8 +171,8 @@ export default function App() {
     }
   };
 
-  const isSuperAdmin = !me || me.isAdmin || me.role === 'admin';
-  const isAdmin = Boolean(me && (me.isAdmin || me.role === 'admin'));
+  const isSuperAdmin = !me || isUserAdmin(me);
+  const isAdmin = isUserAdmin(me);
 
   // Scoped groups according to user role to prevent clutter ("không bị loạn")
   const scopedGroups = useMemo(() => getScopedGroups(state?.groups ?? [], me), [state?.groups, me]);

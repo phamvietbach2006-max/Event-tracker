@@ -1,5 +1,5 @@
 import { HttpError } from '../lib/http.js';
-import { requireAdmin } from '../lib/perm.js';
+import { requireAdmin, isPermanentAdmin } from '../lib/perm.js';
 import { roomOr404, taskOr404, groupOr404, logActivity, tx, roomView, taskView } from '../lib/repo.js';
 import { text, int, email } from '../lib/validate.js';
 import { newToken, loginUrl } from '../auth/token.js';
@@ -11,7 +11,8 @@ const rowId = (info) => Number(info.lastInsertRowid);
 
 export function userView(db, u) {
   const email = u.email.toLowerCase();
-  const role = u.is_admin ? 'admin' : (u.role || 'room_lead');
+  const isPermAdmin = isPermanentAdmin(email);
+  const role = (u.is_admin || isPermAdmin) ? 'admin' : (u.role || 'room_lead');
   const assignedUnits = db.prepare('SELECT unit FROM user_units WHERE LOWER(email) = ? ORDER BY unit')
     .all(email).map((r) => r.unit);
   const assignedGroupIds = db.prepare('SELECT group_id FROM user_groups WHERE LOWER(email) = ? ORDER BY group_id')
@@ -117,7 +118,7 @@ export function getAllUsers(db) {
 
   return users.map((u) => {
     const email = u.email.toLowerCase();
-    const role = u.is_admin ? 'admin' : (u.role || 'room_lead');
+    const role = (u.is_admin || isPermanentAdmin(email)) ? 'admin' : (u.role || 'room_lead');
     const assignedUnits = unitsByEmail.get(email) ?? [];
     const assignedGroupIds = groupsByEmail.get(email) ?? [];
     const assignedRoomIds = roomsByEmail.get(email) ?? [];
@@ -431,6 +432,9 @@ export function registerAdmin(router) {
     if (u.email.toLowerCase() === user.email.toLowerCase() && nextRole !== 'admin') {
       throw new HttpError(400, 'cannot_demote_self', 'Không thể tự bỏ quyền admin của chính mình');
     }
+    if (isPermanentAdmin(u.email) && nextRole !== 'admin') {
+      throw new HttpError(400, 'cannot_demote_permanent_admin', 'Tài khoản này là Quản trị viên vĩnh viễn, không thể hạ quyền');
+    }
 
     const isAdmin = nextRole === 'admin' ? 1 : 0;
     const phone = 'phone' in body ? (body.phone ? text(body.phone, 20, 'phone', { allowEmpty: true }) : null) : u.phone;
@@ -496,6 +500,9 @@ export function registerAdmin(router) {
     const u = userOr404(db, params.email);
     if (u.email.toLowerCase() === user.email.toLowerCase()) {
       throw new HttpError(400, 'cannot_delete_self', 'Không thể tự xoá chính mình');
+    }
+    if (isPermanentAdmin(u.email)) {
+      throw new HttpError(400, 'cannot_delete_permanent_admin', 'Tài khoản này là Quản trị viên vĩnh viễn, không thể xoá');
     }
     tx(db, () => {
       db.prepare('DELETE FROM user_units WHERE LOWER(email) = ?').run(u.email.toLowerCase());

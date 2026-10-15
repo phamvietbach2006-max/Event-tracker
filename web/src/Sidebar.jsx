@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { LayoutDashboard, ClipboardList, Home, Star, Settings, LogOut, LogIn, X, Map as MapIcon, Building2, FileSpreadsheet, ChevronDown, ChevronRight, BookUser } from 'lucide-react';
-import { UNITS, ROLES, parseGroupMeta } from './logic.js';
+import { UNITS, ROLES, parseGroupMeta, isUserAdmin } from './logic.js';
 
 /* Nhóm groups theo tòa (ví dụ D9, C7, …) rồi theo đơn vị */
 function groupByBuilding(groups) {
@@ -87,7 +87,7 @@ export default function Sidebar({
         <button className={`nav-item ${!managing && (mode === 'overview' || mode === 'group' || mode === 'status') ? 'active' : ''}`} onClick={() => choose('overview')}>
           <ClipboardList size={19} />Bảng theo dõi<span className="nav-badge">{tot.rooms}</span>
         </button>
-        {(me?.isAdmin || me?.role === 'admin') && (
+        {isUserAdmin(me) && (
           <button className="nav-item import-nav-btn" onClick={() => { setOpen(false); onOpenImport(); }}>
             <FileSpreadsheet size={19} />Nhập Excel / Thêm Lớp
           </button>
@@ -104,7 +104,7 @@ export default function Sidebar({
           <BookUser size={19} />
           <span>Danh bạ Ban TC-KT</span>
         </button>
-        {(me?.isAdmin || me?.role === 'admin') && (
+        {isUserAdmin(me) && (
           <a className={`nav-item ${managing ? 'active' : ''}`} href="#/manage" onClick={() => setOpen(false)}>
             <Settings size={19} />Quản lý hệ thống
           </a>
