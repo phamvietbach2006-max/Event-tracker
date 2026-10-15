@@ -133,12 +133,16 @@ const dispatch = (req, res) => {
 
 const server = http.createServer(dispatch);
 
-server.on('error', (err) => {
-  console.warn('Cảnh báo HTTP server:', err.message);
-});
-
 const rawPort = process.env.PORT;
 const listenPort = rawPort ? (isNaN(rawPort) ? rawPort : Number(rawPort)) : (config.port || 3000);
+
+server.on('error', (err) => {
+  if (err.code === 'EADDRINUSE') {
+    console.error(`[FATAL] Port ${listenPort} is already in use. Exiting...`);
+    process.exit(1);
+  }
+  console.warn('Cảnh báo HTTP server:', err.message);
+});
 
 try {
   if (typeof listenPort === 'string') {

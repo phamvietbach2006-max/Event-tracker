@@ -7,6 +7,8 @@ function cleanPhone(raw) {
   if (clean.startsWith('84') && !clean.startsWith('+84') && clean.length > 9) {
     clean = '0' + clean.slice(2);
   }
+  const digits = clean.replace(/\D/g, '');
+  if (digits.length < 9 || digits.length > 11) return '';
   return clean;
 }
 

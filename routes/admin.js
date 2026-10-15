@@ -289,9 +289,9 @@ export function registerAdmin(router) {
           });
         }
       }
+      logActivity(db, user, null, 'unit.import', `${unit}: +${importedGroups} tầng, +${importedRooms} lớp`);
     });
 
-    logActivity(db, user, null, 'unit.import', `${unit}: +${importedGroups} tầng, +${importedRooms} lớp`);
     sse.broadcast();
     return { ok: true, unit, importedGroups, importedRooms };
   });

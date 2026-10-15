@@ -87,8 +87,8 @@ export function registerRooms(router) {
       db.prepare('UPDATE tasks SET state = ?, text = ?, updated_at = ?, updated_by = ? WHERE id = ?')
         .run(state, txt, Date.now(), actor.name, task.id);
       touchRoom(db, actor, task.room_id);
+      logActivity(db, actor, task.room_id, 'task.update', `${task.id}: ${task.state} -> ${state}${txt !== task.text ? `; text: ${txt}` : ''}`);
     });
-    logActivity(db, actor, task.room_id, 'task.update', `${task.id}: ${task.state} -> ${state}${txt !== task.text ? `; text: ${txt}` : ''}`);
     sse.broadcast();
     return taskView(taskOr404(db, task.id));
   });
@@ -104,9 +104,9 @@ export function registerRooms(router) {
       const info = db.prepare('INSERT INTO tasks(room_id, text, sort, updated_at, updated_by) VALUES (?,?,?,?,?)')
         .run(room.id, txt, sort, Date.now(), actor.name);
       touchRoom(db, actor, room.id);
+      logActivity(db, actor, room.id, 'task.add', txt);
       return Number(info.lastInsertRowid);
     });
-    logActivity(db, actor, room.id, 'task.add', txt);
     sse.broadcast();
     return taskView(taskOr404(db, id));
   });
@@ -118,8 +118,8 @@ export function registerRooms(router) {
     tx(db, () => {
       db.prepare('DELETE FROM tasks WHERE id = ?').run(task.id);
       touchRoom(db, actor, task.room_id);
+      logActivity(db, actor, task.room_id, 'task.delete', task.text);
     });
-    logActivity(db, actor, task.room_id, 'task.delete', task.text);
     sse.broadcast();
     return { ok: true };
   });
