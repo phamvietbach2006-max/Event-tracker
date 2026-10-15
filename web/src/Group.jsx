@@ -19,10 +19,12 @@ function AttendanceBox({ room, onSave, disabled, onBlocked }) {
   const minRequired = tot > 0 ? Math.ceil((tot * 2) / 3) : 0;
   const deficit = Math.max(0, minRequired - att);
 
-  const handleSave = () => {
+  const handleSave = (customA, customT) => {
     if (disabled) return;
-    let a = Math.max(0, parseInt(attendees, 10) || 0);
-    const t = Math.max(0, parseInt(totalMembers, 10) || 0);
+    const rawA = customA !== undefined ? customA : attendees;
+    const rawT = customT !== undefined ? customT : totalMembers;
+    let a = Math.max(0, parseInt(rawA, 10) || 0);
+    const t = Math.max(0, parseInt(rawT, 10) || 0);
     if (t > 0 && a > t) {
       a = t;
       setAttendees(t);
@@ -67,8 +69,8 @@ function AttendanceBox({ room, onSave, disabled, onBlocked }) {
             disabled={disabled}
             placeholder="Số có mặt"
             onChange={(e) => setAttendees(e.target.value)}
-            onBlur={handleSave}
-            onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }}
+            onBlur={(e) => handleSave(e.target.value, undefined)}
+            onKeyDown={(e) => { if (e.key === 'Enter') { handleSave(e.currentTarget.value, undefined); e.currentTarget.blur(); } }}
           />
         </div>
         <div className="att-divider">/</div>
@@ -83,8 +85,8 @@ function AttendanceBox({ room, onSave, disabled, onBlocked }) {
             disabled={disabled}
             placeholder="Sĩ số lớp"
             onChange={(e) => setTotalMembers(e.target.value)}
-            onBlur={handleSave}
-            onKeyDown={(e) => { if (e.key === 'Enter') e.currentTarget.blur(); }}
+            onBlur={(e) => handleSave(undefined, e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') { handleSave(undefined, e.currentTarget.value); e.currentTarget.blur(); } }}
           />
         </div>
         <div className="att-pct-display">
