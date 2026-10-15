@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, Clock3, FileCheck2, MessageSquareText, Plus, Trash2, UserRound, PhoneCall, Users, CheckCircle2, AlertCircle, AlertOctagon, Settings2, Check, Lock, Unlock, Save } from 'lucide-react';
+import { ChevronDown, Clock3, FileCheck2, MessageSquareText, Plus, Trash2, UserRound, PhoneCall, Users, CheckCircle2, AlertCircle, AlertOctagon, Settings2, Check, Lock, Unlock, Save, Send, ShieldAlert } from 'lucide-react';
 import { api } from './api.js';
 import { ORDER, ST, TS, NEXT, NOTE_MAX, canEdit, isSupervisor, canEditStatus, canEditDetails, doneCount, percent, statusCounts, patchRoom, patchTask, removeTask, timeLabel, parseRoomMeta, parseGroupMeta, isAttendanceValid, isChecklistComplete, canStartCongress, isUserAdmin } from './logic.js';
 import ConfirmModal from './ConfirmModal.jsx';
+import QuorumRequestModal from './QuorumRequestModal.jsx';
 
 
-function AttendanceBox({ room, onSave, disabled, onBlocked }) {
+function AttendanceBox({ room, onSave, disabled, onBlocked, onRequestExemption, canRequestExemption }) {
   const [attendees, setAttendees] = useState(room.attendees || '');
   const [totalMembers, setTotalMembers] = useState(room.totalMembers || '');
 
@@ -17,7 +18,8 @@ function AttendanceBox({ room, onSave, disabled, onBlocked }) {
   const att = Number(attendees) || 0;
   const tot = Number(totalMembers) || 0;
   const pct = tot > 0 ? Math.min(100, Math.round((att / tot) * 100)) : 0;
-  const valid = tot > 0 && (att * 3 >= tot * 2);
+  const isQuorumExempt = Boolean(room.quorumExempt);
+  const valid = isQuorumExempt || (tot > 0 && (att * 3 >= tot * 2));
   const minRequired = tot > 0 ? Math.ceil((tot * 2) / 3) : 0;
   const deficit = Math.max(0, minRequired - att);
 
@@ -48,15 +50,35 @@ function AttendanceBox({ room, onSave, disabled, onBlocked }) {
     >
       <div className="att-label-row">
         <span className="att-box-title">
-          <Users size={14} aria-hidden="true" /> Điểm danh & Sĩ số Đoàn viên
+          <Users size={14} aria-hidden="true" /> Điểm danh &amp; Sĩ số Đoàn viên
         </span>
-        {tot > 0 ? (
-          <span className={`att-ratio-tag ${valid ? 'valid' : 'invalid'}`}>
-            {valid ? `✓ Đủ 2/3 sĩ số (${att}/${tot} - ${pct}%)` : `⚠️ Chưa đủ 2/3 (hiện ${att}/${tot} · thiếu ${deficit})`}
-          </span>
-        ) : (
-          <span className="att-ratio-tag waiting">Chưa nhập sĩ số lớp</span>
-        )}
+        <div className="att-tags-group">
+          {isQuorumExempt ? (
+            <span className="att-ratio-tag exempt" title="Đã được phê duyệt miễn yêu cầu 2/3">
+              ✓ Đã miễn yêu cầu 2/3 sĩ số
+            </span>
+          ) : tot > 0 ? (
+            <span className={`att-ratio-tag ${valid ? 'valid' : 'invalid'}`}>
+              {valid ? `✓ Đủ 2/3 sĩ số (${att}/${tot} - ${pct}%)` : `⚠️ Chưa đủ 2/3 (hiện ${att}/${tot} · thiếu ${deficit})`}
+            </span>
+          ) : (
+            <span className="att-ratio-tag waiting">Chưa nhập sĩ số lớp</span>
+          )}
+
+          {!valid && !isQuorumExempt && canRequestExemption && (
+            <button
+              type="button"
+              className="btn-request-quorum"
+              onClick={(e) => {
+                e.stopPropagation();
+                onRequestExemption?.();
+              }}
+              title="Gửi yêu cầu xin phê duyệt khẩn cấp cho Admin/Phụ trách tầng khi sĩ số chưa đủ 2/3"
+            >
+              <Send size={12} /> Xin phê duyệt sĩ số (&lt; 2/3)
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="att-inputs-grid">
@@ -202,9 +224,20 @@ export function RoomCard({ room, group, me, act, initialOpen = false, onRequireL
   const progress = percent(room);
   const meta = parseRoomMeta(room.name);
 
-  const isAttOk = isAttendanceValid(room.attendees, room.totalMembers);
+  const isAttOk = isAttendanceValid(room.attendees, room.totalMembers, room);
   const isDocOk = isChecklistComplete(room);
   const canStart = isAttOk && isDocOk;
+  const [quorumModalOpen, setQuorumModalOpen] = useState(false);
+
+  const handleSubmitQuorumRequest = async (roomId, targetType, attendees, totalMembers) => {
+    try {
+      await api.requestQuorumExemption(roomId, targetType, attendees, totalMembers);
+      toast?.(`✓ Đã gửi yêu cầu phê duyệt sĩ số lớp ${meta.className} thành công! Pop-up khẩn cấp đã được gửi tới Cấp trên.`);
+    } catch (err) {
+      toast?.(`Lỗi khi gửi yêu cầu phê duyệt: ${err.message}`);
+      throw err;
+    }
+  };
 
   const handleBlockedAction = (e, actionName = 'cập nhật thông tin') => {
     e?.preventDefault?.();
@@ -479,6 +512,8 @@ export function RoomCard({ room, group, me, act, initialOpen = false, onRequireL
           onSave={saveAttendance}
           disabled={!canUserEditDetails}
           onBlocked={() => handleBlockedAction(null, 'cập nhật điểm danh và sĩ số của')}
+          onRequestExemption={() => setQuorumModalOpen(true)}
+          canRequestExemption={canUserEditDetails || canUserEditStatus}
         />
 
         {/* 2. THANH DROPDOWN TRẠNG THÁI ĐẠI HỘI DUY NHẤT */}
@@ -495,7 +530,12 @@ export function RoomCard({ room, group, me, act, initialOpen = false, onRequireL
         ) : (
           <div className={`congress-condition-banner ${canStart ? 'eligible' : 'locked'}`}>
             {canStart ? (
-              <span><CheckCircle2 size={15} /> Đã đủ điều kiện tiến hành Đại hội (≥ 2/3 sĩ số & 100% giấy tờ)</span>
+              <span>
+                <CheckCircle2 size={15} />
+                {room.quorumExempt
+                  ? ' Đã đủ điều kiện tiến hành Đại hội (Đã miễn yêu cầu 2/3 sĩ số & 100% giấy tờ)'
+                  : ' Đã đủ điều kiện tiến hành Đại hội (≥ 2/3 sĩ số & 100% giấy tờ)'}
+              </span>
             ) : (
               <span>
                 <AlertCircle size={15} /> Chưa đủ điều kiện tổ chức:{' '}
@@ -707,6 +747,14 @@ export function RoomCard({ room, group, me, act, initialOpen = false, onRequireL
       </div>
     </div>
     <ConfirmModal {...modalConfig} onClose={closeModal} />
+    <QuorumRequestModal
+      open={quorumModalOpen}
+      onClose={() => setQuorumModalOpen(false)}
+      room={room}
+      group={group}
+      me={me}
+      onSubmit={handleSubmitQuorumRequest}
+    />
   </article>;
 
 

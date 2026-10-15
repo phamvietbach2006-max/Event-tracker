@@ -1,6 +1,8 @@
 {
-  "3": "sso.js",
+  "3": "auth.js",
   "7": "build_presentation.py",
   "11": "CdpClient",
-  "14": "Event Tracker backend  frontend Implementation Plan"
+  "13": "DirectoryModal.jsx",
+  "14": "Event Tracker backend  frontend Implementation Plan",
+  "15": "LogsView.jsx"
 }

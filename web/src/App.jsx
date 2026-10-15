@@ -16,6 +16,8 @@ import OfficerModal from './OfficerModal.jsx';
 import DirectoryModal from './DirectoryModal.jsx';
 import NotificationsModal from './NotificationsModal.jsx';
 import IncomingAlertModal from './IncomingAlertModal.jsx';
+import EmergencyQuorumModal from './EmergencyQuorumModal.jsx';
+import ReviewTemplateView from './ReviewTemplateView.jsx';
 
 const MapView = lazy(() => import('./MapView.jsx')); // maplibre-gl nặng, chỉ tải khi mở Sơ đồ
 
@@ -33,21 +35,50 @@ export default function App() {
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [unreadNotifCount, setUnreadNotifCount] = useState(0);
   const [incomingAlert, setIncomingAlert] = useState(null);
+  const [pendingQuorumRequests, setPendingQuorumRequests] = useState([]);
+  const [showEmergencyModal, setShowEmergencyModal] = useState(false);
+
+  const [me, setMe] = useState(undefined);
+
+  const refreshQuorumRequests = useCallback(() => {
+    if (!me) {
+      setPendingQuorumRequests([]);
+      return;
+    }
+    const role = me.role || 'room_lead';
+    const isAdmin = isUserAdmin(me);
+    if (!isAdmin && role !== 'floor_lead') {
+      setPendingQuorumRequests([]);
+      return;
+    }
+    api.pendingQuorumRequests()
+      .then((data) => {
+        const list = data?.requests || [];
+        setPendingQuorumRequests(list);
+        if (list.length > 0) {
+          setShowEmergencyModal(true);
+        }
+      })
+      .catch(() => {});
+  }, [me]);
 
   const handleLiveNotification = useCallback((notif) => {
     if (!notif) return;
     setUnreadNotifCount((prev) => prev + 1);
+    if (notif.type === 'quorum_request') {
+      refreshQuorumRequests();
+      return;
+    }
     if (notif.level === 'urgent' || notif.level === 'warning') {
       setIncomingAlert(notif);
     } else {
       setToast(`🔔 ${notif.title}: ${notif.content.slice(0, 75)}...`);
     }
-  }, []);
+  }, [refreshQuorumRequests]);
 
   const { state, setState, online, reload, error: stateError, stats } = useLive({
     onNotification: handleLiveNotification,
   });
-  const [me, setMe] = useState(undefined);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [loginNotice, setLoginNotice] = useState('');
   const [selectedUnit, setSelectedUnit] = useState(UNITS[0]);
@@ -98,6 +129,21 @@ export default function App() {
   useEffect(() => {
     refreshNotificationsCount();
   }, [refreshNotificationsCount]);
+
+  useEffect(() => {
+    refreshQuorumRequests();
+  }, [refreshQuorumRequests, state]);
+
+  const handleDecideQuorumRequest = useCallback(async (id, decision) => {
+    try {
+      const res = await api.decideQuorumRequest(id, decision);
+      setToast(res.message || 'Đã ghi nhận quyết định phê duyệt.');
+      refreshQuorumRequests();
+    } catch (err) {
+      setToast('Lỗi khi phê duyệt: ' + err.message);
+      throw err;
+    }
+  }, [refreshQuorumRequests]);
 
   const handleOpenDirectory = useCallback(() => {
     setDirectoryOpen(true);
@@ -415,6 +461,10 @@ export default function App() {
           <main id="main" className="overview-page">
             <LogsView />
           </main>
+        ) : mode === 'review-template' ? (
+          <main id="main" className="overview-page">
+            <ReviewTemplateView me={me} say={setToast} />
+          </main>
         ) : (
           <main id="main" className={`event-board ${mode === 'overview' ? '' : 'detail-board'}`}>
 
@@ -574,6 +624,14 @@ export default function App() {
           setUnreadNotifCount((prev) => Math.max(0, prev - 1));
         }}
       />
+      {showEmergencyModal && pendingQuorumRequests.length > 0 && (
+        <EmergencyQuorumModal
+          requests={pendingQuorumRequests}
+          onClose={() => setShowEmergencyModal(false)}
+          onDecide={handleDecideQuorumRequest}
+          me={me}
+        />
+      )}
       <IncomingAlertModal
         notification={incomingAlert}
         onClose={() => setIncomingAlert(null)}

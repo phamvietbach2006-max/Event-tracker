@@ -37,8 +37,8 @@ export function registerRooms(router) {
     if (status !== 'red' && status !== 'cancelled' && !body.force && !actor.is_admin && (room.total_members > 0 || body.enforceRules)) {
       const attendees = room.attendees ?? 0;
       const totalMembers = room.total_members ?? 0;
-      if (totalMembers <= 0 || (attendees * 3 < totalMembers * 2)) {
-        throw new HttpError(400, 'attendance_not_met', 'Chưa đủ điều kiện: Số lượng đoàn viên có mặt phải đạt từ 2/3 sĩ số lớp trở lên.');
+      if (!room.quorum_exempt && (totalMembers <= 0 || (attendees * 3 < totalMembers * 2))) {
+        throw new HttpError(400, 'attendance_not_met', 'Chưa đủ điều kiện: Số lượng đoàn viên có mặt phải đạt từ 2/3 sĩ số lớp trở lên (hoặc cần được Cấp trên phê duyệt gỡ bỏ yêu cầu 2/3).');
       }
       const pendingTasks = db.prepare("SELECT COUNT(*) AS count FROM tasks WHERE room_id = ? AND state != 'done'").get(room.id)?.count ?? 0;
       if (pendingTasks > 0) {

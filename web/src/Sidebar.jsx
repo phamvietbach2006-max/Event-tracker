@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LayoutDashboard, ClipboardList, Home, Star, Settings, LogOut, LogIn, X, Map as MapIcon, Building2, FileSpreadsheet, ChevronDown, ChevronRight, BookUser, History, Bell } from 'lucide-react';
+import { LayoutDashboard, ClipboardList, Home, Star, Settings, LogOut, LogIn, X, Map as MapIcon, Building2, FileSpreadsheet, ChevronDown, ChevronRight, BookUser, History, Bell, FileText } from 'lucide-react';
 import { UNITS, ROLES, parseGroupMeta, isUserAdmin } from './logic.js';
 
 
@@ -117,6 +117,14 @@ export default function Sidebar({
           {unreadNotifCount > 0 && (
             <span className="nav-badge notif-badge">{unreadNotifCount > 99 ? '99+' : unreadNotifCount}</span>
           )}
+        </button>
+        <button
+          className={`nav-item nav-item-template ${!managing && mode === 'review-template' ? 'active' : ''}`}
+          onClick={() => choose('review-template')}
+          title="Mẫu nhận xét kiểm tra Đại hội"
+        >
+          <FileText size={19} />
+          <span>Mẫu nhận xét</span>
         </button>
         {isUserAdmin(me) && (
           <a className={`nav-item ${managing ? 'active' : ''}`} href="#/manage" onClick={() => setOpen(false)}>

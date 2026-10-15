@@ -88,7 +88,8 @@ export const allRooms = (state) => (state?.groups ?? []).flatMap((g) => g.rooms)
 export const doneCount = (r) => r.tasks.filter((t) => t.state === 'done').length;
 export const percent = (r) => (r.tasks.length ? Math.round((doneCount(r) / r.tasks.length) * 100) : 0);
 
-export function isAttendanceValid(attendees, totalMembers) {
+export function isAttendanceValid(attendees, totalMembers, room = null) {
+  if (room?.quorumExempt) return true;
   const att = Number(attendees) || 0;
   const tot = Number(totalMembers) || 0;
   if (tot <= 0) return false;
@@ -103,7 +104,7 @@ export function isChecklistComplete(room) {
 
 export function canStartCongress(room) {
   if (!room) return false;
-  return isAttendanceValid(room.attendees, room.totalMembers) && isChecklistComplete(room);
+  return isAttendanceValid(room.attendees, room.totalMembers, room) && isChecklistComplete(room);
 }
 
 export function statusCounts(rooms) {

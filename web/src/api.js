@@ -77,4 +77,13 @@ export const api = {
   sendNotification: (data) => req('POST', '/api/notifications', data),
   readNotification: (id) => req('POST', `/api/notifications/${id}/read`),
   readAllNotifications: () => req('POST', '/api/notifications/read-all'),
+  // phê duyệt ngoại lệ sĩ số
+  requestQuorumExemption: (roomId, targetType, attendees, totalMembers) =>
+    req('POST', `/api/rooms/${roomId}/quorum-request`, { targetType, attendees, totalMembers }),
+  pendingQuorumRequests: () => req('GET', '/api/quorum-requests/pending'),
+  decideQuorumRequest: (id, decision) => req('POST', `/api/quorum-requests/${id}/decision`, { decision }),
+  quorumStatus: (roomId) => req('GET', `/api/rooms/${roomId}/quorum-status`),
+  // mẫu nhận xét kiểm tra
+  getReviewTemplate: () => req('GET', '/api/template/review'),
+  setReviewTemplate: (content) => req('PUT', '/api/template/review', { content }),
 };
