@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { api } from './api.js';
 
 const CACHE_KEY = 'event_tracker_state_cache_v1';
@@ -19,6 +19,7 @@ export function useLive() {
   const [online, setOnline] = useState(false);
   const [error, setError] = useState(false);
   const [stats, setStats] = useState({ online: 1, visits: 1 });
+  const inFlightRef = useRef(false);
 
   const updateState = useCallback((next) => {
     setStateInternal((current) => {
@@ -36,6 +37,8 @@ export function useLive() {
   }, []);
 
   const reload = useCallback(() => {
+    if (inFlightRef.current) return Promise.resolve();
+    inFlightRef.current = true;
     return api.state()
       .then((next) => {
         if (next && Array.isArray(next.groups)) {
@@ -52,6 +55,9 @@ export function useLive() {
           if (!curr) setError(true);
           return curr;
         });
+      })
+      .finally(() => {
+        inFlightRef.current = false;
       });
   }, [updateState]);
 
@@ -98,10 +104,10 @@ export function useLive() {
       setOnline(false);
     }
 
-    // Polling dự phòng định kỳ để giữ dữ liệu luôn mới nhất
+    // Polling dự phòng định kỳ để giữ dữ liệu luôn mới nhất khi mạng chập chờn
     pollInterval = setInterval(() => {
       reload();
-    }, 6000);
+    }, 20000);
 
     const onVisible = () => {
       if (document.visibilityState === 'visible') {

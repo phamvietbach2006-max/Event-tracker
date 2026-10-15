@@ -6,7 +6,7 @@ export class ApiError extends Error {
   }
 }
 
-async function req(method, path, body, timeoutMs = 35000) {
+async function req(method, path, body, timeoutMs = 15000) {
   const signal = typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? AbortSignal.timeout(timeoutMs) : undefined;
   const res = await fetch(path, {
     method,
@@ -26,20 +26,10 @@ const u = encodeURIComponent;
 
 export const api = {
   state: async () => {
-    try {
-      return await req('GET', '/api/state', undefined, 45000);
-    } catch {
-      // Tự động thử lại 1 lần nếu gặp sự cố mạng mobile chập chờn
-      return await req('GET', '/api/state', undefined, 45000);
-    }
+    return await req('GET', '/api/state', undefined, 12000);
   },
   contacts: async () => {
-    try {
-      return await req('GET', '/api/contacts', undefined, 35000);
-    } catch {
-      // Tự động thử lại 1 lần nếu gặp sự cố mạng hoặc khởi động phiên bản mới
-      return await req('GET', '/api/contacts', undefined, 35000);
-    }
+    return await req('GET', '/api/contacts', undefined, 15000);
   },
   me: async () => {
     try {
