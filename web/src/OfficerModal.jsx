@@ -168,12 +168,6 @@ export default function OfficerModal({ officer, onClose }) {
             )}
           </div>
         </div>
-
-        <div className="officer-modal-footer">
-          <button type="button" className="officer-close-btn" onClick={onClose}>
-            Đóng
-          </button>
-        </div>
       </div>
     </div>
   );
