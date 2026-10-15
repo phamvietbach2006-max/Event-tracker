@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { ChevronDown, Clock3, FileCheck2, MessageSquareText, Plus, Trash2, UserRound, PhoneCall, Users, CheckCircle2, AlertCircle } from 'lucide-react';
+import { ChevronDown, Clock3, FileCheck2, MessageSquareText, Plus, Trash2, UserRound, PhoneCall, Users, CheckCircle2, AlertCircle, Settings2, Check } from 'lucide-react';
 import { api } from './api.js';
 import { ORDER, ST, TS, NEXT, NOTE_MAX, canEdit, doneCount, percent, statusCounts, patchRoom, patchTask, removeTask, timeLabel, parseRoomMeta, parseGroupMeta, isAttendanceValid, isChecklistComplete, canStartCongress, isUserAdmin } from './logic.js';
 
@@ -14,14 +14,19 @@ function AttendanceBox({ room, onSave, disabled, onBlocked }) {
 
   const att = Number(attendees) || 0;
   const tot = Number(totalMembers) || 0;
-  const pct = tot > 0 ? Math.round((att / tot) * 100) : 0;
+  const pct = tot > 0 ? Math.min(100, Math.round((att / tot) * 100)) : 0;
   const valid = tot > 0 && (att * 3 >= tot * 2);
   const minRequired = tot > 0 ? Math.ceil((tot * 2) / 3) : 0;
+  const deficit = Math.max(0, minRequired - att);
 
   const handleSave = () => {
     if (disabled) return;
-    const a = Math.max(0, parseInt(attendees, 10) || 0);
+    let a = Math.max(0, parseInt(attendees, 10) || 0);
     const t = Math.max(0, parseInt(totalMembers, 10) || 0);
+    if (t > 0 && a > t) {
+      a = t;
+      setAttendees(t);
+    }
     if (a !== (room.attendees ?? 0) || t !== (room.totalMembers ?? 0)) {
       onSave(a, t);
     }
@@ -38,13 +43,15 @@ function AttendanceBox({ room, onSave, disabled, onBlocked }) {
       }}
     >
       <div className="att-label-row">
-        <span><Users size={14} aria-hidden="true" /> Điểm danh & Sĩ số Đoàn viên</span>
+        <span className="att-box-title">
+          <Users size={14} aria-hidden="true" /> Điểm danh & Sĩ số Đoàn viên
+        </span>
         {tot > 0 ? (
           <span className={`att-ratio-tag ${valid ? 'valid' : 'invalid'}`}>
-            {valid ? `✓ Đủ điều kiện (≥ 2/3: ${att}/${tot})` : `⚠️ Chưa đủ 2/3 (cần ≥ ${minRequired}/${tot})`}
+            {valid ? `✓ Đủ 2/3 sĩ số (${att}/${tot} - ${pct}%)` : `⚠️ Chưa đủ 2/3 (hiện ${att}/${tot} · thiếu ${deficit})`}
           </span>
         ) : (
-          <span className="att-ratio-tag waiting">Chưa nhập sĩ số</span>
+          <span className="att-ratio-tag waiting">Chưa nhập sĩ số lớp</span>
         )}
       </div>
 
@@ -82,9 +89,24 @@ function AttendanceBox({ room, onSave, disabled, onBlocked }) {
         </div>
         <div className="att-pct-display">
           <span className={`att-pct-val ${valid ? 'val-good' : 'val-warn'}`}>{pct}%</span>
-          <span className="att-pct-sub">tỷ lệ có mặt</span>
+          <span className="att-pct-sub">{valid ? 'Đạt chuẩn' : 'Chưa đạt'}</span>
         </div>
       </div>
+
+      {tot > 0 && (
+        <div className="att-progress-container" title={`Tỷ lệ có mặt: ${pct}% (Yêu cầu tối thiểu: 66.7%)`}>
+          <div className="att-progress-bar-track">
+            <div
+              className={`att-progress-bar-fill ${valid ? 'fill-good' : 'fill-warn'}`}
+              style={{ width: `${Math.min(100, pct)}%` }}
+            />
+            <div className="att-progress-benchmark" style={{ left: '66.67%' }}>
+              <span className="benchmark-pin" />
+              <span className="benchmark-label">Mốc 2/3</span>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -143,6 +165,7 @@ function AddTask({ onAdd }) {
 
 export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, toast, onSelectOfficer }) {
   const [open, setOpen] = useState(initialOpen);
+  const [customizingTasks, setCustomizingTasks] = useState(false);
   const editor = canEdit(me, room);
   const done = doneCount(room);
   const progress = percent(room);
@@ -163,35 +186,76 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
   };
 
   const changeStatus = (status) => {
+    const prevStatus = room.status;
     if (status !== 'red' && !canStart && !isUserAdmin(me)) {
-      if (!isAttOk) {
-        toast?.(`Chưa đủ điều kiện tổ chức Đại hội: Số đoàn viên có mặt (${room.attendees || 0}/${room.totalMembers || 0}) chưa đạt tối thiểu 2/3 sĩ số lớp.`);
+      if (!isAttOk && !isDocOk) {
+        toast?.(`Chưa đủ điều kiện tổ chức Đại hội: Sĩ số chưa đạt 2/3 (${room.attendees || 0}/${room.totalMembers || 0}) và checklist giấy tờ chưa đủ 100% (${done}/${room.tasks.length}).`);
+      } else if (!isAttOk) {
+        const minRequired = room.totalMembers > 0 ? Math.ceil((room.totalMembers * 2) / 3) : 1;
+        toast?.(`Chưa đủ điều kiện tổ chức: Cần tối thiểu 2/3 đoàn viên có mặt (hiện có ${room.attendees || 0}/${room.totalMembers || 0}, cần ≥ ${minRequired}).`);
       } else if (!isDocOk) {
-        toast?.(`Chưa đủ điều kiện tổ chức Đại hội: Checklist giấy tờ chưa hoàn thành 100% (${done}/${room.tasks.length} mục đã đủ).`);
+        toast?.(`Chưa đủ điều kiện tổ chức: Checklist giấy tờ chưa hoàn thành 100% (mới đạt ${done}/${room.tasks.length} mục).`);
       }
       return;
     }
-    act((state) => patchRoom(state, room.id, { status }), () => api.setStatus(room.id, status));
+    act(
+      (state) => patchRoom(state, room.id, { status }),
+      () => api.setStatus(room.id, status),
+      (state) => patchRoom(state, room.id, { status: prevStatus }),
+    );
   };
 
-  const saveAttendance = (attendees, totalMembers) => act(
-    (state) => patchRoom(state, room.id, { attendees, totalMembers }),
-    () => api.setAttendance(room.id, attendees, totalMembers),
-  );
+  const saveAttendance = (attendees, totalMembers) => {
+    const prevAtt = room.attendees;
+    const prevTot = room.totalMembers;
+    act(
+      (state) => patchRoom(state, room.id, { attendees, totalMembers }),
+      () => api.setAttendance(room.id, attendees, totalMembers),
+      (state) => patchRoom(state, room.id, { attendees: prevAtt, totalMembers: prevTot }),
+    );
+  };
 
   const changeTask = (task) => {
-    const state = NEXT[task.state];
-    act((current) => patchTask(current, task.id, { state }), () => api.setTask(task.id, state));
+    const prevState = task.state;
+    const nextState = NEXT[task.state];
+    act(
+      (current) => patchTask(current, task.id, { state: nextState }),
+      () => api.setTask(task.id, nextState),
+      (current) => patchTask(current, task.id, { state: prevState }),
+    );
   };
-  const editTask = (task, text) => act((state) => patchTask(state, task.id, { text }), () => api.patchTaskText(task.id, text));
+
+  const editTask = (task, text) => {
+    const prevText = task.text;
+    act(
+      (state) => patchTask(state, task.id, { text }),
+      () => api.patchTaskText(task.id, text),
+      (state) => patchTask(state, task.id, { text: prevText }),
+    );
+  };
+
   const deleteTask = (task) => {
-    if (confirm(`Xóa mục "${task.text}"?`)) act((state) => removeTask(state, task.id), () => api.delTask(task.id));
+    if (confirm(`Xóa mục "${task.text}"?`)) {
+      act(
+        (state) => removeTask(state, task.id),
+        () => api.delTask(task.id),
+      );
+    }
   };
+
   const addNewTask = (text) => act(
     (state) => patchRoom(state, room.id, { tasks: [...room.tasks, { id: -Date.now(), text, state: 'todo', sort: room.tasks.length + 1 }] }),
     () => api.addTask(room.id, text),
   );
-  const saveNote = (note) => act((state) => patchRoom(state, room.id, { note }), () => api.setNote(room.id, note));
+
+  const saveNote = (note) => {
+    const prevNote = room.note;
+    act(
+      (state) => patchRoom(state, room.id, { note }),
+      () => api.setNote(room.id, note),
+      (state) => patchRoom(state, room.id, { note: prevNote }),
+    );
+  };
 
   return <article className={`task-card room-card status-${room.status} ${open ? 'expanded' : ''} ${!editor ? 'is-read-only' : ''}`}>
     <div className="room-card-head" role="button" tabIndex={0} onClick={() => setOpen(!open)} onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(!open); } }} aria-expanded={open}>
@@ -272,10 +336,13 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
         {/* Thông báo điều kiện tổ chức trực quan */}
         <div className={`congress-condition-banner ${canStart ? 'eligible' : 'locked'}`}>
           {canStart ? (
-            <span><CheckCircle2 size={14} /> Đã đủ điều kiện tiến hành Đại hội (≥ 2/3 sĩ số & 100% giấy tờ)</span>
+            <span><CheckCircle2 size={15} /> Đã đủ điều kiện tiến hành Đại hội (≥ 2/3 sĩ số & 100% giấy tờ)</span>
           ) : (
             <span>
-              <AlertCircle size={14} /> Chưa đủ điều kiện tổ chức: {!isAttOk ? 'Thiếu ≥ 2/3 đoàn viên có mặt' : ''} {!isAttOk && !isDocOk ? 'và ' : ''} {!isDocOk ? 'Chưa đủ 100% giấy tờ' : ''}
+              <AlertCircle size={15} /> Chưa đủ điều kiện tổ chức:{' '}
+              {!isAttOk && `Cần ≥ 2/3 đoàn viên có mặt (${room.attendees || 0}/${room.totalMembers || 0})`}
+              {!isAttOk && !isDocOk && ' · '}
+              {!isDocOk && `Checklist chưa đạt 100% (${done}/${room.tasks.length} mục)`}
             </span>
           )}
         </div>
@@ -297,22 +364,44 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
             aria-label={`Chọn trạng thái Đại hội cho ${meta.className}`}
           >
             <option value="red">{ST.red}</option>
-            <option value="yellow" disabled={!canStart && !isUserAdmin(me) && room.status === 'red'}>
-              {ST.yellow} {!canStart && !isUserAdmin(me) && room.status === 'red' ? '(Chưa đủ điều kiện)' : ''}
+            <option value="yellow" disabled={!canStart && !isUserAdmin(me)}>
+              {ST.yellow} {!canStart && !isUserAdmin(me) ? '(Chưa đủ điều kiện)' : ''}
             </option>
-            <option value="green" disabled={!canStart && !isUserAdmin(me) && room.status === 'red'}>
-              {ST.green} {!canStart && !isUserAdmin(me) && room.status === 'red' ? '(Chưa đủ điều kiện)' : ''}
+            <option value="green" disabled={!canStart && !isUserAdmin(me)}>
+              {ST.green} {!canStart && !isUserAdmin(me) ? '(Chưa đủ điều kiện)' : ''}
             </option>
           </select>
         </div>
 
-        <div className="room-detail-title">
-          <span>Checklist giấy tờ ({meta.congressType})</span>
-          <span>{done}/{room.tasks.length} đã đủ</span>
+        {/* 3. CHECKLIST GIẤY TỜ TINH GỌN */}
+        <div className="room-detail-title checklist-header-row">
+          <span>Checklist giấy tờ ({meta.congressType}) · {done}/{room.tasks.length} đã đủ</span>
+          {editor && (
+            <button
+              type="button"
+              className={`btn-toggle-task-customize ${customizingTasks ? 'active' : ''}`}
+              onClick={() => setCustomizingTasks((v) => !v)}
+              title={customizingTasks ? 'Hoàn tất tùy chỉnh' : 'Tùy chỉnh danh mục giấy tờ (sửa tên/thêm/xóa)'}
+            >
+              {customizingTasks ? (
+                <>✓ Hoàn tất</>
+              ) : (
+                <><Settings2 size={13} /> Tùy chỉnh danh mục</>
+              )}
+            </button>
+          )}
         </div>
+
+        {customizingTasks && (
+          <div className="task-customize-notice">
+            <span>⚙️ Chế độ tùy chỉnh: Bạn có thể đổi tên, thêm mới hoặc xóa bớt danh mục giấy tờ bên dưới.</span>
+          </div>
+        )}
+
         {room.tasks.length === 0 && <p className="room-empty">Lớp này chưa có danh mục giấy tờ nào.</p>}
+
         <div
-          className={`card-checklist ${!editor ? 'checklist-readonly' : ''}`}
+          className={`card-checklist ${!editor ? 'checklist-readonly' : ''} ${customizingTasks ? 'mode-customize' : 'mode-inspect'}`}
           onClickCapture={(e) => {
             if (!editor) {
               e.stopPropagation();
@@ -320,52 +409,80 @@ export function RoomCard({ room, me, act, initialOpen = false, onRequireLogin, t
             }
           }}
         >
-          {room.tasks.map((task) => (
-            <div className={`checklist-item ${task.state}`} key={task.id}>
-              <button
-                className={`task-state-btn ${task.state}`}
-                disabled={!editor}
-                onClick={() => changeTask(task)}
+          {room.tasks.map((task) => {
+            const isDone = task.state === 'done';
+            if (customizingTasks) {
+              return (
+                <div className={`checklist-item customize-item ${task.state}`} key={task.id}>
+                  <button
+                    className={`task-state-btn ${task.state}`}
+                    disabled={!editor}
+                    onClick={() => changeTask(task)}
+                    aria-label={`${task.text}: ${TS[task.state]}`}
+                  >
+                    {isDone ? <Check size={12} strokeWidth={3} /> : null}
+                  </button>
+                  <input
+                    className="task-edit-input"
+                    key={task.text}
+                    defaultValue={task.text}
+                    maxLength={200}
+                    aria-label={`Sửa tên giấy tờ ${task.text}`}
+                    onBlur={(e) => {
+                      const text = e.target.value.trim();
+                      if (text && text !== task.text) editTask(task, text);
+                      else e.target.value = task.text;
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') e.currentTarget.blur();
+                      if (e.key === 'Escape') {
+                        e.currentTarget.value = task.text;
+                        e.currentTarget.blur();
+                      }
+                    }}
+                  />
+                  <button
+                    className="task-del-btn"
+                    onClick={() => deleteTask(task)}
+                    aria-label={`Xóa mục ${task.text}`}
+                    title="Xóa mục giấy tờ này"
+                  >
+                    <Trash2 size={15} />
+                  </button>
+                </div>
+              );
+            }
+
+            // Clean Inspection Mode (Chế độ Tác nghiệp / Kiểm tra Tinh Gọn)
+            return (
+              <div
+                className={`clean-check-row ${isDone ? 'is-done' : 'is-todo'} ${editor ? 'clickable' : ''}`}
+                key={task.id}
+                role="button"
+                tabIndex={editor ? 0 : undefined}
+                onClick={() => {
+                  if (editor) changeTask(task);
+                }}
+                onKeyDown={(e) => {
+                  if (editor && (e.key === 'Enter' || e.key === ' ')) {
+                    e.preventDefault();
+                    changeTask(task);
+                  }
+                }}
                 aria-label={`${task.text}: ${TS[task.state]}. Nhấn để đổi trạng thái`}
               >
-                {TS[task.state]}
-              </button>
-              {editor ? (
-                <input
-                  className="task-edit-input"
-                  key={task.text}
-                  defaultValue={task.text}
-                  maxLength={200}
-                  aria-label={`Sửa tên giấy tờ ${task.text}`}
-                  onBlur={(e) => {
-                    const text = e.target.value.trim();
-                    if (text && text !== task.text) editTask(task, text);
-                    else e.target.value = task.text;
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') e.currentTarget.blur();
-                    if (e.key === 'Escape') {
-                      e.currentTarget.value = task.text;
-                      e.currentTarget.blur();
-                    }
-                  }}
-                />
-              ) : (
-                <span className="task-label">{task.text}</span>
-              )}
-              {editor && (
-                <button
-                  className="task-del-btn"
-                  onClick={() => deleteTask(task)}
-                  aria-label={`Xóa mục ${task.text}`}
-                >
-                  <Trash2 size={16} />
-                </button>
-              )}
-            </div>
-          ))}
+                <div className={`clean-check-circle ${isDone ? 'checked' : ''}`}>
+                  {isDone ? <Check size={13} strokeWidth={3} /> : null}
+                </div>
+                <span className="clean-check-label">{task.text}</span>
+                <span className={`clean-check-pill ${task.state}`}>
+                  {TS[task.state]}
+                </span>
+              </div>
+            );
+          })}
         </div>
-        {editor && <AddTask onAdd={addNewTask} />}
+        {editor && customizingTasks && <AddTask onAdd={addNewTask} />}
 
         <NoteBox
           room={room}

@@ -125,25 +125,24 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [toast]);
 
-  const act = useCallback(async (optimistic, call) => {
-    let previous = null;
-    setState((current) => {
-      previous = current;
-      return current ? optimistic(current) : current;
-    });
+  const act = useCallback(async (optimistic, call, rollback) => {
+    setState((current) => (current ? optimistic(current) : current));
     try {
       const res = await call();
       if (!online) reload();
       return res;
     } catch (e) {
-      if (previous) setState(previous);
+      if (typeof rollback === 'function') {
+        setState((current) => (current ? rollback(current) : current));
+      } else {
+        reload();
+      }
       if (e.status === 401) {
         setMe(null);
         setToast('Phiên đăng nhập đã hết hạn. Hãy đăng nhập lại.');
       } else {
-        setToast(e.status === 403 ? 'Bạn không có quyền sửa lớp này.' : e.message);
+        setToast(e.status === 403 ? 'Bạn không có quyền sửa lớp này.' : (e.message || 'Có lỗi xảy ra'));
       }
-      reload();
       return undefined;
     }
   }, [online, reload, setState]);
