@@ -351,7 +351,7 @@ def build_presentation():
         cp2.font.color.rgb = RGBColor(203, 213, 225)
 
     # Right side graphic / logo
-    logo_path = os.path.join(ARTIFACT_DIR, "logo_preview.png")
+    logo_path = os.path.join(ARTIFACT_DIR, "transparent_logo.png")
     if os.path.exists(logo_path):
         s1.shapes.add_picture(logo_path, Inches(9.8), Inches(1.6), width=Inches(2.8), height=Inches(2.8))
 
@@ -371,9 +371,9 @@ def build_presentation():
     ], font_size=10.5, space_after=10)
 
     create_card(s2, Inches(6.8), Inches(1.3), Inches(5.9), Inches(5.6), "Giao diện Bảng Điều khiển Tập trung Toàn trường")
-    preview_img = os.path.join(ARTIFACT_DIR, "full_preview.png")
+    preview_img = os.path.join(ARTIFACT_DIR, "real_dashboard_overview.png")
     add_fitted_image(s2, preview_img, 7.0, 1.8, 5.5, 4.4)
-    add_caption(s2, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Hệ thống hiển thị hàng trăm phòng học trực quan theo từng tầng và tòa nhà")
+    add_caption(s2, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Bảng điều khiển trực quan 198 chi đoàn với 10 tầng học phân cấp thời gian thực")
 
     # =========================================================================
     # SLIDE 3: HƯỚNG DẪN CÀI ĐẶT PWA TRÊN iOS (IPHONE / IPAD)
@@ -442,7 +442,7 @@ def build_presentation():
     ], font_size=10.0, space_after=6)
 
     create_card(s5, Inches(6.8), Inches(1.3), Inches(5.9), Inches(5.6), "Hộp thoại Đăng nhập Cán bộ Kiểm tra")
-    login_img = os.path.join(UPLOAD_DIR, "media_1791986024994_52b26b5b.png")
+    login_img = os.path.join(ARTIFACT_DIR, "real_login_modal.png")
     add_fitted_image(s5, login_img, 7.0, 1.8, 5.5, 4.4)
     add_caption(s5, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Hộp thoại Đăng nhập Cán bộ: Nhập Email @sis.hust.edu.vn và mật khẩu bảo mật")
 
@@ -483,8 +483,9 @@ def build_presentation():
     ], font_size=10.5, space_after=8)
 
     create_card(s7, Inches(6.8), Inches(1.3), Inches(5.9), Inches(5.6), "Bộ lọc Kíp, Khóa, Trạng thái & Ô Tìm kiếm Header")
-    add_fitted_image(s7, preview_img, 7.0, 1.8, 5.5, 4.4)
-    add_caption(s7, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Hệ thống lọc thông minh giúp tìm đúng lớp trong 500+ chi đoàn chỉ sau 1 click")
+    filter_bar_img = os.path.join(ARTIFACT_DIR, "real_filter_bar.png")
+    add_fitted_image(s7, filter_bar_img, 7.0, 1.8, 5.5, 4.4)
+    add_caption(s7, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Thanh công cụ lọc đa năng: Đơn vị, Kíp 1-4, Khóa K70/K71, Trạng thái & Tìm kiếm nhanh")
 
     # =========================================================================
     # SLIDE 8: CÁN BỘ TRỰC LỚP [1]: CẤU TRÚC THẺ CHI ĐOÀN & ĐIỀU PHỐI
@@ -503,9 +504,9 @@ def build_presentation():
     ], font_size=10.5, space_after=8)
 
     create_card(s8, Inches(6.8), Inches(1.3), Inches(5.9), Inches(5.6), "Hình ảnh Thẻ Chi đoàn Thực tế với Đầy đủ Dữ liệu")
-    card_img = os.path.join(UPLOAD_DIR, "media_1791980705711_cf092d8d.png")
-    add_fitted_image(s8, card_img, 7.0, 1.8, 5.5, 4.4)
-    add_caption(s8, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Thẻ Chi đoàn thực tế: Đầy đủ tên lớp, phòng học, cán bộ trực và checklist giấy tờ")
+    card_d9102_img = os.path.join(ARTIFACT_DIR, "real_card_d9102.png")
+    add_fitted_image(s8, card_d9102_img, 7.0, 1.8, 5.5, 4.4)
+    add_caption(s8, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Cấu trúc Thẻ Chi đoàn: Mã phòng, Kíp học, Loại đại hội, Tiến độ hồ sơ & Cán bộ trực")
 
     # =========================================================================
     # SLIDE 9: CÁN BỘ TRỰC LỚP [2]: ĐIỂM DANH SĨ SỐ & RÀNG BUỘC 2/3
@@ -526,9 +527,9 @@ def build_presentation():
                 "• Đại hội Chi đoàn chỉ có giá trị pháp lý khi có ít nhất 2/3 tổng số đoàn viên được triệu tập có mặt tham dự.\n• KHÓA CHẶN TỰ ĐỘNG: Nếu sĩ số chưa đạt đủ 2/3, hệ thống sẽ KHÓA CHẶN, tuyệt đối không cho phép chuyển trạng thái lớp sang 'Đang tiến hành' hoặc 'Đã xong'.\n• Nếu không tập hợp đủ 2/3: Cán bộ phải thực hiện quy trình Hủy đại hội và xin hoãn sang buổi khác.")
 
     create_card(s9, Inches(6.8), Inches(1.3), Inches(5.9), Inches(5.6), "Khung Điểm danh Sĩ số & Huy hiệu Đủ 2/3 Hợp lệ")
-    attend_img = os.path.join(UPLOAD_DIR, "media_1791977382994_018f2f03.png")
+    attend_img = os.path.join(ARTIFACT_DIR, "real_attendance_box.png")
     add_fitted_image(s9, attend_img, 7.0, 1.8, 5.5, 4.4)
-    add_caption(s9, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Huy hiệu xanh 'Đủ 2/3 (Có mặt/Tổng số)' hiển thị tự động khi đạt điều kiện pháp lý")
+    add_caption(s9, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Khung Điểm danh thực tế: 42/50 ĐV (84% Đạt chuẩn), vạch Mốc 2/3 & Huy hiệu Đủ 2/3 hợp lệ")
 
     # =========================================================================
     # SLIDE 10: CÁN BỘ TRỰC LỚP [3]: KIỂM TRA HỒ SƠ & CHECKLIST 100%
@@ -546,8 +547,9 @@ def build_presentation():
     ], font_size=10.0, space_after=8)
 
     create_card(s10, Inches(6.8), Inches(1.3), Inches(5.9), Inches(5.6), "Danh sách Checklist Hồ sơ đã Tích Đủ 100%")
-    add_fitted_image(s10, card_img, 7.0, 1.8, 5.5, 4.4)
-    add_caption(s10, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Checklist 8 mục của khóa K70 đã tích đủ màu xanh lá kèm tỷ lệ 100% hoàn thành")
+    checklist_img = os.path.join(ARTIFACT_DIR, "real_checklist_100.png")
+    add_fitted_image(s10, checklist_img, 7.0, 1.8, 5.5, 4.4)
+    add_caption(s10, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Checklist 8 mục của khóa K70 đã tích đủ màu xanh lá kèm xác nhận đủ điều kiện tổ chức")
 
     # =========================================================================
     # SLIDE 11: CÁN BỘ TRỰC LỚP [4]: GHI CHÚ & ĐỔI MÀU TRẠNG THÁI
@@ -565,8 +567,9 @@ def build_presentation():
     ], font_size=10.5, space_after=8)
 
     create_card(s11, Inches(6.8), Inches(1.3), Inches(5.9), Inches(5.6), "Thẻ Lớp với Ô Ghi chú & Nút Trạng thái Đại hội")
-    add_fitted_image(s11, card_img, 7.0, 1.8, 5.5, 4.4)
-    add_caption(s11, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Vòng đời đại hội: Quản lý minh bạch, rõ ràng theo từng giai đoạn tác nghiệp")
+    note_bottom_img = os.path.join(ARTIFACT_DIR, "test_card_bottom.png")
+    add_fitted_image(s11, note_bottom_img, 7.0, 1.8, 5.5, 4.4)
+    add_caption(s11, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Ghi chú kiểm tra chi tiết nhân sự trúng cử, nút Lưu độc lập và nút Khóa niêm phong")
 
     # =========================================================================
     # SLIDE 12: CÁN BỘ TRỰC LỚP [5]: XỬ LÝ HỦY ĐẠI HỘI & LÝ DO BẮT BUỘC
@@ -616,8 +619,9 @@ def build_presentation():
                 "• BẤM LƯU NHIỀU LẦN: Cán bộ có thể bấm nút Lưu nhiều lần trong suốt quá trình đại hội mà không sợ bị khóa dữ liệu.\n• NGUY CƠ NẾU QUÊN LƯU: Nếu thoát trình duyệt hoặc chuyển trang khi chưa bấm Lưu, dữ liệu mới nhập sẽ bị mất.\n• NGUYÊN TẮC VÀNG: 'Kiểm tra xong mục nào hoặc xong lớp nào - Chạm ngay nút Lưu lớp đó!'.")
 
     create_card(s13, Inches(6.8), Inches(1.3), Inches(5.9), Inches(5.6), "Vị trí & Giao diện Nút 'Lưu thông tin lớp'")
-    add_fitted_image(s13, card_img, 7.0, 1.8, 5.5, 4.4)
-    add_caption(s13, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Nút Lưu màu xanh ngọc nằm nổi bật ở chân thẻ lớp, thao tác cực nhanh")
+    save_focus_img = os.path.join(ARTIFACT_DIR, "real_save_button_focus.png")
+    add_fitted_image(s13, save_focus_img, 7.0, 1.8, 5.5, 4.4)
+    add_caption(s13, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Nút 'Lưu thông tin lớp' màu trắng viền xám nổi bật ở chân thẻ lớp, ghi nhận tức thời")
 
     # =========================================================================
     # SLIDE 14: CÁN BỘ TRỰC LỚP [7]: NÚT KHÓA HỒ SƠ & NIÊM PHONG DỮ LIỆU
@@ -684,8 +688,9 @@ def build_presentation():
     ], font_size=10.5, space_after=8)
 
     create_card(s16, Inches(6.8), Inches(1.3), Inches(5.9), Inches(5.6), "Bảng Giám sát Đa tầng Toàn diện Toàn Tòa nhà")
-    add_fitted_image(s16, preview_img, 7.0, 1.8, 5.5, 4.4)
-    add_caption(s16, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Nắm bắt toàn cảnh tiến độ các tầng và liên chi đoàn trong cùng một màn hình")
+    building_floors_img = os.path.join(ARTIFACT_DIR, "real_building_floors.png")
+    add_fitted_image(s16, building_floors_img, 7.0, 1.8, 5.5, 4.4)
+    add_caption(s16, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Bảng Giám sát Đa tầng Tòa D9: Theo dõi đồng thời từ Tầng 1 đến Tầng 10 và các phòng học")
 
     # =========================================================================
     # SLIDE 17: TRUNG TÂM THÔNG BÁO ĐA CẤP & CẢNH BÁO TỨC THỜI
@@ -735,8 +740,9 @@ def build_presentation():
                 "• NÚT TẠO LINK [Link]: Admin bấm tạo link đăng nhập nhanh 1-chạm gửi qua Zalo. Cán bộ chỉ cần chạm vào link là tự động đăng nhập đúng quyền mà không cần gõ mật khẩu.\n• BẢO VỆ TÀI KHOẢN ADMIN: Hệ thống khóa cứng, không ai có thể xóa tài khoản Quản trị viên vĩnh viễn (bach.pv2414676@sis.hust.edu.vn).")
 
     create_card(s18, Inches(6.8), Inches(1.3), Inches(5.9), Inches(5.6), "Giao diện Quản trị Nhân sự & Phân quyền Cán bộ")
-    add_fitted_image(s18, login_img, 7.0, 1.8, 5.5, 4.4)
-    add_caption(s18, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Trung tâm phân quyền: Đúng người, đúng nhiệm vụ, bảo mật đa tầng")
+    manage_img = os.path.join(ARTIFACT_DIR, "real_manage_users_page.png")
+    add_fitted_image(s18, manage_img, 7.0, 1.8, 5.5, 4.4)
+    add_caption(s18, Inches(7.0), Inches(6.4), Inches(5.5), Inches(0.4), "Trung tâm Quản trị Cán bộ: Phân cấp vai trò, Magic Link 1-chạm & Đặt lại mật khẩu")
 
     # =========================================================================
     # SLIDE 19: BAN QUẢN TRỊ [2]: MA TRẬN TIẾN ĐỘ, EXCEL & AUDIT LOGS

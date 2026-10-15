@@ -1,17 +1,17 @@
 # Graph Report - Event-tracker  (2026-10-15)
 
 ## Corpus Check
-- 75 files · ~159,859 words
+- 81 files · ~170,805 words
 - Verdict: corpus is large enough that graph structure adds value.
-- Unclassified: 394 file(s) not represented in the graph (top: .pbf 388, (none) 2, .service 1)
+- Unclassified: 395 file(s) not represented in the graph (top: .pbf 388, (none) 2, .pptx 1)
 
 ## Summary
-- 450 nodes · 1127 edges · 24 communities (20 shown, 4 thin omitted)
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 62 edges (avg confidence: 0.83)
+- 499 nodes · 1206 edges · 25 communities (21 shown, 4 thin omitted)
+- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 62 edges (avg confidence: 0.83)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e43e8a22`
+- Built from commit: `6dab561a`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -23,14 +23,15 @@
 - Vite Bundler & Frontend Dependencies
 - Core Architecture & Business Rules
 - Load Testing & Performance Benchmarks
-- DirectoryModal.jsx
+- build_presentation.py
 - Backend Package Configuration
 - Vercel Deployment & Service Rewrites
 - Rate Limiting & SSE Realtime Stream
+- CdpClient
 - REST API Design & Conventions
 - Project Scope & Execution Timeline
 - System Architecture & Codemaps
-- Implementation Plan & Constraints
+- LogsView.jsx
 - Test Scenarios & Quality Assurance
 - Project Overview & Product Highlights
 - Technical Specification & Tech Stack
@@ -68,51 +69,55 @@
 ## Import Cycles
 - None detected.
 
-## Communities (24 total, 4 thin omitted)
+## Communities (25 total, 4 thin omitted)
 
 ### Community 0 - "React UI Components & Client API"
 Cohesion: 0.07
-Nodes (74): lucide-react, maplibre-gl, react, api, ApiError, req(), App(), MapView (+66 more)
+Nodes (80): lucide-react, maplibre-gl, react, react-dom, api, ApiError, req(), App() (+72 more)
 
 ### Community 1 - "HTTP Application Server & Middleware"
-Cohesion: 0.07
-Nodes (37): createApp(), getContacts(), getDatabaseSync(), getLibsqlDatabase(), getState(), getVisits(), groupBy(), incrementVisits() (+29 more)
+Cohesion: 0.08
+Nodes (31): getContacts(), getDatabaseSync(), getLibsqlDatabase(), getState(), groupBy(), openDb(), require, tx() (+23 more)
 
 ### Community 2 - "Token & Session Authentication"
-Cohesion: 0.09
-Nodes (58): DEFAULT_PASSWORD, hashPassword(), verifyPassword(), hashToken(), loginUrl(), newToken(), userByToken(), checkOrigin() (+50 more)
+Cohesion: 0.08
+Nodes (65): DEFAULT_PASSWORD, hashPassword(), verifyPassword(), hashToken(), loginUrl(), newToken(), userByToken(), createApp() (+57 more)
 
 ### Community 3 - "sso.js"
 Cohesion: 0.33
 Nodes (13): bindCookie(), discovery(), getJson(), keyFor(), metas, pending, purge(), rand() (+5 more)
 
 ### Community 4 - "Vite Bundler & Frontend Dependencies"
-Cohesion: 0.08
-Nodes (25): react-dom, vite, @vitejs/plugin-react, xlsx, dependencies, lucide-react, maplibre-gl, react (+17 more)
+Cohesion: 0.10
+Nodes (19): vite, @vitejs/plugin-react, xlsx, dependencies, lucide-react, maplibre-gl, react, react-dom (+11 more)
 
 ### Community 5 - "Core Architecture & Business Rules"
-Cohesion: 0.13
-Nodes (22): Microsoft Entra ID SSO, 100% Paperwork Checklist Rule, Permanent Admin Protection, React & Vite Frontend, Server-Sent Events (SSE), SQLite & Libsql Database, Cấu hình VM đã chỉnh sau test tải 2026-10-12, Cách hoạt động (+14 more)
+Cohesion: 0.09
+Nodes (30): Microsoft Entra ID SSO, 100% Paperwork Checklist Rule, Permanent Admin Protection, React & Vite Frontend, Server-Sent Events (SSE), SQLite & Libsql Database, Cấu hình VM đã chỉnh sau test tải 2026-10-12, Cách hoạt động (+22 more)
 
 ### Community 6 - "Load Testing & Performance Benchmarks"
-Cohesion: 0.18
-Nodes (13): agent, args, base, fanout, fmt(), main(), NREAD, NSSE (+5 more)
+Cohesion: 0.10
+Nodes (24): fetchWithStats(), pct(), run(), stressEndpoint(), agent, args, base, fanout (+16 more)
 
-### Community 7 - "DirectoryModal.jsx"
-Cohesion: 0.60
-Nodes (5): cleanPhone(), DirectoryModal(), formatPhoneDisplay(), getInitials(), TEAMS
+### Community 7 - "build_presentation.py"
+Cohesion: 0.14
+Nodes (11): add_bullets(), add_callout(), add_caption(), add_fitted_image(), add_footer(), add_header(), build_presentation(), create_card() (+3 more)
 
 ### Community 8 - "Backend Package Configuration"
-Cohesion: 0.14
-Nodes (13): dependencies, libsql, engines, node, name, private, scripts, build (+5 more)
+Cohesion: 0.13
+Nodes (14): dependencies, libsql, engines, node, name, private, scripts, build (+6 more)
 
 ### Community 9 - "Vercel Deployment & Service Rewrites"
-Cohesion: 0.17
-Nodes (11): entrypoint, root, runtime, rewrites, $schema, services, app, web (+3 more)
+Cohesion: 0.15
+Nodes (12): entrypoint, root, runtime, regions, rewrites, $schema, services, app (+4 more)
 
 ### Community 10 - "Rate Limiting & SSE Realtime Stream"
-Cohesion: 0.35
-Nodes (8): createRateLimiter(), getClientIp(), createSse(), add(), broadcast(), broadcastNotification(), broadcastStats(), write()
+Cohesion: 0.52
+Nodes (6): createSse(), add(), broadcast(), broadcastNotification(), broadcastStats(), write()
+
+### Community 11 - "CdpClient"
+Cohesion: 0.22
+Nodes (4): CdpClient, main(), sleep(), startChrome()
 
 ### Community 12 - "REST API Design & Conventions"
 Cohesion: 0.25
@@ -126,9 +131,9 @@ Nodes (8): 1 Phạm vi đã chốt với anh, 2 Thiết kế tóm tắt, 3 Các 
 Cohesion: 0.25
 Nodes (8): 1 Sơ đồ Kiến trúc Tổng thể System Architecture, 21 Bảng phân tích các module Backend, 2 Bản đồ Module Backend, 31 Bảng phân tích các module Frontend websrc, 32 Tài nguyên Bản đồ Ngoại tuyến webpublichustmap, 3 Bản đồ Module Frontend, 4 Sơ đồ Luồng Dữ liệu Data Flow, Bản đồ Kiến trúc Hệ thống Architecture Codemap
 
-### Community 15 - "Implementation Plan & Constraints"
-Cohesion: 0.25
-Nodes (8): Event Tracker backend  frontend Implementation Plan, Global Constraints, Phase 1 Backend nhánh featbackend PR 1, Review Focus, Task 1 Khung dự án  database, Task 2 Lõi HTTP kiểm tra dữ liệu phiên quyền, Task 3 Ứng dụng route công khai SSE seed helper test, Task 4 Đăng nhập apime link riêng đăng xuất khe SSO
+### Community 15 - "LogsView.jsx"
+Cohesion: 0.60
+Nodes (5): ActionBadge(), formatVnTime(), LogsView(), RoleBadge(), timeAgo()
 
 ### Community 16 - "Test Scenarios & Quality Assurance"
 Cohesion: 0.25
@@ -152,23 +157,23 @@ Nodes (4): cleanPhone(), formatPhoneDisplay(), getInitials(), OfficerModal()
 
 ## Knowledge Gaps
 - **24 isolated node(s):** `DEBIAN_FRONTEND`, `4 Ghi dữ liệu`, `7 Chưa quyết cần chốt`, `4 Sơ đồ Luồng Dữ liệu Data Flow`, `Task 4 Đăng nhập apime link riêng đăng xuất khe SSO` (+19 more)
-  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 107 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
+  These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 115 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `libsql` connect `HTTP Application Server & Middleware` to `Backend Package Configuration`?**
-  _High betweenness centrality (0.044) - this node is a cross-community bridge._
+- **Why does `openDb()` connect `HTTP Application Server & Middleware` to `Token & Session Authentication`, `CdpClient`?**
+  _High betweenness centrality (0.060) - this node is a cross-community bridge._
 - **What connects `DEBIAN_FRONTEND`, `4 Ghi dữ liệu`, `7 Chưa quyết cần chốt` to the rest of the system?**
   _24 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `React UI Components & Client API` be split into smaller, more focused modules?**
-  _Cohesion score 0.0748013090229079 - nodes in this community are weakly interconnected._
-- **Why does `openDb()` connect `HTTP Application Server & Middleware` to `Token & Session Authentication`?**
-  _High betweenness centrality (0.039) - this node is a cross-community bridge._
+  _Cohesion score 0.06658901184236071 - nodes in this community are weakly interconnected._
+- **Why does `getLibsqlDatabase()` connect `HTTP Application Server & Middleware` to `Backend Package Configuration`?**
+  _High betweenness centrality (0.041) - this node is a cross-community bridge._
 - **Should `HTTP Application Server & Middleware` be split into smaller, more focused modules?**
-  _Cohesion score 0.07236544549977386 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07769423558897243 - nodes in this community are weakly interconnected._
+- **Why does `libsql` connect `Backend Package Configuration` to `HTTP Application Server & Middleware`?**
+  _High betweenness centrality (0.039) - this node is a cross-community bridge._
 - **Should `Token & Session Authentication` be split into smaller, more focused modules?**
-  _Cohesion score 0.08807017543859649 - nodes in this community are weakly interconnected._
-- **Should `Vite Bundler & Frontend Dependencies` be split into smaller, more focused modules?**
-  _Cohesion score 0.07816091954022988 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08207934336525308 - nodes in this community are weakly interconnected._
