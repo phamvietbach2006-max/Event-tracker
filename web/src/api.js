@@ -8,13 +8,21 @@ export class ApiError extends Error {
 
 async function req(method, path, body, timeoutMs = 15000) {
   const signal = typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? AbortSignal.timeout(timeoutMs) : undefined;
-  const res = await fetch(path, {
-    method,
-    credentials: 'same-origin',
-    headers: body === undefined ? {} : { 'Content-Type': 'application/json' },
-    body: body === undefined ? undefined : JSON.stringify(body),
-    signal,
-  });
+  let res;
+  try {
+    res = await fetch(path, {
+      method,
+      credentials: 'same-origin',
+      headers: body === undefined ? {} : { 'Content-Type': 'application/json' },
+      body: body === undefined ? undefined : JSON.stringify(body),
+      signal,
+    });
+  } catch (err) {
+    if (err.name === 'TimeoutError' || /timeout|aborted|signal/i.test(err.message)) {
+      throw new ApiError(408, 'timeout', 'Quá thời gian kết nối (timeout). Hệ thống có thể đang xử lý dữ liệu lớn, vui lòng thử lại hoặc tải lại trang.');
+    }
+    throw err;
+  }
   const t = await res.text();
   let data = null;
   try { data = t ? JSON.parse(t) : null; } catch { /* body không phải JSON */ }
@@ -56,7 +64,7 @@ export const api = {
   addGroup: (name) => req('POST', '/api/groups', { name }),
   patchGroup: (id, p) => req('PATCH', `/api/groups/${id}`, p),
   delGroup: (id, force = false) => req('DELETE', `/api/groups/${id}${force ? '?force=1' : ''}`),
-  importUnit: (payload) => req('POST', '/api/units/import', payload),
+  importUnit: (payload) => req('POST', '/api/units/import', payload, 120000),
   addRoom: (groupId, name) => req('POST', `/api/groups/${groupId}/rooms`, { name }),
   patchRoom: (id, p) => req('PATCH', `/api/rooms/${id}`, p),
   delRoom: (id) => req('DELETE', `/api/rooms/${id}`),

@@ -1,7 +1,7 @@
 # Graph Report - Event-tracker  (2026-10-15)
 
 ## Corpus Check
-- 87 files · ~176,041 words
+- 87 files · ~176,682 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 395 file(s) not represented in the graph (top: .pbf 388, (none) 2, .pptx 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2cb518fa`
+- Built from commit: `e3c84d4d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -156,7 +156,7 @@ Cohesion: 0.80
 Nodes (4): cleanPhone(), formatPhoneDisplay(), getInitials(), OfficerModal()
 
 ## Knowledge Gaps
-- **24 isolated node(s):** `DEBIAN_FRONTEND`, `4 Ghi dữ liệu`, `7 Chưa quyết cần chốt`, `Task 4 Đăng nhập apime link riêng đăng xuất khe SSO`, `UC6  Bảo mật và phân quyền gọi API` (+19 more)
+- **24 isolated node(s):** `DEBIAN_FRONTEND`, `4 Ghi dữ liệu`, `Task 4 Đăng nhập apime link riêng đăng xuất khe SSO`, `UC6  Bảo mật và phân quyền gọi API`, `Bản đồ số HUSTMAP tích hợp Nhánh minh` (+19 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 116 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -165,7 +165,7 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `openDb()` connect `HTTP Application Server & Middleware` to `Token & Session Authentication`, `CdpClient`?**
   _High betweenness centrality (0.058) - this node is a cross-community bridge._
-- **What connects `DEBIAN_FRONTEND`, `4 Ghi dữ liệu`, `7 Chưa quyết cần chốt` to the rest of the system?**
+- **What connects `DEBIAN_FRONTEND`, `4 Ghi dữ liệu`, `Task 4 Đăng nhập apime link riêng đăng xuất khe SSO` to the rest of the system?**
   _24 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `React UI Components & Client API` be split into smaller, more focused modules?**
   _Cohesion score 0.06988934187536401 - nodes in this community are weakly interconnected._

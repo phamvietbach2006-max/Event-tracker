@@ -290,4 +290,86 @@ test('nhật ký hoạt động (GET /api/admin/logs): ghi lại đầy đủ ai
   } finally { await t.close(); }
 });
 
+test('nhập hàng loạt lớp theo Đơn vị (POST /api/units/import): xử lý dữ liệu lớn (100+ lớp, 1000+ việc) nhanh chóng và thay thế dữ liệu', async () => {
+  const t = await startApp();
+  try {
+    // 1. Tạo payload giả lập Trường CNTT & TT với 10 tầng, mỗi tầng 10 lớp = 100 lớp, mỗi lớp 10 việc = 1000 việc
+    const sampleGroups = [];
+    for (let f = 1; f <= 10; f++) {
+      const roomsList = [];
+      for (let c = 1; c <= 10; c++) {
+        roomsList.push({
+          name: `[Kíp 1 · B1-${f}0${c}] CNTT-TT ${f}0${c}-K71`,
+          owners: [`Cán bộ Trực ${f}`, `Kiểm tra Viên ${c}`],
+          tasks: Array.from({ length: 10 }, (_, i) => `Nhiệm vụ kiểm tra ${i + 1}`),
+        });
+      }
+      sampleGroups.push({
+        floorName: `Tầng ${f} Nhà B1`,
+        rooms: roomsList,
+      });
+    }
+
+    const tStart = Date.now();
+    const res = await t.call('POST', '/api/units/import', {
+      as: A,
+      body: {
+        unit: 'Trường CNTT & TT',
+        replace: false,
+        groups: sampleGroups,
+      },
+    });
+    const duration = Date.now() - tStart;
+    assert.equal(res.status, 200);
+    assert.equal(res.body.ok, true);
+    assert.equal(res.body.unit, 'Trường CNTT & TT');
+    assert.equal(res.body.importedGroups, 10);
+    assert.equal(res.body.importedRooms, 100);
+    assert.ok(duration < 3000, `Import 100 lớp phải hoàn thành nhanh (< 3s), thực tế: ${duration}ms`);
+
+    // 2. Kiểm tra dữ liệu trong DB
+    const cnttGroups = t.db.prepare("SELECT COUNT(*) AS n FROM groups WHERE name LIKE '[Trường CNTT & TT]%'").get().n;
+    assert.equal(cnttGroups, 10);
+    const cnttRooms = t.db.prepare("SELECT COUNT(*) AS n FROM rooms WHERE name LIKE '%CNTT-TT%'").get().n;
+    assert.equal(cnttRooms, 100);
+    const cnttTasks = t.db.prepare("SELECT COUNT(*) AS n FROM tasks WHERE text LIKE 'Nhiệm vụ kiểm tra%'").get().n;
+    assert.equal(cnttTasks, 1000);
+
+    // 3. Test tính năng 'replace: true' thay thế toàn bộ dữ liệu đơn vị Trường CNTT & TT
+    const replaceGroups = [
+      {
+        floorName: 'Tầng 1 Nhà B1',
+        rooms: [
+          {
+            name: '[Kíp 2 · B1-101] Khoa học Máy tính 01-K70',
+            owners: ['Cán bộ Mới'],
+            tasks: ['Kiểm tra tư cách đại biểu', 'Kiểm tra hòm phiếu'],
+          },
+        ],
+      },
+    ];
+
+    const resReplace = await t.call('POST', '/api/units/import', {
+      as: A,
+      body: {
+        unit: 'Trường CNTT & TT',
+        replace: true,
+        groups: replaceGroups,
+      },
+    });
+    assert.equal(resReplace.status, 200);
+    assert.equal(resReplace.body.importedGroups, 1);
+    assert.equal(resReplace.body.importedRooms, 1);
+
+    // Dữ liệu cũ của Trường CNTT & TT phải được xóa sạch và chỉ còn lại 1 lớp mới
+    const cnttGroupsAfter = t.db.prepare("SELECT COUNT(*) AS n FROM groups WHERE name LIKE '[Trường CNTT & TT]%'").get().n;
+    assert.equal(cnttGroupsAfter, 1);
+    const cnttRoomsAfter = t.db.prepare("SELECT COUNT(*) AS n FROM rooms WHERE name LIKE '%Khoa học Máy tính%'").get().n;
+    assert.equal(cnttRoomsAfter, 1);
+    const oldRoomsAfter = t.db.prepare("SELECT COUNT(*) AS n FROM rooms WHERE name LIKE '%CNTT-TT%'").get().n;
+    assert.equal(oldRoomsAfter, 0);
+  } finally { await t.close(); }
+});
+
+
 

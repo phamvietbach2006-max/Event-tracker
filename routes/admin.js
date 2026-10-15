@@ -231,62 +231,97 @@ export function registerAdmin(router) {
       if (replace) {
         const prefix = `[${unit}] `;
         const oldGroups = db.prepare('SELECT id, name FROM groups').all().filter((g) => g.name.startsWith(prefix) || g.name === unit);
+        const stmtDelRooms = db.prepare('DELETE FROM rooms WHERE group_id = ?');
+        const stmtDelGroup = db.prepare('DELETE FROM groups WHERE id = ?');
         for (const og of oldGroups) {
-          db.prepare('DELETE FROM rooms WHERE group_id = ?').run(og.id);
-          db.prepare('DELETE FROM groups WHERE id = ?').run(og.id);
+          stmtDelRooms.run(og.id);
+          stmtDelGroup.run(og.id);
         }
       }
 
+      // Pre-compile statements outside the loop for high-throughput batch insert
+      const stmtInsertGroup = db.prepare('INSERT INTO groups(name, sort) VALUES (?,?)');
+      const stmtInsertRoom = db.prepare('INSERT INTO rooms(group_id, name, status, note, sort, updated_at, updated_by) VALUES (?,?,?,?,?,?,?)');
+      const stmtInsertOwner = db.prepare('INSERT OR IGNORE INTO room_owners(room_id, email) VALUES (?,?)');
+      const stmtInsertTask = db.prepare('INSERT INTO tasks(room_id, text, state, sort, updated_at, updated_by) VALUES (?,?,?,?,?,?)');
+      const stmtInsertUser = db.prepare('INSERT INTO users(email, name, is_admin) VALUES (?,?,0)');
+
+      // User lookups & caching: in-memory Map & Set to eliminate O(N) scans and repeated DB queries
       const allUsers = db.prepare('SELECT email, name FROM users').all();
+      const userMap = new Map();
+      const existingEmails = new Set();
+      for (const u of allUsers) {
+        if (u.name) userMap.set(u.name.toLocaleLowerCase('vi'), u.email);
+        if (u.email) {
+          userMap.set(u.email.toLowerCase(), u.email);
+          existingEmails.add(u.email.toLowerCase());
+        }
+      }
+
       const ensureUserByName = (rawName) => {
         const n = text(rawName, 80, 'ownerName');
         const lower = n.toLocaleLowerCase('vi');
-        const found = allUsers.find((u) => u.name.toLocaleLowerCase('vi') === lower || u.email === lower);
-        if (found) return found.email;
+        const foundEmail = userMap.get(lower);
+        if (foundEmail) return foundEmail;
+
         const base = n.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[đĐ]/g, 'd')
           .toLowerCase().replace(/[^a-z0-9]+/g, '.').replace(/^\.+|\.+$/g, '') || 'user';
         let candidate = `${base}@sis.hust.edu.vn`;
         let suffix = 2;
-        while (db.prepare('SELECT 1 FROM users WHERE email = ?').get(candidate)) {
+        while (existingEmails.has(candidate.toLowerCase())) {
           candidate = `${base}.${suffix++}@sis.hust.edu.vn`;
         }
-        db.prepare('INSERT INTO users(email, name, is_admin) VALUES (?,?,0)').run(candidate, n);
-        allUsers.push({ email: candidate, name: n });
+        stmtInsertUser.run(candidate, n);
+        existingEmails.add(candidate.toLowerCase());
+        userMap.set(lower, candidate);
+        userMap.set(candidate.toLowerCase(), candidate);
         return candidate;
       };
+
+      // Group lookups & sort caching: avoid executing SELECT queries inside loops
+      const existingGroups = db.prepare('SELECT id, name FROM groups').all();
+      const groupMapByName = new Map();
+      for (const g of existingGroups) {
+        groupMapByName.set(g.name, g.id);
+      }
+      let currentMaxGroupSort = db.prepare('SELECT COALESCE(MAX(sort), 0) AS n FROM groups').get().n;
+      const roomSortByGroupId = new Map();
 
       for (const gItem of body.groups) {
         const rawFloor = text(gItem.floorName ?? gItem.name ?? '', 60, 'floorName');
         const fullGroupName = rawFloor.startsWith(`[${unit}]`) ? rawFloor : `[${unit}] ${rawFloor}`;
         const safeGroupName = fullGroupName.slice(0, 80);
-        let existingGroup = db.prepare('SELECT id FROM groups WHERE name = ?').get(safeGroupName);
-        let gid;
-        if (existingGroup) {
-          gid = existingGroup.id;
-        } else {
-          const gSort = nextSort(db, 'SELECT COALESCE(MAX(sort), 0) + 1 AS n FROM groups');
-          gid = rowId(db.prepare('INSERT INTO groups(name, sort) VALUES (?,?)').run(safeGroupName, gSort));
+        let gid = groupMapByName.get(safeGroupName);
+        if (gid === undefined) {
+          currentMaxGroupSort++;
+          gid = rowId(stmtInsertGroup.run(safeGroupName, currentMaxGroupSort));
+          groupMapByName.set(safeGroupName, gid);
           importedGroups++;
+        }
+
+        if (!roomSortByGroupId.has(gid)) {
+          const maxRSort = db.prepare('SELECT COALESCE(MAX(sort), 0) AS n FROM rooms WHERE group_id = ?').get(gid).n;
+          roomSortByGroupId.set(gid, maxRSort);
         }
 
         for (const rItem of gItem.rooms ?? []) {
           const rName = text(rItem.name, 120, 'room.name');
-          const rSort = nextSort(db, 'SELECT COALESCE(MAX(sort), 0) + 1 AS n FROM rooms WHERE group_id = ?', gid);
+          const rSort = roomSortByGroupId.get(gid) + 1;
+          roomSortByGroupId.set(gid, rSort);
+
           const rid = rowId(
-            db.prepare('INSERT INTO rooms(group_id, name, status, note, sort, updated_at, updated_by) VALUES (?,?,?,?,?,?,?)')
-              .run(gid, rName, 'red', text(rItem.note ?? '', 150, 'note', { allowEmpty: true }), rSort, now, user.name),
+            stmtInsertRoom.run(gid, rName, 'red', text(rItem.note ?? '', 150, 'note', { allowEmpty: true }), rSort, now, user.name),
           );
           importedRooms++;
 
           const ownerEmails = [...new Set((rItem.owners ?? []).map(ensureUserByName))];
           for (const em of ownerEmails) {
-            db.prepare('INSERT OR IGNORE INTO room_owners(room_id, email) VALUES (?,?)').run(rid, em);
+            stmtInsertOwner.run(rid, em);
           }
 
           (rItem.tasks ?? []).forEach((t, idx) => {
             const tText = text(Array.isArray(t) ? t[0] : typeof t === 'string' ? t : t.text, 200, 'task.text');
-            db.prepare('INSERT INTO tasks(room_id, text, state, sort, updated_at, updated_by) VALUES (?,?,?,?,?,?)')
-              .run(rid, tText, 'todo', idx + 1, now, user.name);
+            stmtInsertTask.run(rid, tText, 'todo', idx + 1, now, user.name);
           });
         }
       }

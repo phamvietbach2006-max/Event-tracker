@@ -157,7 +157,11 @@ export default function UnitImportModal({ open, onClose, defaultUnit, groups, sa
       if (reload) reload();
       onClose(unit);
     } catch (err) {
-      say(`Lỗi khi nhập dữ liệu: ${err.message}`);
+      if (err.code === 'timeout' || err.name === 'TimeoutError' || /timeout|aborted|signal/i.test(err.message)) {
+        say('Quá thời gian phản hồi: Dữ liệu lớn đang được lưu trong nền, vui lòng đợi vài giây rồi tải lại trang.');
+      } else {
+        say(`Lỗi khi nhập dữ liệu: ${err.message}`);
+      }
     } finally {
       setBusy(false);
     }
@@ -273,6 +277,11 @@ export default function UnitImportModal({ open, onClose, defaultUnit, groups, sa
                   {busy ? 'Đang nhập dữ liệu…' : `Nhập ${preview?.totalClasses ?? 0} lớp vào ${unit}`}
                 </button>
               </div>
+              {busy && (
+                <div style={{ marginTop: '0.75rem', fontSize: '0.85rem', color: '#64748b', textAlign: 'center' }}>
+                  Đang xử lý dữ liệu và khởi tạo danh sách lớp... Vui lòng không đóng cửa sổ.
+                </div>
+              )}
             </>
           ) : (
             <>
