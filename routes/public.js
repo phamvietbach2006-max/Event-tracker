@@ -7,11 +7,21 @@ export function registerPublic(router) {
   router.add('GET', '/api/state', ({ db }) => getState(db));
   router.add('GET', '/api/stats', ({ db, sse }) => ({ online: sse.size(), visits: getVisits(db) }));
   router.add('GET', '/api/contacts', ({ db, user }) => {
-    const list = getContacts(db);
-    if (!user) {
-      return list.map((c) => ({ ...c, student_id: null }));
+    try {
+      const list = getContacts(db);
+      if (!user) {
+        return list.map((c) => ({ ...c, student_id: null }));
+      }
+      return list;
+    } catch (err) {
+      console.warn('Cảnh báo khi truy vấn getContacts:', err.message);
+      try {
+        const rows = db.prepare('SELECT email, name, phone, position, department, team, cohort, role FROM users').all();
+        return rows.map((c) => ({ ...c, student_id: null }));
+      } catch {
+        return [];
+      }
     }
-    return list;
   });
   router.add('GET', '/events', ({ req, res, sse }) => { sse.add(req, res); });
 }

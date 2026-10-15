@@ -33,8 +33,21 @@ export const api = {
       return await req('GET', '/api/state', undefined, 45000);
     }
   },
-  contacts: () => req('GET', '/api/contacts', undefined, 35000),
-  me: () => req('GET', '/api/me', undefined, 25000),
+  contacts: async () => {
+    try {
+      return await req('GET', '/api/contacts', undefined, 35000);
+    } catch {
+      // Tự động thử lại 1 lần nếu gặp sự cố mạng hoặc khởi động phiên bản mới
+      return await req('GET', '/api/contacts', undefined, 35000);
+    }
+  },
+  me: async () => {
+    try {
+      return await req('GET', '/api/me', undefined, 25000);
+    } catch {
+      return null;
+    }
+  },
   login: (email, password) => req('POST', '/api/auth/login', { email, password }),
   changePassword: (oldPassword, newPassword) => req('POST', '/api/auth/change-password', { oldPassword, newPassword }),
   logout: () => req('POST', '/auth/logout'),
