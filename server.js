@@ -52,16 +52,6 @@ function init() {
   try {
     console.log(`[BOOT] Initializing SQLite db at ${config.dbPath} on Node ${process.version}...`);
     const db = openDb(config.dbPath);
-    try {
-      db.prepare("DELETE FROM room_owners WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
-      db.prepare("DELETE FROM sessions WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
-      db.prepare("DELETE FROM user_units WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
-      db.prepare("DELETE FROM user_groups WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
-      db.prepare("DELETE FROM users WHERE LOWER(email) NOT LIKE '%@sis.hust.edu.vn'").run();
-    } catch (err) {
-      console.warn('Lỗi dọn dẹp tài khoản không thuộc sis.hust.edu.vn:', err.message);
-    }
-
     if (isEmpty(db)) {
       try {
         applySeed(db, seedData);
@@ -69,27 +59,6 @@ function init() {
       } catch (err) {
         console.error('Lỗi khi nạp seed.json:', err.message);
       }
-    } else {
-      try {
-        syncUsersSeed(db, seedData.users);
-      } catch (err) {
-        console.warn('Lỗi khi kiểm tra cán bộ từ seed.json:', err.message);
-      }
-    }
-
-    try {
-      const needsToken = db.prepare('SELECT 1 FROM users WHERE token IS NULL LIMIT 1').get();
-      if (needsToken) {
-        ensureTokens(db);
-      }
-    } catch (err) {
-      console.warn('Lỗi khi kiểm tra token:', err.message);
-    }
-
-    try {
-      db.prepare("UPDATE users SET is_admin = 1, role = 'admin' WHERE LOWER(email) = 'bach.pv2414676@sis.hust.edu.vn'").run();
-    } catch (err) {
-      console.warn('Lỗi đồng bộ admin vĩnh viễn:', err.message);
     }
 
     app = createApp({ db, config });
@@ -156,7 +125,7 @@ try {
       console.log(`[BOOT] Event tracker service listening on socket ${listenPort}`);
     });
   } else {
-    server.listen(listenPort, () => {
+    server.listen(listenPort, '0.0.0.0', () => {
       console.log(`[BOOT] Event tracker service listening on port ${listenPort} (DB ${config.dbPath})`);
     });
   }
