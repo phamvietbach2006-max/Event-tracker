@@ -9612,6 +9612,24 @@ a {
   color: #64748b;
 }
 
+.target-user-select {
+  margin-top: 4px;
+  width: 100%;
+  padding: 6px 10px;
+  font-size: 12.5px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #1e293b;
+  outline: none;
+  cursor: pointer;
+}
+
+.target-user-select:focus {
+  border-color: #d97706;
+  box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.15);
+}
+
 .quorum-notice-box {
   display: flex;
   align-items: flex-start;

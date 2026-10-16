@@ -229,10 +229,10 @@ export function RoomCard({ room, group, me, act, initialOpen = false, onRequireL
   const canStart = isAttOk && isDocOk;
   const [quorumModalOpen, setQuorumModalOpen] = useState(false);
 
-  const handleSubmitQuorumRequest = async (roomId, targetType, attendees, totalMembers) => {
+  const handleSubmitQuorumRequest = async (roomId, targetType, targetEmail, attendees, totalMembers) => {
     try {
-      await api.requestQuorumExemption(roomId, targetType, attendees, totalMembers);
-      toast?.(`✓ Đã gửi yêu cầu phê duyệt sĩ số lớp ${meta.className} thành công! Pop-up khẩn cấp đã được gửi tới Cấp trên.`);
+      await api.requestQuorumExemption(roomId, targetType, targetEmail, attendees, totalMembers);
+      toast?.(`✓ Đã gửi yêu cầu phê duyệt sĩ số lớp ${meta.className} thành công! Pop-up khẩn cấp đã được gửi tới người được chỉ định.`);
     } catch (err) {
       toast?.(`Lỗi khi gửi yêu cầu phê duyệt: ${err.message}`);
       throw err;

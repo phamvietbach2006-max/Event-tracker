@@ -13,18 +13,86 @@ function getUserRole(db, email) {
 }
 
 export function registerQuorum(router) {
-  // ── POST /api/rooms/:id/quorum-request: Gửi yêu cầu xin phê duyệt ngoại lệ sĩ số ──
+  // ── GET /api/rooms/:id/quorum-targets: Lấy danh sách 1 Admin online hoặc 1 Phụ trách tầng online để xin duyệt ──
+  router.add('GET', '/api/rooms/:id/quorum-targets', ({ db, user, config, params, sse }) => {
+    if (!config?.openAccess) requireUser(user);
+    const room = roomOr404(db, params.id);
+    const group = db.prepare('SELECT id, name FROM groups WHERE id = ?').get(room.group_id);
+
+    const allUsers = db.prepare('SELECT email, name, role, is_admin, phone FROM users').all();
+
+    // 1. Danh sách Admin
+    const admins = allUsers
+      .filter((u) => u.is_admin || u.role === 'admin' || isPermanentAdmin(u.email))
+      .map((u) => ({
+        email: u.email,
+        name: u.name,
+        role: 'admin',
+        isOnline: sse ? sse.isUserOnline(u.email) : false,
+        phone: u.phone || null,
+      }))
+      .sort((a, b) => (b.isOnline ? 1 : 0) - (a.isOnline ? 1 : 0) || a.name.localeCompare(b.name, 'vi'));
+
+    // 2. Danh sách Phụ trách tầng của nhóm/khu vực này
+    const floorLeadEmails = db.prepare('SELECT LOWER(email) AS email FROM user_groups WHERE group_id = ?').all(room.group_id).map((r) => r.email);
+    const floorLeads = allUsers
+      .filter((u) => floorLeadEmails.includes(u.email.toLowerCase()) || (u.role === 'floor_lead' && floorLeadEmails.includes(u.email.toLowerCase())))
+      .map((u) => ({
+        email: u.email,
+        name: u.name,
+        role: 'floor_lead',
+        isOnline: sse ? sse.isUserOnline(u.email) : false,
+        phone: u.phone || null,
+        groupName: group?.name || '',
+      }))
+      .sort((a, b) => (b.isOnline ? 1 : 0) - (a.isOnline ? 1 : 0) || a.name.localeCompare(b.name, 'vi'));
+
+    return {
+      roomId: room.id,
+      roomName: room.name,
+      groupName: group?.name || '',
+      admins,
+      floorLeads,
+    };
+  });
+
+  // ── POST /api/rooms/:id/quorum-request: Gửi yêu cầu xin phê duyệt cho đúng 1 người (Admin hoặc Phụ trách tầng) ──
   router.add('POST', '/api/rooms/:id/quorum-request', ({ db, user, config, params, body, sse }) => {
     if (!config?.openAccess) requireUser(user);
     const room = roomOr404(db, params.id);
     const actor = user ?? { email: null, name: 'Cán bộ kiểm tra', role: 'room_lead' };
 
-    const targetType = oneOf(body.targetType || 'both', ['both', 'admin', 'floor_lead'], 'targetType');
+    const targetType = oneOf(body.targetType || 'admin', ['admin', 'floor_lead', 'both'], 'targetType');
+
     const attendees = Math.max(0, parseInt(body.attendees ?? room.attendees ?? 0, 10) || 0);
     const totalMembers = Math.max(0, parseInt(body.totalMembers ?? room.total_members ?? 0, 10) || 0);
 
     const group = db.prepare('SELECT name FROM groups WHERE id = ?').get(room.group_id);
     const now = Date.now();
+
+    // Xác định đích danh 1 người nhận (nếu có):
+    let targetUser = null;
+    const rawTargetEmail = typeof body.targetEmail === 'string' ? body.targetEmail.trim().toLowerCase() : '';
+    if (rawTargetEmail) {
+      targetUser = db.prepare('SELECT email, name, role, is_admin FROM users WHERE LOWER(email) = ?').get(rawTargetEmail);
+    }
+
+    if (!targetUser && targetType !== 'both') {
+      if (targetType === 'floor_lead') {
+        const floorLeadEmails = db.prepare('SELECT LOWER(email) AS email FROM user_groups WHERE group_id = ?').all(room.group_id).map((r) => r.email);
+        if (floorLeadEmails.length > 0) {
+          const candidates = db.prepare('SELECT email, name, role, is_admin FROM users WHERE LOWER(email) IN (' + floorLeadEmails.map(() => '?').join(',') + ')').all(...floorLeadEmails);
+          targetUser = candidates.find((c) => sse && sse.isUserOnline(c.email)) || candidates[0] || null;
+        }
+      }
+      if (!targetUser) {
+        const allAdmins = db.prepare('SELECT email, name, role, is_admin FROM users WHERE is_admin = 1 OR role = ?').all('admin');
+        targetUser = allAdmins.find((c) => sse && sse.isUserOnline(c.email)) || allAdmins[0] || { email: 'anh.tdh250154e@sis.hust.edu.vn', name: 'Ban Quản trị' };
+      }
+    }
+
+    const targetEmail = targetUser?.email || null;
+    const targetName = targetUser?.name || (targetType === 'both' ? 'Ban Quản trị & Phụ trách tầng' : (targetType === 'admin' ? 'Quản trị viên' : 'Phụ trách tầng'));
 
     const info = tx(db, () => {
       // Lưu lại sĩ số thực tế cập nhật
@@ -32,29 +100,28 @@ export function registerQuorum(router) {
 
       const insert = db.prepare(`
         INSERT INTO quorum_requests (
-          room_id, sender_email, sender_name, sender_role, target_type,
+          room_id, sender_email, sender_name, sender_role, target_type, target_email, target_name,
           attendees, total_members, status, created_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?)
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending', ?)
       `).run(
         room.id,
         actor.email || 'anonymous',
         actor.name || 'Cán bộ trực lớp',
         actor.role || 'room_lead',
         targetType,
+        targetEmail,
+        targetName,
         attendees,
         totalMembers,
         now
       );
 
-      const targetLabel = targetType === 'admin' ? 'Ban Tổ chức - Kiểm tra (Admin)'
-        : targetType === 'floor_lead' ? 'Phụ trách tầng'
-        : 'Ban Quản trị & Phụ trách tầng';
-
-      logActivity(db, actor, room.id, 'quorum.request', `Xin phê duyệt sĩ số: ${attendees}/${totalMembers} đoàn viên (Gửi: ${targetLabel})`);
+      const targetLabel = targetEmail ? `${targetName} (${targetType === 'admin' ? 'Ban Quản trị' : 'Phụ trách tầng'})` : (targetType === 'both' ? 'Ban Quản trị & Phụ trách tầng' : targetName);
+      logActivity(db, actor, room.id, 'quorum.request', `Xin phê duyệt sĩ số: ${attendees}/${totalMembers} đoàn viên (Gửi đích danh: ${targetLabel})`);
       return Number(insert.lastInsertRowid);
     });
 
-    // Phát thông báo khẩn cấp qua SSE
+    // Phát thông báo khẩn cấp qua SSE đích danh tới người nhận
     sse.broadcast();
     if (sse.broadcastNotification) {
       sse.broadcastNotification({
@@ -63,7 +130,9 @@ export function registerQuorum(router) {
         level: 'urgent',
         title: `🚨 Yêu cầu phê duyệt sĩ số: ${room.name}`,
         content: `Cán bộ ${actor.name} gửi yêu cầu phê duyệt đặc cách sĩ số cho ${room.name} (${group?.name || ''}). Sĩ số thực tế: ${attendees}/${totalMembers}.`,
-        targetType,
+        target_type: targetType,
+        target_email: targetEmail,
+        target_name: targetName,
         sender_name: actor.name,
       });
     }
@@ -75,12 +144,14 @@ export function registerQuorum(router) {
       attendees,
       totalMembers,
       targetType,
+      targetEmail,
+      targetName,
       status: 'pending',
       createdAt: now,
     };
   });
 
-  // ── GET /api/quorum-requests/pending: Lấy danh sách yêu cầu cần duyệt cho người dùng hiện tại ──
+  // ── GET /api/quorum-requests/pending: Lấy danh sách yêu cầu cần duyệt cho đúng người được gửi ──
   router.add('GET', '/api/quorum-requests/pending', ({ db, user, config }) => {
     if (!config?.openAccess && !user) return { requests: [] };
     const email = String(user?.email || '').trim().toLowerCase();
@@ -90,7 +161,7 @@ export function registerQuorum(router) {
     // Lấy tất cả yêu cầu có status = 'pending'
     const pendingRows = db.prepare(`
       SELECT qr.id, qr.room_id, qr.sender_email, qr.sender_name, qr.sender_role,
-             qr.target_type, qr.attendees, qr.total_members, qr.status,
+             qr.target_type, qr.target_email, qr.target_name, qr.attendees, qr.total_members, qr.status,
              qr.admin_decision, qr.admin_decided_by, qr.admin_decided_at,
              qr.floor_decision, qr.floor_decided_by, qr.floor_decided_at,
              qr.created_at,
@@ -102,26 +173,22 @@ export function registerQuorum(router) {
       ORDER BY qr.created_at DESC
     `).all();
 
-    if (isAdmin) {
-      // Admin thấy mọi yêu cầu mà admin chưa quyết định
-      const list = pendingRows.filter((r) => r.admin_decision === null);
-      return { requests: list };
-    }
+    // Lọc theo người nhận đích danh để chỉ duy nhất 1 người được chỉ định mới nhận được pop-up và xử lý (tránh xung đột)
+    const list = pendingRows.filter((r) => {
+      if (r.target_email) {
+        return r.target_email.toLowerCase() === email;
+      }
+      if (isAdmin) {
+        return (r.target_type === 'admin' || r.target_type === 'both') && r.admin_decision === null;
+      }
+      if (role === 'floor_lead') {
+        const assignedGroupIds = db.prepare('SELECT group_id FROM user_groups WHERE LOWER(email) = ?').all(email).map((g) => g.group_id);
+        return (r.target_type === 'floor_lead' || r.target_type === 'both') && assignedGroupIds.includes(r.group_id) && r.floor_decision === null;
+      }
+      return false;
+    });
 
-    if (role === 'floor_lead') {
-      const assignedGroupIds = db.prepare('SELECT group_id FROM user_groups WHERE LOWER(email) = ?').all(email).map((r) => r.group_id);
-      const list = pendingRows.filter((r) => {
-        // Thuộc tầng mình phụ trách
-        if (!assignedGroupIds.includes(r.group_id)) return false;
-        // Yêu cầu có gửi cho floor_lead hoặc both
-        if (r.target_type !== 'floor_lead' && r.target_type !== 'both') return false;
-        // Mình chưa quyết định và Admin chưa quyết định
-        return r.floor_decision === null && r.admin_decision === null;
-      });
-      return { requests: list };
-    }
-
-    return { requests: [] };
+    return { requests: list };
   });
 
   // ── POST /api/quorum-requests/:id/decision: Quyết định phê duyệt hoặc từ chối ──

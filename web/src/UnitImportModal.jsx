@@ -63,7 +63,7 @@ function parseSheetToGroups(ws) {
 
     const roomCode = rawRoom ? String(rawRoom).trim() : 'Phòng';
     const floorName = floorFromRoomCode(roomCode);
-    const isK71 = /\bK71\b/i.test(className);
+    const isK71 = /K71|Khóa\s*71|K\.71/i.test(className);
     if (isK71) k71Count++;
     else k70Count++;
 
@@ -175,7 +175,7 @@ export default function UnitImportModal({ open, onClose, defaultUnit, groups, sa
       return;
     }
     const targetFloor = floorInput.trim() || floorFromRoomCode(rCode);
-    const isK71 = docType === 'K71' || (docType === 'auto' && /\bK71\b/i.test(cls));
+    const isK71 = docType === 'K71' || (docType === 'auto' && /K71|Khóa\s*71|K\.71/i.test(cls));
     const tasks = isK71 ? TASKS_K71 : TASKS_K70;
     const prefix = kip.trim() && rCode ? `[${kip.trim()} · ${rCode}]` : rCode ? `[${rCode}]` : '';
     const fullRoomName = `${prefix} ${cls}`.trim();

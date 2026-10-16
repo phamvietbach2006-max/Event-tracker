@@ -9,6 +9,29 @@ import { destroyUserSessions } from '../lib/session.js';
 const nextSort = (db, sql, ...args) => db.prepare(sql).get(...args).n;
 const rowId = (info) => Number(info.lastInsertRowid);
 
+export const DEFAULT_TASKS_K71 = [
+  '1. Phương hướng',
+  '2. Nghị quyết Đại hội',
+  '3. Biên bản Đại hội',
+  '4. Danh sách Đoàn viên và Cán bộ lớp',
+];
+
+export const DEFAULT_TASKS_K70 = [
+  '1. Biên bản ĐHCĐ',
+  '2. Biên bản kiểm phiếu bầu BCH CĐ',
+  '3. Biên bản họp phân công BCH CĐ',
+  '4. Bản kiểm điểm BCH',
+  '5. Nghị quyết Đại hội',
+  '6. Báo cáo tổng kết',
+  '7. Phương hướng nhiệm kỳ mới',
+  '8. Danh sách Đoàn viên và Cán bộ lớp',
+];
+
+export function getDefaultTasksForClass(className) {
+  const isK71 = /K71|Khóa\s*71|K\.71/i.test(className || '');
+  return isK71 ? DEFAULT_TASKS_K71 : DEFAULT_TASKS_K70;
+}
+
 export function userView(db, u) {
   const email = u.email.toLowerCase();
   const isPermAdmin = isPermanentAdmin(email);
@@ -319,7 +342,10 @@ export function registerAdmin(router) {
             stmtInsertOwner.run(rid, em);
           }
 
-          (rItem.tasks ?? []).forEach((t, idx) => {
+          const rawTasks = (Array.isArray(rItem.tasks) && rItem.tasks.length > 0)
+            ? rItem.tasks
+            : getDefaultTasksForClass(rName);
+          rawTasks.forEach((t, idx) => {
             const tText = text(Array.isArray(t) ? t[0] : typeof t === 'string' ? t : t.text, 200, 'task.text');
             stmtInsertTask.run(rid, tText, 'todo', idx + 1, now, user.name);
           });
@@ -337,8 +363,14 @@ export function registerAdmin(router) {
     const g = groupOr404(db, params.id);
     const name = text(body.name, 80, 'name');
     const sort = nextSort(db, 'SELECT COALESCE(MAX(sort), 0) + 1 AS n FROM rooms WHERE group_id = ?', g.id);
+    const now = Date.now();
     const id = rowId(db.prepare('INSERT INTO rooms(group_id, name, sort, updated_at, updated_by) VALUES (?,?,?,?,?)')
-      .run(g.id, name, sort, Date.now(), user.name));
+      .run(g.id, name, sort, now, user.name));
+    const defaultTasks = getDefaultTasksForClass(name);
+    defaultTasks.forEach((t, idx) => {
+      db.prepare('INSERT INTO tasks(room_id, text, state, sort, updated_at, updated_by) VALUES (?,?,?,?,?,?)')
+        .run(id, t, 'todo', idx + 1, now, user.name);
+    });
     logActivity(db, user, id, 'room.create', name);
     sse.broadcast();
     return roomView(roomOr404(db, id));

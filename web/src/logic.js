@@ -77,8 +77,8 @@ export function parseRoomMeta(name = '') {
   const kip = kipMatch ? kipMatch[0] : '';
   const roomCode = m ? m[2].trim() : '';
   const className = m ? m[3].trim() : name;
-  const isK71 = /\bK71\b/i.test(className);
-  const isK70 = /\bK70\b/i.test(className);
+  const isK71 = /K71|Khóa\s*71|K\.71/i.test(className);
+  const isK70 = /K70|Khóa\s*70|K\.70/i.test(className);
   const cohort = isK71 ? 'K71' : isK70 ? 'K70' : '';
   const congressType = isK71 ? 'ĐH Thành lập (K71)' : isK70 ? 'ĐH Nhiệm kỳ (K70)' : 'ĐH Chi đoàn';
   return { kip, kipLabel, roomCode, className, cohort, congressType };

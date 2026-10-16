@@ -103,6 +103,16 @@ export default function EmergencyQuorumModal({
                 <strong className="meta-val">{timeLabel(activeReq.created_at)}</strong>
               </div>
             </div>
+            {activeReq.target_name && (
+              <div className="meta-item">
+                <User size={16} />
+                <div>
+                  <span className="meta-label">Chỉ định duyệt bởi:</span>
+                  <strong className="meta-val">{activeReq.target_name}</strong>
+                  <small className="meta-sub">({activeReq.target_type === 'admin' ? 'Admin' : 'Phụ trách tầng'})</small>
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Hộp thông tin Sĩ số thực tế */}

@@ -30,5 +30,5 @@ export function registerPublic(router) {
       }
     }
   });
-  router.add('GET', '/events', ({ req, res, sse }) => { sse.add(req, res); });
+  router.add('GET', '/events', ({ req, res, user, sse }) => { sse.add(req, res, user); });
 }

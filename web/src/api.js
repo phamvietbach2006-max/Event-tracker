@@ -49,7 +49,7 @@ export const api = {
   login: (email, password) => req('POST', '/api/auth/login', { email, password }),
   changePassword: (oldPassword, newPassword) => req('POST', '/api/auth/change-password', { oldPassword, newPassword }),
   logout: () => req('POST', '/auth/logout'),
-  setStatus: (id, status, force = false, note = undefined) => req('PATCH', `/api/rooms/${id}/status`, { status, force, ...(note !== undefined ? { note } : {}) }),
+  setStatus: (id, status, force = false, note = undefined) => req('PATCH', `/api/rooms/${id}/status`, { status, force, enforceRules: true, ...(note !== undefined ? { note } : {}) }),
   setAttendance: (id, attendees, totalMembers) => req('PATCH', `/api/rooms/${id}/attendance`, { attendees, totalMembers }),
   setNote: (id, note) => req('PATCH', `/api/rooms/${id}/note`, { note }),
   setTask: (id, state) => req('PATCH', `/api/tasks/${id}`, state === undefined ? {} : { state }),
@@ -85,9 +85,10 @@ export const api = {
   sendNotification: (data) => req('POST', '/api/notifications', data),
   readNotification: (id) => req('POST', `/api/notifications/${id}/read`),
   readAllNotifications: () => req('POST', '/api/notifications/read-all'),
-  // phê duyệt ngoại lệ sĩ số
-  requestQuorumExemption: (roomId, targetType, attendees, totalMembers) =>
-    req('POST', `/api/rooms/${roomId}/quorum-request`, { targetType, attendees, totalMembers }),
+  // phê duyệt ngoại lệ sĩ số (chỉ gửi cho 1 Admin online hoặc 1 Phụ trách tầng online)
+  quorumTargets: (roomId) => req('GET', `/api/rooms/${roomId}/quorum-targets`),
+  requestQuorumExemption: (roomId, targetType, targetEmail, attendees, totalMembers) =>
+    req('POST', `/api/rooms/${roomId}/quorum-request`, { targetType, targetEmail, attendees, totalMembers }),
   pendingQuorumRequests: () => req('GET', '/api/quorum-requests/pending'),
   decideQuorumRequest: (id, decision) => req('POST', `/api/quorum-requests/${id}/decision`, { decision }),
   quorumStatus: (roomId) => req('GET', `/api/rooms/${roomId}/quorum-status`),

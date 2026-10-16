@@ -153,3 +153,105 @@ test('phê duyệt ngoại lệ sĩ số: gửi yêu cầu nhiều lần, phân 
     await t.close();
   }
 });
+
+test('gửi yêu cầu phê duyệt đích danh 1 người online (tránh xung đột) và tự động gán checklist mặc định K70/K71', async () => {
+  const t = await startApp();
+
+  try {
+    // Thêm 2 floor leads và 1 admin thứ hai
+    t.db.prepare("INSERT INTO users(email, name, is_admin, role) VALUES ('floor1@t.test', 'Trưởng Tầng 1', 0, 'floor_lead')").run();
+    t.db.prepare("INSERT INTO users(email, name, is_admin, role) VALUES ('floor2@t.test', 'Trưởng Tầng 2', 0, 'floor_lead')").run();
+    t.db.prepare("INSERT INTO users(email, name, is_admin, role) VALUES ('admin2@t.test', 'Admin Phụ', 1, 'admin')").run();
+
+    // Gán floor1 và floor2 vào group 1
+    t.db.prepare('INSERT INTO user_groups(email, group_id) VALUES (?, ?)').run('floor1@t.test', 1);
+    t.db.prepare('INSERT INTO user_groups(email, group_id) VALUES (?, ?)').run('floor2@t.test', 1);
+
+    // 1. Kiểm tra API GET /api/rooms/1/quorum-targets
+    const rTargets = await t.call('GET', '/api/rooms/1/quorum-targets', { as: 'owner@t.test' });
+    assert.equal(rTargets.status, 200);
+    assert.ok(rTargets.body.admins.some((a) => a.email === 'admin@t.test'));
+    assert.ok(rTargets.body.admins.some((a) => a.email === 'admin2@t.test'));
+    assert.ok(rTargets.body.floorLeads.some((f) => f.email === 'floor1@t.test'));
+    assert.ok(rTargets.body.floorLeads.some((f) => f.email === 'floor2@t.test'));
+
+    // 2. Gửi yêu cầu đích danh cho floor1@t.test
+    const rTargetFloor = await t.call('POST', '/api/rooms/1/quorum-request', {
+      as: 'owner@t.test',
+      body: {
+        targetType: 'floor_lead',
+        targetEmail: 'floor1@t.test',
+        attendees: 12,
+        totalMembers: 30,
+      },
+    });
+    assert.equal(rTargetFloor.status, 200);
+    assert.equal(rTargetFloor.body.targetEmail, 'floor1@t.test');
+    const reqFloorId = rTargetFloor.body.requestId;
+
+    // Floor 1 THẤY yêu cầu
+    const rPendingFloor1 = await t.call('GET', '/api/quorum-requests/pending', { as: 'floor1@t.test' });
+    assert.ok(rPendingFloor1.body.requests.some((r) => r.id === reqFloorId));
+
+    // Floor 2 KHÔNG THẤY yêu cầu (tránh xung đột)
+    const rPendingFloor2 = await t.call('GET', '/api/quorum-requests/pending', { as: 'floor2@t.test' });
+    assert.ok(!rPendingFloor2.body.requests.some((r) => r.id === reqFloorId));
+
+    // Admin khác cũng KHÔNG THẤY yêu cầu vì đã chỉ định đích danh Floor 1
+    const rPendingAdmin2 = await t.call('GET', '/api/quorum-requests/pending', { as: 'admin2@t.test' });
+    assert.ok(!rPendingAdmin2.body.requests.some((r) => r.id === reqFloorId));
+
+    // 3. Gửi yêu cầu đích danh cho admin2@t.test
+    const rTargetAdmin = await t.call('POST', '/api/rooms/1/quorum-request', {
+      as: 'owner@t.test',
+      body: {
+        targetType: 'admin',
+        targetEmail: 'admin2@t.test',
+        attendees: 15,
+        totalMembers: 30,
+      },
+    });
+    assert.equal(rTargetAdmin.status, 200);
+    assert.equal(rTargetAdmin.body.targetEmail, 'admin2@t.test');
+    const reqAdminId = rTargetAdmin.body.requestId;
+
+    // Admin 2 THẤY yêu cầu
+    const rPendingAdmin2After = await t.call('GET', '/api/quorum-requests/pending', { as: 'admin2@t.test' });
+    assert.ok(rPendingAdmin2After.body.requests.some((r) => r.id === reqAdminId));
+
+    // Admin chính KHÔNG THẤY yêu cầu của Admin 2
+    const rPendingAdmin1After = await t.call('GET', '/api/quorum-requests/pending', { as: 'admin@t.test' });
+    assert.ok(!rPendingAdmin1After.body.requests.some((r) => r.id === reqAdminId));
+
+    // 4. Test tự động gán checklist mặc định K70 / K71 cho bất kỳ lớp nào tạo mới
+    // Tạo lớp K71
+    const rNewK71 = await t.call('POST', '/api/groups/1/rooms', {
+      as: 'admin@t.test',
+      body: { name: 'Khoa học máy tính 01 - K71' },
+    });
+    assert.equal(rNewK71.status, 200);
+    const k71Tasks = t.db.prepare('SELECT * FROM tasks WHERE room_id = ?').all(rNewK71.body.id);
+    assert.equal(k71Tasks.length, 4, 'Lớp K71 phải tự động có 4 việc');
+
+    // Tạo lớp K70
+    const rNewK70 = await t.call('POST', '/api/groups/1/rooms', {
+      as: 'admin@t.test',
+      body: { name: 'Kỹ thuật hóa học 02 - K70' },
+    });
+    assert.equal(rNewK70.status, 200);
+    const k70Tasks = t.db.prepare('SELECT * FROM tasks WHERE room_id = ?').all(rNewK70.body.id);
+    assert.equal(k70Tasks.length, 8, 'Lớp K70 phải tự động có 8 việc');
+
+    // Tạo lớp không có K71 (mặc định K70/khóa khác -> 8 việc)
+    const rNewOther = await t.call('POST', '/api/groups/1/rooms', {
+      as: 'admin@t.test',
+      body: { name: 'Việt Nhật 03 - K69' },
+    });
+    assert.equal(rNewOther.status, 200);
+    const otherTasks = t.db.prepare('SELECT * FROM tasks WHERE room_id = ?').all(rNewOther.body.id);
+    assert.equal(otherTasks.length, 8, 'Lớp các khóa khác cũng có 8 việc');
+  } finally {
+    await t.close();
+  }
+});
+
