@@ -114,9 +114,9 @@
     "semantic_hash": "ff7e22bfa270ef41d5271fd1c1316cd8"
   },
   "routes/admin.js": {
-    "mtime": 1792137795.0282497,
-    "seen": 1792138254.5997996,
-    "ast_hash": "a1a3a585ca3e2222c92c4839c38f07f8",
+    "mtime": 1792139180.7259521,
+    "seen": 1792139436.5990827,
+    "ast_hash": "d7800c14e6030092c0f6a65184c5affa",
     "semantic_hash": ""
   },
   "routes/auth.js": {
@@ -162,9 +162,9 @@
     "semantic_hash": ""
   },
   "tests/admin.test.js": {
-    "mtime": 1792076355.5372887,
-    "seen": 1792076378.4471583,
-    "ast_hash": "8efa3597a927748db63f04317d8605fd",
+    "mtime": 1792139406.9269564,
+    "seen": 1792139436.599115,
+    "ast_hash": "7fbf9f4ff7edbb6f8a918b57b17fa927",
     "semantic_hash": ""
   },
   "tests/auth.test.js": {
@@ -282,9 +282,9 @@
     "semantic_hash": "811ff0891b04a2cb875a598d1cd54f2e"
   },
   "web/src/Manage.jsx": {
-    "mtime": 1792053268.2218375,
-    "seen": 1792055894.9394226,
-    "ast_hash": "2e72bc6757bbfe177fca24eb4af961a7",
+    "mtime": 1792139381.9440112,
+    "seen": 1792139436.5991645,
+    "ast_hash": "b7c45ff7c468ad09367775f40c817b5e",
     "semantic_hash": ""
   },
   "web/src/MapView.jsx": {
@@ -318,9 +318,9 @@
     "semantic_hash": ""
   },
   "web/src/api.js": {
-    "mtime": 1792137879.5166748,
-    "seen": 1792138254.599898,
-    "ast_hash": "83a2f0b133667d988d346d7abbb48711",
+    "mtime": 1792139190.9378612,
+    "seen": 1792139436.5991807,
+    "ast_hash": "2494b62e0d3fcf2bc35d241f1f9f3da1",
     "semantic_hash": ""
   },
   "web/src/logic.js": {
@@ -603,6 +603,12 @@
     "mtime": 1792074862.2023146,
     "seen": 1792075230.2480483,
     "ast_hash": "8f7e6e9e8baad4980c778a0352d2cf47",
+    "semantic_hash": ""
+  },
+  "web/src/SystemResetModal.jsx": {
+    "mtime": 1792139217.088791,
+    "seen": 1792139436.5991774,
+    "ast_hash": "7a51aa033f756453dfa6d0fbbf7a998c",
     "semantic_hash": ""
   }
 }

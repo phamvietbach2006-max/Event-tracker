@@ -95,4 +95,6 @@ export const api = {
   // mẫu nhận xét kiểm tra
   getReviewTemplate: () => req('GET', '/api/template/review'),
   setReviewTemplate: (content) => req('PUT', '/api/template/review', { content }),
+  // làm mới dữ liệu hệ thống (chỉ dành riêng cho admin vĩnh viễn Phạm Việt Bách)
+  systemReset: (password) => req('POST', '/api/admin/system-reset', { password }),
 };

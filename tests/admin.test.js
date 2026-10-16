@@ -371,5 +371,109 @@ test('nhập hàng loạt lớp theo Đơn vị (POST /api/units/import): xử l
   } finally { await t.close(); }
 });
 
+test('reset hệ thống: chỉ tài khoản admin vĩnh viễn Phạm Việt Bách, mật khẩu chính xác, làm mới toàn bộ kết quả/logs/thông báo', async () => {
+  const t = await startApp();
+  const P = 'bach.pv2414676@sis.hust.edu.vn';
+
+  try {
+    // Thêm tài khoản Admin vĩnh viễn Phạm Việt Bách
+    t.db.prepare("INSERT INTO users(email, name, is_admin, role) VALUES (?, 'Phạm Việt Bách', 1, 'admin')").run(P);
+
+    // 1. Khách / Người dùng thường gọi API -> 401 / 403
+    const rGuest = await t.call('POST', '/api/admin/system-reset', { body: { password: 'Việt Bách đẹp trai nhất vũ trụ' } });
+    assert.equal(rGuest.status, 401);
+
+    const rOfficer = await t.call('POST', '/api/admin/system-reset', { as: 'owner@t.test', body: { password: 'Việt Bách đẹp trai nhất vũ trụ' } });
+    assert.equal(rOfficer.status, 403);
+
+    // 2. Admin thường (không phải Phạm Việt Bách) gọi API -> 403 bị chặn
+    const rOtherAdmin = await t.call('POST', '/api/admin/system-reset', { as: A, body: { password: 'Việt Bách đẹp trai nhất vũ trụ' } });
+    assert.equal(rOtherAdmin.status, 403);
+    assert.ok(rOtherAdmin.body.error.includes('forbidden') || rOtherAdmin.body.message.includes('Phạm Việt Bách'));
+
+    // 3. Phạm Việt Bách gọi API nhưng sai mật khẩu -> 400
+    const rWrongPwd = await t.call('POST', '/api/admin/system-reset', { as: P, body: { password: 'sai mat khau' } });
+    assert.equal(rWrongPwd.status, 400);
+    assert.equal(rWrongPwd.body.error, 'invalid_password');
+
+    // 4. Giả lập dữ liệu test đang chạy:
+    // - Lớp 1 chuyển sang xanh, đã điểm danh 25/30, đã khóa, có ghi chú
+    t.db.prepare(`
+      UPDATE rooms SET
+        status = 'green',
+        attendees = 25,
+        total_members = 30,
+        is_locked = 1,
+        note = 'Đại hội diễn ra nghiêm túc'
+      WHERE id = 1
+    `).run();
+
+    // - Đổi task sang done
+    t.db.prepare("UPDATE tasks SET state = 'done' WHERE room_id = 1").run();
+
+    // - Thêm quorum request
+    t.db.prepare(`
+      INSERT INTO quorum_requests (room_id, sender_email, sender_name, sender_role, target_type, attendees, total_members, status, created_at)
+      VALUES (1, 'owner@t.test', 'Chủ Khu', 'room_lead', 'admin', 15, 30, 'pending', 123456)
+    `).run();
+
+    // - Thêm thông báo
+    t.db.prepare(`
+      INSERT INTO notifications (sender_email, sender_name, sender_role, title, content, level, target_type, target_label, created_at)
+      VALUES ('admin@t.test', 'Admin', 'admin', 'Thông báo test', 'Nội dung test', 'info', 'all', 'Toàn bộ', 123456)
+    `).run();
+
+    // - Thêm activity log
+    t.db.prepare("INSERT INTO activity (ts, email, room_id, action, detail) VALUES (123456, 'owner@t.test', 1, 'room.test', 'Test log cũ')").run();
+
+    const initialGroupsCount = t.db.prepare('SELECT COUNT(*) as c FROM groups').get().c;
+    const initialRoomsCount = t.db.prepare('SELECT COUNT(*) as c FROM rooms').get().c;
+    const initialUsersCount = t.db.prepare('SELECT COUNT(*) as c FROM users').get().c;
+
+    // 5. Phạm Việt Bách gọi API với đúng mật khẩu "Việt Bách đẹp trai nhất vũ trụ" -> 200 thành công!
+    const rResetSuccess = await t.call('POST', '/api/admin/system-reset', {
+      as: P,
+      body: { password: 'Việt Bách đẹp trai nhất vũ trụ' },
+    });
+    assert.equal(rResetSuccess.status, 200);
+    assert.equal(rResetSuccess.body.ok, true);
+
+    // 6. Kiểm tra các dữ liệu đã được làm mới:
+    // - Tất cả rooms: status = 'red', attendees = 0, is_locked = 0, quorum_exempt = 0, note = ''
+    const room1 = t.db.prepare('SELECT * FROM rooms WHERE id = 1').get();
+    assert.equal(room1.status, 'red');
+    assert.equal(room1.attendees, 0);
+    assert.equal(room1.is_locked, 0);
+    assert.equal(room1.quorum_exempt, 0);
+    assert.equal(room1.note, '');
+
+    // - Tất cả tasks: state = 'todo'
+    const nonTodoTasks = t.db.prepare("SELECT COUNT(*) as c FROM tasks WHERE state != 'todo'").get().c;
+    assert.equal(nonTodoTasks, 0);
+
+    // - Quorum requests: xóa sạch
+    const quorumCount = t.db.prepare('SELECT COUNT(*) as c FROM quorum_requests').get().c;
+    assert.equal(quorumCount, 0);
+
+    // - Notifications: xóa sạch
+    const notifCount = t.db.prepare('SELECT COUNT(*) as c FROM notifications').get().c;
+    assert.equal(notifCount, 0);
+
+    // - Activity logs cũ bị xóa, chỉ còn 1 log ghi nhận system.reset
+    const logs = t.db.prepare('SELECT * FROM activity').all();
+    assert.equal(logs.length, 1);
+    assert.equal(logs[0].action, 'system.reset');
+
+    // 7. Kiểm tra dữ liệu được BẢO TỒN NGUYÊN VẸN:
+    // - Số lượng groups (khối/tầng), rooms (lớp), users (tài khoản/danh bạ) không đổi
+    assert.equal(t.db.prepare('SELECT COUNT(*) as c FROM groups').get().c, initialGroupsCount);
+    assert.equal(t.db.prepare('SELECT COUNT(*) as c FROM rooms').get().c, initialRoomsCount);
+    assert.equal(t.db.prepare('SELECT COUNT(*) as c FROM users').get().c, initialUsersCount);
+  } finally {
+    await t.close();
+  }
+});
+
+
 
 

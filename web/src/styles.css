@@ -10156,3 +10156,224 @@ a {
   border-radius: 6px;
   padding: 8px 12px;
 }
+
+/* ── SYSTEM RESET FEATURE (ADMIN PHẠM VIỆT BÁCH) ── */
+.btn-system-reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-system-reset:hover {
+  background: #fecaca;
+  color: #991b1b;
+  border-color: #f87171;
+  box-shadow: 0 2px 6px rgba(185, 28, 28, 0.15);
+}
+
+.manage-reset-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: linear-gradient(135deg, #fff5f5 0%, #fef2f2 100%);
+  border: 1.5px solid #fecaca;
+  border-left: 5px solid #dc2626;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(220, 38, 38, 0.06);
+}
+
+.reset-banner-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: #fee2e2;
+  color: #dc2626;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.reset-banner-content {
+  flex: 1;
+}
+
+.reset-banner-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+
+.reset-banner-title strong {
+  font-size: 15px;
+  color: #991b1b;
+  font-weight: 700;
+}
+
+.badge-perm-admin {
+  background: #fee2e2;
+  color: #b91c1c;
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  border: 1px solid #fca5a5;
+}
+
+.reset-banner-desc {
+  font-size: 13px;
+  color: #475569;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.btn-system-reset-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #dc2626;
+  color: #ffffff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.25);
+}
+
+.btn-system-reset-banner:hover {
+  background: #b91c1c;
+  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.35);
+}
+
+.system-reset-modal-card {
+  max-width: 580px;
+}
+
+.reset-modal-header {
+  border-bottom: 1.5px solid #fee2e2;
+}
+
+.reset-notice-box {
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 14px;
+  font-size: 13px;
+}
+
+.danger-box {
+  background: #fff5f5;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+}
+
+.preserved-box {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+}
+
+.notice-box-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  margin-bottom: 8px;
+}
+
+.notice-box-title.text-success {
+  color: #16a34a;
+}
+
+.reset-bullets {
+  margin: 0;
+  padding-left: 20px;
+  line-height: 1.6;
+}
+
+.reset-bullets li {
+  margin-bottom: 3px;
+}
+
+.reset-password-form {
+  margin-top: 16px;
+}
+
+.reset-password-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 8px;
+}
+
+.reset-error-msg {
+  color: #dc2626;
+  font-size: 12.5px;
+  font-weight: 500;
+  margin-top: 6px;
+}
+
+.btn-danger-confirm {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #dc2626;
+  color: #ffffff;
+  border: none;
+  padding: 9px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-danger-confirm:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+.btn-danger-confirm:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.spin-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 640px) {
+  .manage-reset-banner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .btn-system-reset-banner {
+    width: 100%;
+    justify-content: center;
+  }
+}
+

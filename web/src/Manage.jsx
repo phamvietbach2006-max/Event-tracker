@@ -18,10 +18,13 @@ import {
   AlertCircle,
   RefreshCw,
   Phone,
+  RotateCcw,
+  AlertOctagon,
 } from 'lucide-react';
 import { api } from './api.js';
 import { UNITS, ROLES, parseGroupMeta, parseRoomMeta } from './logic.js';
 import ConfirmModal from './ConfirmModal.jsx';
+import SystemResetModal from './SystemResetModal.jsx';
 
 export default function Manage({ state, me, say, toast }) {
   const [users, setUsers] = useState([]);
@@ -32,6 +35,9 @@ export default function Manage({ state, me, say, toast }) {
   const [generatedLink, setGeneratedLink] = useState(null); // { name, url }
   const [linkCopied, setLinkCopied] = useState(false);
   const [confirmModal, setConfirmModal] = useState({ open: false });
+  const [resetModalOpen, setResetModalOpen] = useState(false);
+
+  const isPermanentAdminUser = me?.email?.toLowerCase() === 'bach.pv2414676@sis.hust.edu.vn';
 
   // Load all users
   const loadUsers = useCallback(async () => {
@@ -196,6 +202,17 @@ export default function Manage({ state, me, say, toast }) {
           </p>
         </div>
         <div className="manage-header-actions">
+          {isPermanentAdminUser && (
+            <button
+              type="button"
+              className="btn-system-reset"
+              onClick={() => setResetModalOpen(true)}
+              title="Làm mới toàn bộ dữ liệu test trước sự kiện (Chỉ dành riêng cho Admin vĩnh viễn Phạm Việt Bách)"
+            >
+              <RotateCcw size={16} />
+              <span>Reset Hệ thống</span>
+            </button>
+          )}
           <button
             type="button"
             className="btn-add-user"
@@ -206,6 +223,33 @@ export default function Manage({ state, me, say, toast }) {
           </button>
         </div>
       </div>
+
+      {/* ── BANNER RESET DÀNH RIÊNG CHO ADMIN VĨNH VIỄN PHẠM VIỆT BÁCH ── */}
+      {isPermanentAdminUser && (
+        <div className="manage-reset-banner">
+          <div className="reset-banner-icon">
+            <AlertOctagon size={24} />
+          </div>
+          <div className="reset-banner-content">
+            <div className="reset-banner-title">
+              <strong>Khu vực Quản trị Đặc biệt: Làm mới Toàn bộ Dữ liệu Test trước Sự kiện</strong>
+              <span className="badge-perm-admin">Admin vĩnh viễn: Phạm Việt Bách</span>
+            </div>
+            <p className="reset-banner-desc">
+              Khôi phục toàn bộ tiến độ kiểm tra về trạng thái ban đầu (đưa kết quả đại hội về đỏ, checklist về 0%, mở khóa tất cả lớp, xóa toàn bộ thông báo và nhật ký test).
+              <b> Toàn bộ danh sách chi đoàn các đơn vị, danh bạ cán bộ và tài khoản hệ thống sẽ được bảo toàn nguyên vẹn.</b>
+            </p>
+          </div>
+          <button
+            type="button"
+            className="btn-system-reset-banner"
+            onClick={() => setResetModalOpen(true)}
+          >
+            <RotateCcw size={16} />
+            <span>Reset Hệ thống</span>
+          </button>
+        </div>
+      )}
 
       {/* ── ROLE STAT CARDS ── */}
       <div className="manage-stats-grid">
@@ -507,6 +551,13 @@ export default function Manage({ state, me, say, toast }) {
       <ConfirmModal
         {...confirmModal}
         onClose={() => setConfirmModal((m) => ({ ...m, open: false }))}
+      />
+
+      {/* Modal Reset Hệ Thống (Dành riêng cho Admin Phạm Việt Bách) */}
+      <SystemResetModal
+        open={resetModalOpen}
+        onClose={() => setResetModalOpen(false)}
+        say={say}
       />
     </div>
   );

@@ -670,5 +670,75 @@ export function registerAdmin(router) {
 
     return { logs, total: totalCount };
   });
+
+  // ── POST /api/admin/system-reset: Làm mới toàn bộ dữ liệu test trước sự kiện ──
+  router.add('POST', '/api/admin/system-reset', ({ db, user, body, sse }) => {
+    requireAdmin(user);
+    const email = String(user?.email || '').trim().toLowerCase();
+    if (!isPermanentAdmin(email) && email !== 'bach.pv2414676@sis.hust.edu.vn') {
+      throw new HttpError(403, 'forbidden', 'Chỉ tài khoản Quản trị viên vĩnh viễn Phạm Việt Bách mới có quyền thực hiện chức năng này');
+    }
+
+    const password = typeof body?.password === 'string' ? body.password.trim() : '';
+    if (password !== 'Việt Bách đẹp trai nhất vũ trụ') {
+      throw new HttpError(400, 'invalid_password', 'Mật khẩu xác nhận reset hệ thống không chính xác');
+    }
+
+    const now = Date.now();
+
+    tx(db, () => {
+      // 1. Reset trạng thái toàn bộ lớp học về đỏ, mở khóa, đưa sĩ số & tiến độ về mặc định ban đầu
+      db.prepare(`
+        UPDATE rooms SET
+          status = 'red',
+          note = '',
+          attendees = 0,
+          is_locked = 0,
+          locked_at = NULL,
+          locked_by = NULL,
+          quorum_exempt = 0,
+          updated_at = ?,
+          updated_by = NULL
+      `).run(now);
+
+      // 2. Reset toàn bộ checklist công việc về 'todo' (chưa làm)
+      db.prepare(`
+        UPDATE tasks SET
+          state = 'todo',
+          updated_at = ?,
+          updated_by = NULL
+      `).run(now);
+
+      // 3. Xóa toàn bộ yêu cầu phê duyệt ngoại lệ sĩ số
+      db.prepare('DELETE FROM quorum_requests').run();
+
+      // 4. Xóa toàn bộ thông báo hệ thống và lịch sử đọc thông báo
+      db.prepare('DELETE FROM notification_reads').run();
+      db.prepare('DELETE FROM notifications').run();
+
+      // 5. Xóa toàn bộ nhật ký hoạt động cũ
+      db.prepare('DELETE FROM activity').run();
+
+      // 6. Ghi nhận nhật ký hoạt động mới khởi động hệ thống
+      logActivity(db, user, null, 'system.reset', 'Làm mới toàn bộ dữ liệu kết quả, thông báo, nhật ký trước sự kiện');
+    });
+
+    // Phát SSE broadcast cập nhật realtime cho toàn bộ client
+    sse.broadcast();
+    if (sse.broadcastNotification) {
+      sse.broadcastNotification({
+        id: Date.now(),
+        type: 'system_reset',
+        level: 'warning',
+        title: '🔄 Hệ thống đã được làm mới',
+        content: 'Toàn bộ dữ liệu kết quả, thông báo và nhật ký test đã được Quản trị viên Phạm Việt Bách làm mới sẵn sàng cho sự kiện!',
+        target_type: 'all',
+        target_label: 'Toàn bộ hệ thống',
+        sender_name: user?.name || 'Phạm Việt Bách',
+      });
+    }
+
+    return { ok: true, message: 'Đã làm mới toàn bộ dữ liệu hệ thống thành công!' };
+  });
 }
 
