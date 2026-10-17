@@ -270,9 +270,9 @@
     "semantic_hash": ""
   },
   "web/src/Header.jsx": {
-    "mtime": 1792202482.0058155,
-    "seen": 1792202642.4654412,
-    "ast_hash": "b166811dcb4a699489ddb8c73075a929",
+    "mtime": 1792203166.5447092,
+    "seen": 1792203225.0019996,
+    "ast_hash": "7f47fe8bdddfe7ea9883f6d17363d802",
     "semantic_hash": ""
   },
   "web/src/LoginModal.jsx": {
@@ -306,9 +306,9 @@
     "semantic_hash": ""
   },
   "web/src/Sidebar.jsx": {
-    "mtime": 1792202463.1077619,
-    "seen": 1792202642.4654639,
-    "ast_hash": "b8a64f22365470294b39537ce27ebf91",
+    "mtime": 1792203146.403722,
+    "seen": 1792203225.0020208,
+    "ast_hash": "07f6cfeb7b2f8bc4b5a487f12a92b54b",
     "semantic_hash": ""
   },
   "web/src/UnitImportModal.jsx": {

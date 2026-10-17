@@ -1,17 +1,17 @@
 # Graph Report - Event-tracker  (2026-10-17)
 
 ## Corpus Check
-- 92 files · ~261,931 words
+- 92 files · ~261,835 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 784 file(s) not represented in the graph (top: .pbf 776, (none) 2, .ico 2)
 
 ## Summary
-- 527 nodes · 1328 edges · 25 communities (21 shown, 4 thin omitted)
+- 527 nodes · 1327 edges · 25 communities (21 shown, 4 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 64 edges (avg confidence: 0.83)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c2f3f855`
+- Built from commit: `cd16c828`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -156,7 +156,7 @@ Cohesion: 0.25
 Nodes (8): 1 Stack chốt, 2 Cấu trúc thư mục, 3 Cơ sở dữ liệu, 4 API và quyền, 5 Khe cắm đăng nhập, 61 Bố cục và trải nghiệm người dùng, 6 Giao diện mobile-first và Kiến trúc UI mới, Stack và thiết kế kỹ thuật chi tiết
 
 ## Knowledge Gaps
-- **24 isolated node(s):** `DEBIAN_FRONTEND`, `7 Chưa quyết cần chốt`, `Task 4 Đăng nhập apime link riêng đăng xuất khe SSO`, `Bản đồ số HUSTMAP tích hợp Nhánh minh`, `61 Bố cục và trải nghiệm người dùng` (+19 more)
+- **24 isolated node(s):** `DEBIAN_FRONTEND`, `7 Chưa quyết cần chốt`, `Task 4 Đăng nhập apime link riêng đăng xuất khe SSO`, `4 Sơ đồ Luồng Dữ liệu Data Flow`, `Bản đồ số HUSTMAP tích hợp Nhánh minh` (+19 more)
   These have ≤1 connection - possible missing edges or undocumented components. (Counts symbols only; 121 node(s) total have ≤1 connection when file, concept and rationale nodes are included.)
 - **4 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -168,7 +168,7 @@ _Questions this graph is uniquely positioned to answer:_
 - **What connects `DEBIAN_FRONTEND`, `7 Chưa quyết cần chốt`, `Task 4 Đăng nhập apime link riêng đăng xuất khe SSO` to the rest of the system?**
   _24 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `React UI Components & Client API` be split into smaller, more focused modules?**
-  _Cohesion score 0.06715126341294565 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06697819314641744 - nodes in this community are weakly interconnected._
 - **Why does `libsql` connect `HTTP Application Server & Middleware` to `Backend Package Configuration`?**
   _High betweenness centrality (0.038) - this node is a cross-community bridge._
 - **Should `HTTP Application Server & Middleware` be split into smaller, more focused modules?**

@@ -1,5 +1,5 @@
-import { Menu, Search, Wifi, WifiOff, X, Users, Eye, Building2, LogIn, LogOut, UserRound, BookUser, Bell } from 'lucide-react';
-import { ORDER, ST, KIPS, COHORTS, UNITS, ROLES } from './logic.js';
+import { Menu, Search, Wifi, WifiOff, X, Users, Eye, Building2, BookUser, Bell } from 'lucide-react';
+import { ORDER, ST, KIPS, COHORTS, UNITS } from './logic.js';
 import Logo from './Logo.jsx';
 
 export default function Header({
@@ -89,39 +89,6 @@ export default function Header({
             <span className="header-stat-label">lượt xem</span>
           </span>
         </div>
-
-        {me ? (
-          <div className="header-user-badge">
-            <span className={`header-user-avatar role-avatar-${me.role || (me.isAdmin ? 'admin' : 'room_lead')}`}>
-              {me.name?.charAt(0).toUpperCase() || 'U'}
-            </span>
-            <div className="header-user-info" title={me.email}>
-              <span className="header-user-name">{me.name}</span>
-              <span className={`header-role-tag role-tag-${me.role || (me.isAdmin ? 'admin' : 'room_lead')}`}>
-                {ROLES[me.role || (me.isAdmin ? 'admin' : 'room_lead')]?.badge || (me.isAdmin ? 'Admin' : 'Cán bộ')}
-              </span>
-            </div>
-            <button
-              type="button"
-              className="header-logout-btn"
-              onClick={onLogout}
-              title="Đăng xuất khỏi hệ thống"
-              aria-label="Đăng xuất"
-            >
-              <LogOut size={15} />
-            </button>
-          </div>
-        ) : (
-          <button
-            type="button"
-            className="header-login-btn"
-            onClick={onOpenLogin}
-            title="Đăng nhập cán bộ kiểm tra để cập nhật tiến độ"
-          >
-            <LogIn size={15} />
-            <span>Đăng nhập Cán bộ</span>
-          </button>
-        )}
       </div>
     </div>
 

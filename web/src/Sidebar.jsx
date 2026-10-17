@@ -224,12 +224,16 @@ export default function Sidebar({
         )}
       </nav>
 
-      <div className="sidebar-info-card"><strong>Tiến độ hồ sơ giấy tờ</strong><span>{tot.done}/{tot.total} mục đã đủ · {tot.pct}%</span><div className="info-progress-bar"><div className="info-progress-fill" style={{ width: `${tot.pct}%` }} /></div><small>{online ? 'Đang đồng bộ trực tiếp' : 'Đang kết nối lại'}</small></div>
       <div className="sidebar-profile">
         <span className={`user-avatar-circle role-avatar-${me?.role || (me?.isAdmin ? 'admin' : me ? 'room_lead' : 'guest')}`}>
           {me?.name?.charAt(0).toUpperCase() || 'K'}
         </span>
-        <div className="profile-info">
+        <div
+          className="profile-info"
+          onClick={!me ? () => { setOpen(false); onOpenLogin(); } : undefined}
+          style={!me ? { cursor: 'pointer' } : undefined}
+          title={!me ? "Nhấn để đăng nhập tài khoản cán bộ" : undefined}
+        >
           <strong>{me?.name || 'Khách (Chỉ xem)'}</strong>
           <small>
             {me
