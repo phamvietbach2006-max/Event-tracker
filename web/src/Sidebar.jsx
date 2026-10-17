@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { LayoutDashboard, ClipboardList, Home, Star, Settings, LogOut, LogIn, X, Map as MapIcon, Building2, FileSpreadsheet, ChevronDown, ChevronRight, BookUser, History, Bell, FileText } from 'lucide-react';
 import { UNITS, ROLES, parseGroupMeta, isUserAdmin } from './logic.js';
+import Logo from './Logo.jsx';
 
 
 /* Nhóm groups theo tòa (ví dụ D9, C7, …) rồi theo đơn vị */
@@ -73,7 +74,7 @@ export default function Sidebar({
     <aside className={`sidebar ${open ? 'open' : ''}`}>
       <div className="sidebar-logo">
         <a href="#/" className="sidebar-brand" onClick={() => choose('overview')} aria-label="ĐẠI HỘI CHI ĐOÀN - ĐHBK HÀ NỘI">
-          <img className="sidebar-logo-img" src="/logo.png" alt="Logo Ban Tổ chức - Kiểm tra Đoàn ĐHBK Hà Nội" />
+          <Logo className="sidebar-logo-img" alt="Logo Ban Tổ chức - Kiểm tra Đoàn ĐHBK Hà Nội" />
           <span className="sidebar-brand-text">
             <strong className="sidebar-brand-title">ĐẠI HỘI CHI ĐOÀN</strong>
             <span className="sidebar-brand-subtitle">BAN TC-KT ĐOÀN ĐHBK HÀ NỘI</span>

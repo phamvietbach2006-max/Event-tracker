@@ -1,4 +1,31 @@
+import { readFileSync, existsSync } from 'node:fs';
+import path from 'node:path';
 import { getState, getVisits, getContacts } from '../lib/db.js';
+
+function sendStatic(res, filename, mimeType) {
+  const candidates = [
+    path.join(process.cwd(), 'web', 'public', filename),
+    path.join(process.cwd(), 'web', 'dist', filename),
+    path.join(process.cwd(), 'public', filename),
+  ];
+  for (const c of candidates) {
+    if (existsSync(c)) {
+      try {
+        const data = readFileSync(c);
+        res.writeHead(200, {
+          'Content-Type': mimeType,
+          'Content-Length': data.length,
+          'Cache-Control': 'public, max-age=86400, s-maxage=604800, immutable',
+          'Access-Control-Allow-Origin': '*',
+        });
+        res.end(data);
+        return;
+      } catch {}
+    }
+  }
+  res.writeHead(404, { 'Content-Type': 'text/plain' });
+  res.end('File not found');
+}
 
 export function registerPublic(router) {
   router.add('GET', '/', () => ({ ok: true, name: 'event-tracker-api' }));
@@ -31,4 +58,12 @@ export function registerPublic(router) {
     }
   });
   router.add('GET', '/events', ({ req, res, user, sse }) => { sse.add(req, res, user); });
+
+  // Static assets fallbacks for logos and favicon
+  router.add('GET', '/logo.png', ({ res }) => sendStatic(res, 'logo.png', 'image/png'));
+  router.add('GET', '/logo-emblem.png', ({ res }) => sendStatic(res, 'logo-emblem.png', 'image/png'));
+  router.add('GET', '/logo-full.png', ({ res }) => sendStatic(res, 'logo-full.png', 'image/png'));
+  router.add('GET', '/logo-dyc.png', ({ res }) => sendStatic(res, 'logo-dyc.png', 'image/png'));
+  router.add('GET', '/logo-70-hust.svg', ({ res }) => sendStatic(res, 'logo-70-hust.svg', 'image/svg+xml'));
+  router.add('GET', '/favicon.ico', ({ res }) => sendStatic(res, 'favicon.ico', 'image/x-icon'));
 }

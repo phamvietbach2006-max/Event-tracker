@@ -1,5 +1,6 @@
 import { Menu, Search, Wifi, WifiOff, X, Users, Eye, Building2, LogIn, LogOut, UserRound, BookUser, Bell } from 'lucide-react';
 import { ORDER, ST, KIPS, COHORTS, UNITS, ROLES } from './logic.js';
+import Logo from './Logo.jsx';
 
 export default function Header({
   me,
@@ -36,7 +37,7 @@ export default function Header({
     <div className="topbar-row-1">
       <div className="space-brand">
         <button className="mobile-menu-btn" onClick={onOpenSidebar} aria-label="Mở menu"><Menu size={22} /></button>
-        <img className="header-brand-logo" src="/logo.png" alt="Logo Ban Tổ chức - Kiểm tra Đoàn ĐHBK Hà Nội" />
+        <Logo className="header-brand-logo" alt="Logo Ban Tổ chức - Kiểm tra Đoàn ĐHBK Hà Nội" />
         <div className="space-title-box">
           <div className="space-title-row">
             <h1 className="space-title">

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Mail, LogIn, AlertCircle, KeyRound, X } from 'lucide-react';
 import { api, ApiError } from './api.js';
+import Logo from './Logo.jsx';
 
 export default function LoginModal({ open, onClose, onSuccess, initialNotice }) {
   const [email, setEmail] = useState('');
@@ -49,7 +50,7 @@ export default function LoginModal({ open, onClose, onSuccess, initialNotice }) 
 
         <div className="login-modal-header">
           <div className="login-brand-icon">
-            <img src="/logo.png" alt="Logo Ban TC-KT" className="login-logo-img" />
+            <Logo alt="Logo Ban TC-KT" className="login-logo-img" />
           </div>
           <h2>Đăng nhập Cán bộ</h2>
           <p className="login-subtext">

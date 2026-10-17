@@ -1,4 +1,5 @@
 import { ShieldCheck, Wifi, WifiOff, Users, Eye } from 'lucide-react';
+import Logo from './Logo.jsx';
 
 export default function Footer({ tot, online, stats }) {
   const onlineCount = Math.max(1, Number(stats?.online) || 1);
@@ -12,9 +13,8 @@ export default function Footer({ tot, online, stats }) {
             <div className="footer-orgs-wrap">
               <div className="footer-dyc-header">
                 <span className="footer-dyc-logo-box">
-                  <img
+                  <Logo
                     className="footer-dyc-logo"
-                    src="/logo.png"
                     alt="Logo Ban Tổ chức - Kiểm tra Đoàn ĐHBK Hà Nội"
                     loading="lazy"
                   />
