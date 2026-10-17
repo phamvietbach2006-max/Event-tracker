@@ -474,6 +474,22 @@ test('reset hệ thống: chỉ tài khoản admin vĩnh viễn Phạm Việt B�
   }
 });
 
+test('tự động dọn sạch duplicate tasks và chặn trùng lặp checklist theo (room_id, text)', async () => {
+  const t = await startApp();
+  try {
+    // Thử chèn trùng task vào phòng 1
+    const taskInsert = t.db.prepare('INSERT OR IGNORE INTO tasks(room_id, text, state, sort, updated_at) VALUES (1, ?, ?, 99, 100)');
+    taskInsert.run('Việc trùng lặp 1', 'todo');
+    taskInsert.run('Việc trùng lặp 1', 'todo');
+
+    const duplicates = t.db.prepare('SELECT COUNT(*) as c FROM tasks WHERE room_id = 1 AND text = ?').get('Việc trùng lặp 1').c;
+    assert.equal(duplicates, 1, 'Chỉ được có đúng 1 task với cùng nội dung');
+  } finally {
+    await t.close();
+  }
+});
+
+
 
 
 

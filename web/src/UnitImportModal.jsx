@@ -80,12 +80,21 @@ function parseSheetToGroups(ws) {
     const roomTitle = `${prefix} ${className}`.slice(0, 120);
 
     if (!floorMap.has(floorName)) floorMap.set(floorName, []);
-    floorMap.get(floorName).push({
-      name: roomTitle,
-      owners,
-      tasks: isK71 ? TASKS_K71 : TASKS_K70,
-    });
-    totalClasses++;
+    const roomList = floorMap.get(floorName);
+    const existing = roomList.find((r) => r.name === roomTitle);
+    if (existing) {
+      // Nếu lớp đã xuất hiện ở dòng trước (vd file danh sách sinh viên lặp lại tên lớp), chỉ gộp cán bộ phụ trách
+      for (const o of owners) {
+        if (!existing.owners.includes(o)) existing.owners.push(o);
+      }
+    } else {
+      roomList.push({
+        name: roomTitle,
+        owners,
+        tasks: isK71 ? TASKS_K71 : TASKS_K70,
+      });
+      totalClasses++;
+    }
   }
 
   const groups = Array.from(floorMap.entries())

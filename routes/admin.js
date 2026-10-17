@@ -266,7 +266,7 @@ export function registerAdmin(router) {
       const stmtInsertGroup = db.prepare('INSERT INTO groups(name, sort) VALUES (?,?)');
       const stmtInsertRoom = db.prepare('INSERT INTO rooms(group_id, name, status, note, sort, updated_at, updated_by) VALUES (?,?,?,?,?,?,?)');
       const stmtInsertOwner = db.prepare('INSERT OR IGNORE INTO room_owners(room_id, email) VALUES (?,?)');
-      const stmtInsertTask = db.prepare('INSERT INTO tasks(room_id, text, state, sort, updated_at, updated_by) VALUES (?,?,?,?,?,?)');
+      const stmtInsertTask = db.prepare('INSERT OR IGNORE INTO tasks(room_id, text, state, sort, updated_at, updated_by) VALUES (?,?,?,?,?,?)');
       const stmtInsertUser = db.prepare('INSERT INTO users(email, name, is_admin) VALUES (?,?,0)');
 
       // User lookups & caching: in-memory Map & Set to eliminate O(N) scans and repeated DB queries
@@ -345,10 +345,17 @@ export function registerAdmin(router) {
           const rawTasks = (Array.isArray(rItem.tasks) && rItem.tasks.length > 0)
             ? rItem.tasks
             : getDefaultTasksForClass(rName);
-          rawTasks.forEach((t, idx) => {
-            const tText = text(Array.isArray(t) ? t[0] : typeof t === 'string' ? t : t.text, 200, 'task.text');
-            stmtInsertTask.run(rid, tText, 'todo', idx + 1, now, user.name);
-          });
+          const seenTaskTexts = new Set();
+          let taskSort = 0;
+          for (const t of rawTasks) {
+            const rawT = Array.isArray(t) ? t[0] : typeof t === 'string' ? t : t.text;
+            const tText = text(rawT, 200, 'task.text');
+            if (seenTaskTexts.has(tText)) continue;
+            seenTaskTexts.add(tText);
+            taskSort++;
+            const tState = (typeof t === 'object' && t.state) ? t.state : 'todo';
+            stmtInsertTask.run(rid, tText, tState, taskSort, now, user.name);
+          }
         }
       }
       logActivity(db, user, null, 'unit.import', `${unit}: +${importedGroups} tầng, +${importedRooms} lớp`);
@@ -368,7 +375,7 @@ export function registerAdmin(router) {
       .run(g.id, name, sort, now, user.name));
     const defaultTasks = getDefaultTasksForClass(name);
     defaultTasks.forEach((t, idx) => {
-      db.prepare('INSERT INTO tasks(room_id, text, state, sort, updated_at, updated_by) VALUES (?,?,?,?,?,?)')
+      db.prepare('INSERT OR IGNORE INTO tasks(room_id, text, state, sort, updated_at, updated_by) VALUES (?,?,?,?,?,?)')
         .run(id, t, 'todo', idx + 1, now, user.name);
     });
     logActivity(db, user, id, 'room.create', name);

@@ -117,6 +117,10 @@ export function registerRooms(router) {
     const room = roomOr404(db, params.id);
     const actor = resolveActor(db, user, config, room.id, 'tasks');
     const txt = text(body.text, 200, 'text');
+    const existing = db.prepare('SELECT id FROM tasks WHERE room_id = ? AND text = ?').get(room.id, txt);
+    if (existing) {
+      return taskView(taskOr404(db, existing.id));
+    }
     const id = tx(db, () => {
       const sort = db.prepare('SELECT COALESCE(MAX(sort), 0) + 1 AS n FROM tasks WHERE room_id = ?').get(room.id).n;
       const info = db.prepare('INSERT INTO tasks(room_id, text, sort, updated_at, updated_by) VALUES (?,?,?,?,?)')
